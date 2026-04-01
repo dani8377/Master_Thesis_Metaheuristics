@@ -21,9 +21,9 @@ def load_problem_data(dataset_dir: str | Path) -> ProblemData:
     customers = pd.read_csv(dataset_dir / "sf_customers.csv").copy()
     stations = pd.read_csv(dataset_dir / "sf_charging_stations.csv").copy()
     distance_matrix = pd.read_csv(
-        dataset_dir / "sf_distance_matrix_euclidean.csv",
+        dataset_dir / "sf_distance_matrix_haversine.csv",
         index_col=0,
-    )
+    ).copy()
 
     if "Node ID" not in depot.columns:
         depot["Node ID"] = "DEPOT"
