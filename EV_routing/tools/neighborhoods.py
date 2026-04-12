@@ -117,9 +117,9 @@ def repair_battery_violation(route: list[str], data: ProblemData, ev_params: EVP
     new_route    = route[:]
     dist_array   = data.dist_array
     dist_index   = data.dist_index
+    energy_array = data.energy_array
     station_ids  = set(data.stations["Node ID"].tolist())
     all_stations = data.stations["Node ID"].tolist()
-    consumption  = ev_params.energy_consumption_kwh_per_km
     battery      = ev_params.initial_battery_kwh
 
     for i in range(len(new_route) - 1):
@@ -131,7 +131,7 @@ def repair_battery_violation(route: list[str], data: ProblemData, ev_params: EVP
         if oi is None or di is None:
             continue
 
-        energy = dist_array[oi, di] * consumption
+        energy = energy_array[oi, di]
 
         if battery - energy < 0:
             best_station: str | None = None
@@ -140,10 +140,9 @@ def repair_battery_violation(route: list[str], data: ProblemData, ev_params: EVP
                 si = dist_index.get(s)
                 if si is None or s == dest:
                     continue
-                d = dist_array[oi, si]
-                if d * consumption <= battery and d < best_dist:
+                if energy_array[oi, si] <= battery and dist_array[oi, si] < best_dist:
                     best_station = s
-                    best_dist    = d
+                    best_dist    = dist_array[oi, si]
             if best_station is not None:
                 new_route.insert(i + 1, best_station)
             return new_route

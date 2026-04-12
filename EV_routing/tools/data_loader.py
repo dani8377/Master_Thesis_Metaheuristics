@@ -16,10 +16,11 @@ class ProblemData:
     node_types: dict[str, str]
 
     # Fast lookup structures — built once at load time
-    dist_array: np.ndarray = field(repr=False)   # NxN float64 numpy array
+    dist_array: np.ndarray = field(repr=False)   # NxN float64 numpy array (Haversine km)
     dist_index: dict[str, int] = field(repr=False)  # node_id -> row/col index
     station_price: dict[str, float] = field(repr=False)   # node_id -> USD/kWh
     station_power: dict[str, float] = field(repr=False)   # node_id -> kW
+    energy_array: np.ndarray = field(repr=False)  # NxN float64 arc energy (kWh)
 
 
 def load_problem_data(dataset_dir: str | Path) -> ProblemData:
@@ -64,6 +65,18 @@ def load_problem_data(dataset_dir: str | Path) -> ProblemData:
         station_price[nid] = float(row["Cost (USD/kWh)"])
         station_power[nid] = float(row["Charging Capacity (kW)"])
 
+    # Load precomputed energy matrix if available; fall back to flat rate
+    energy_path = dataset_dir / "sf_energy_matrix.csv"
+    if energy_path.exists():
+        energy_df = pd.read_csv(energy_path, index_col=0)
+        energy_df.index   = energy_df.index.map(str)
+        energy_df.columns = energy_df.columns.map(str)
+        energy_df = energy_df.reindex(index=node_ids, columns=node_ids, fill_value=0.0)
+        energy_array = energy_df.to_numpy(dtype=np.float64)
+    else:
+        # Flat-rate fallback: 0.50 kWh/km — project still runs before data is fetched
+        energy_array = dist_array * 0.50
+
     return ProblemData(
         depot=depot,
         customers=customers,
@@ -74,4 +87,5 @@ def load_problem_data(dataset_dir: str | Path) -> ProblemData:
         dist_index=dist_index,
         station_price=station_price,
         station_power=station_power,
+        energy_array=energy_array,
     )

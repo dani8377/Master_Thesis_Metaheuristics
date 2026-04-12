@@ -41,15 +41,14 @@ def is_energy_feasible(
     route: list[str],
     data: ProblemData,
     battery_capacity_kwh: float,
-    energy_consumption_kwh_per_km: float,
 ) -> bool:
     """
-    Hard EV feasibility check using fast numpy distance lookup.
+    Hard EV feasibility check using the precomputed energy array.
     Returns False immediately if battery goes below zero on any arc.
     """
-    dist_array  = data.dist_array
-    dist_index  = data.dist_index
-    station_ids = set(data.stations["Node ID"].tolist())
+    dist_index   = data.dist_index
+    energy_array = data.energy_array
+    station_ids  = set(data.stations["Node ID"].tolist())
 
     battery_kwh = battery_capacity_kwh
 
@@ -62,7 +61,7 @@ def is_energy_feasible(
         if oi is None or di is None:
             return False
 
-        battery_kwh -= dist_array[oi, di] * energy_consumption_kwh_per_km
+        battery_kwh -= energy_array[oi, di]
         if battery_kwh < 0:
             return False
 

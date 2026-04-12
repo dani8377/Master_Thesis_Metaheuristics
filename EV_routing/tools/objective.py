@@ -46,13 +46,13 @@ def evaluate_route(
     - infeasibility penalties
     """
 
-    dist_array  = data.dist_array
-    dist_index  = data.dist_index
-    node_types  = data.node_types
+    dist_array    = data.dist_array
+    dist_index    = data.dist_index
+    energy_array  = data.energy_array
+    node_types    = data.node_types
     station_price = data.station_price
     station_power = data.station_power
 
-    consumption  = ev_params.energy_consumption_kwh_per_km
     speed        = ev_params.average_speed_kmh
     capacity     = ev_params.battery_capacity_kwh
     battery_kwh  = ev_params.initial_battery_kwh
@@ -76,7 +76,7 @@ def evaluate_route(
             continue
 
         distance_km = dist_array[oi, di]
-        energy_kwh  = distance_km * consumption
+        energy_kwh  = energy_array[oi, di]
         travel_h    = distance_km / speed
 
         total_distance_km         += distance_km

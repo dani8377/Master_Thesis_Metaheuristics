@@ -1,7 +1,12 @@
 {
   "permissions": {
     "allow": [
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "Bash(pip install:*)",
+      "Bash(python EV_routing/scripts/fetch_elevation_and_roads.py)",
+      "Bash(python EV_routing/main.py)",
+      "Bash(python -c \":*)",
+      "Bash(python -c \"import sys; sys.path.insert\\(0,''EV_routing''\\); from tools.data_loader import load_problem_data; print\\(''import ok''\\)\")"
     ]
   }
 }

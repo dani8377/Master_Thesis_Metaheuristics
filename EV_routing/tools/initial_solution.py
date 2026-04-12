@@ -40,14 +40,15 @@ def build_ev_feasible_solution(data: ProblemData, ev_params: EVParameters) -> li
     route        = build_nearest_neighbor_solution(data)
     dist_array   = data.dist_array
     dist_index   = data.dist_index
+    energy_array = data.energy_array
     station_ids  = set(data.stations["Node ID"].tolist())
     all_stations = data.stations["Node ID"].tolist()
-    consumption  = ev_params.energy_consumption_kwh_per_km
     capacity     = ev_params.battery_capacity_kwh
     threshold    = 0.5 * capacity
 
     battery = ev_params.initial_battery_kwh
     i = 0
+    skip_threshold_check = False  # prevents re-triggering insertion on the arc right after a station
 
     while i < len(route) - 1:
         origin = route[i]
@@ -56,14 +57,16 @@ def build_ev_feasible_solution(data: ProblemData, ev_params: EVParameters) -> li
         oi = dist_index.get(origin)
         di = dist_index.get(dest)
         if oi is None or di is None:
+            skip_threshold_check = False
             i += 1
             continue
 
-        energy_to_dest = dist_array[oi, di] * consumption
+        energy_to_dest = energy_array[oi, di]
 
-        if (battery - energy_to_dest) < threshold:
+        if (battery - energy_to_dest) < threshold and not skip_threshold_check:
             # Find nearest reachable station from origin
             best_station: str | None = None
+            best_si: int | None = None
             best_dist = float("inf")
             for s in all_stations:
                 if s == dest:
@@ -71,18 +74,23 @@ def build_ev_feasible_solution(data: ProblemData, ev_params: EVParameters) -> li
                 si = dist_index.get(s)
                 if si is None:
                     continue
-                d = dist_array[oi, si]
-                if d * consumption <= battery and d < best_dist:
+                if energy_array[oi, si] <= battery and dist_array[oi, si] < best_dist:
                     best_station = s
-                    best_dist = d
+                    best_si      = si
+                    best_dist    = dist_array[oi, si]
 
-            if best_station is not None:
+            if best_station is not None and best_si is not None:
                 route.insert(i + 1, best_station)
-                battery -= best_dist * consumption
+                battery -= energy_array[oi, best_si]
                 battery  = capacity
-                i += 1
+                # skip_threshold_check=True prevents re-inserting a station on the very
+                # next arc (station → dest), which would cause an infinite loop when
+                # energy from the station to dest also exceeds the threshold.
+                skip_threshold_check = True
+                i += 1  # advance to the inserted station
                 continue
 
+        skip_threshold_check = False
         battery -= energy_to_dest
         battery  = max(battery, 0.0)
 

@@ -9,6 +9,8 @@ class EVParameters:
     initial_battery_kwh: float
     energy_consumption_kwh_per_km: float
     average_speed_kmh: float
+    grade_factor: float = 3.0       # slope sensitivity: 10% grade → ±30% energy
+    speed_exponent: float = 2.0     # aerodynamic drag exponent (v^2)
 
 
 def energy_needed_kwh(distance_km: float, consumption_kwh_per_km: float) -> float:

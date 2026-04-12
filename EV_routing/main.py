@@ -16,6 +16,8 @@ def main() -> None:
         initial_battery_kwh=20.0,
         energy_consumption_kwh_per_km=0.50,
         average_speed_kmh=50.0,
+        grade_factor=3.0,    # used when generating sf_energy_matrix.csv
+        speed_exponent=2.0,  # used when generating sf_energy_matrix.csv
     )
 
     weights = ObjectiveWeights(
