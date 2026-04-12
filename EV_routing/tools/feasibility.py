@@ -3,7 +3,6 @@ from __future__ import annotations
 from collections import Counter
 
 from tools.data_loader import ProblemData
-from tools.energy import energy_needed_kwh
 
 
 def is_valid_basic_route(route: list[str], data: ProblemData) -> bool:
@@ -13,15 +12,14 @@ def is_valid_basic_route(route: list[str], data: ProblemData) -> bool:
     - contains only known nodes
     - visits every customer exactly once
     """
-
     if len(route) < 2:
         return False
 
     if route[0] != "DEPOT" or route[-1] != "DEPOT":
         return False
 
-    customer_ids = set(data.customers["Node ID"].tolist())
-    station_ids = set(data.stations["Node ID"].tolist())
+    customer_ids  = set(data.customers["Node ID"].tolist())
+    station_ids   = set(data.stations["Node ID"].tolist())
     allowed_nodes = {"DEPOT"} | customer_ids | station_ids
 
     if any(node not in allowed_nodes for node in route):
@@ -46,28 +44,25 @@ def is_energy_feasible(
     energy_consumption_kwh_per_km: float,
 ) -> bool:
     """
-    Hard EV feasibility:
-    - vehicle starts full
-    - battery decreases on each arc
-    - arriving at a station recharges to full
-    - returns False immediately if battery goes below zero
+    Hard EV feasibility check using fast numpy distance lookup.
+    Returns False immediately if battery goes below zero on any arc.
     """
-
-    battery_kwh = battery_capacity_kwh
-    distance_matrix = data.distance_matrix
+    dist_array  = data.dist_array
+    dist_index  = data.dist_index
     station_ids = set(data.stations["Node ID"].tolist())
 
+    battery_kwh = battery_capacity_kwh
+
     for i in range(len(route) - 1):
-        origin = route[i]
+        origin      = route[i]
         destination = route[i + 1]
 
-        if origin not in distance_matrix.index or destination not in distance_matrix.columns:
+        oi = dist_index.get(origin)
+        di = dist_index.get(destination)
+        if oi is None or di is None:
             return False
 
-        distance_km = float(distance_matrix.loc[origin, destination])
-        energy_kwh = energy_needed_kwh(distance_km, energy_consumption_kwh_per_km)
-
-        battery_kwh -= energy_kwh
+        battery_kwh -= dist_array[oi, di] * energy_consumption_kwh_per_km
         if battery_kwh < 0:
             return False
 

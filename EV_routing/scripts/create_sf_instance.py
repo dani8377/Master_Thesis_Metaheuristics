@@ -23,8 +23,8 @@ from tools.distance import (
 
 INPUT_CSV = "EV_routing/datasets/detailed_ev_charging_stations.csv"
 OUTPUT_DIR = "EV_routing/datasets"
-N_STATIONS = 10
-N_CUSTOMERS = 35
+N_STATIONS = 30
+N_CUSTOMERS = 75
 RANDOM_STATE = 42
 
 # ---------------------------------------------------------------------------
@@ -125,7 +125,6 @@ def save_outputs(
 
 
 def save_map(
-    output_dir: Path,
     stations_df: pd.DataFrame,
     customers_df: pd.DataFrame,
     depot_df: pd.DataFrame,
@@ -160,11 +159,12 @@ def save_map(
     ax.legend()
     plt.tight_layout()
 
-    figures_dir = output_dir / "figures"
+    figures_dir = Path(__file__).resolve().parents[1] / "figures"
     figures_dir.mkdir(exist_ok=True)
-    plt.savefig(figures_dir / "sf_instance_map.png", dpi=300)
+    save_path = figures_dir / "sf_instance_map.png"
+    plt.savefig(save_path, dpi=300)
     plt.close(fig)
-    print(f"Map saved to: {figures_dir / 'sf_instance_map.png'}")
+    print(f"Map saved to: {save_path}")
 
 
 def main() -> None:
@@ -195,7 +195,7 @@ def main() -> None:
     save_outputs(output_dir, depot, customers, stations_instance, nodes_df, distance_df)
 
     print("Generating map...")
-    save_map(output_dir, stations_instance, customers, depot)
+    save_map(stations_instance, customers, depot)
 
     print()
     print(f"Done. Files saved to: {Path(OUTPUT_DIR).resolve()}")

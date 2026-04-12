@@ -1,18 +1,21 @@
+import time
+
 from tools.data_loader import load_problem_data
 from tools.energy import EVParameters
 from tools.objective import ObjectiveWeights
 from algorithms.simmulated_annealing import simulated_annealing
 from tools.experiment import run_experiments
+from tools.plot import plot_convergence, print_comparison_table
 
 
 def main() -> None:
     data = load_problem_data("EV_routing/datasets")
 
     ev_params = EVParameters(
-        battery_capacity_kwh=60.0,
-        initial_battery_kwh=60.0,
-        energy_consumption_kwh_per_km=0.20,
-        average_speed_kmh=35.0,
+        battery_capacity_kwh=20.0,
+        initial_battery_kwh=20.0,
+        energy_consumption_kwh_per_km=0.50,
+        average_speed_kmh=50.0,
     )
 
     weights = ObjectiveWeights(
@@ -25,25 +28,27 @@ def main() -> None:
     )
 
     sa_kwargs = dict(
-        initial_temperature=1000.0,
+        initial_temperature=400.0,   # 80% acceptance of median worsening move (~88)
         cooling_rate=0.995,
         min_temperature=1e-3,
         iterations_per_temperature=50,
-        max_temp_steps=2000,
-        reheat_patience=150,
-        reheat_factor=0.3,
+        max_temp_steps=3000,         # enough to cool 400 → 0.001 (needs ~2635 steps)
+        reheat_patience=3000,        # effectively disabled — no reheat until full cooldown
+        reheat_factor=0.4,
     )
 
     # ------------------------------------------------------------------
     # Single run
     # ------------------------------------------------------------------
     print("=== Single Run ===")
+    t0 = time.perf_counter()
     best_solution, best_eval, stats = simulated_annealing(
         data=data,
         ev_params=ev_params,
         weights=weights,
         **sa_kwargs,
     )
+    single_run_time = time.perf_counter() - t0
 
     print("Route:", best_solution)
     print()
@@ -56,6 +61,7 @@ def main() -> None:
     print(f"  Total charging cost ($): {best_eval.total_charging_cost_usd:.4f}")
     print(f"  Battery violation (kWh): {best_eval.battery_violation_kwh:.4f}")
     print(f"  Infeasible visits:       {best_eval.infeasible_visits}")
+    print(f"  Runtime:                 {single_run_time:.2f}s")
     print()
     print("  --- SA diagnostics ---")
     print(f"  Candidates evaluated:    {stats.total_evaluated}")
@@ -69,10 +75,12 @@ def main() -> None:
     print()
 
     # ------------------------------------------------------------------
-    # Multi-seed experiment (10 independent runs)
+    # Multi-seed experiment
     # ------------------------------------------------------------------
     print("=== Multi-Seed Experiment (10 runs) ===")
-    results = run_experiments(
+    sa_results = run_experiments(
+        algorithm=simulated_annealing,
+        algorithm_name="Simulated Annealing",
         data=data,
         ev_params=ev_params,
         weights=weights,
@@ -81,14 +89,21 @@ def main() -> None:
         **sa_kwargs,
     )
     print()
-    print(f"  Best cost:      {results.best_cost:.4f}  (seed {results.best_seed})")
-    print(f"  Average cost:   {results.average_cost:.4f}")
-    print(f"  Worst cost:     {results.worst_cost:.4f}")
-    print(f"  Std deviation:  {results.std_cost:.4f}")
-    print(f"  Feasible runs:  {results.feasible_run_count}/{len(results.seeds)}")
+    print_comparison_table([sa_results])
     print()
-    print("Best route found across all runs:")
-    print(results.best_solution)
+    print(f"  Best seed:   {sa_results.best_seed}")
+    print(f"  Best route:  {sa_results.best_solution}")
+    print()
+
+    # ------------------------------------------------------------------
+    # Convergence plot
+    # ------------------------------------------------------------------
+    plot_convergence(
+        sa_results,
+        title="Simulated Annealing — Convergence (10 seeds)",
+        save_path="EV_routing/figures/sa_convergence.png",
+        show=False,
+    )
 
 
 if __name__ == "__main__":

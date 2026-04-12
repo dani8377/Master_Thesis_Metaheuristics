@@ -3,12 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from tools.data_loader import ProblemData
-from tools.energy import (
-    EVParameters,
-    energy_needed_kwh,
-    travel_time_hours,
-    charging_time_hours,
-)
+from tools.energy import EVParameters
 
 
 @dataclass
@@ -34,20 +29,6 @@ class RouteEvaluation:
     feasible: bool
 
 
-def build_station_price_lookup(data: ProblemData) -> dict[str, float]:
-    return {
-        str(row["Node ID"]): float(row["Cost (USD/kWh)"])
-        for _, row in data.stations.iterrows()
-    }
-
-
-def build_station_power_lookup(data: ProblemData) -> dict[str, float]:
-    return {
-        str(row["Node ID"]): float(row["Charging Capacity (kW)"])
-        for _, row in data.stations.iterrows()
-    }
-
-
 def evaluate_route(
     route: list[str],
     data: ProblemData,
@@ -65,79 +46,75 @@ def evaluate_route(
     - infeasibility penalties
     """
 
-    distance_matrix = data.distance_matrix
-    node_types = data.node_types
+    dist_array  = data.dist_array
+    dist_index  = data.dist_index
+    node_types  = data.node_types
+    station_price = data.station_price
+    station_power = data.station_power
 
-    station_price = build_station_price_lookup(data)
-    station_power = build_station_power_lookup(data)
+    consumption  = ev_params.energy_consumption_kwh_per_km
+    speed        = ev_params.average_speed_kmh
+    capacity     = ev_params.battery_capacity_kwh
+    battery_kwh  = ev_params.initial_battery_kwh
 
-    battery_kwh = ev_params.initial_battery_kwh
-
-    total_distance_km = 0.0
-    total_travel_time_h = 0.0
-    total_charging_time_h = 0.0
+    total_distance_km        = 0.0
+    total_travel_time_h      = 0.0
+    total_charging_time_h    = 0.0
     total_energy_consumed_kwh = 0.0
-    total_charging_cost_usd = 0.0
-    battery_violation_kwh = 0.0
-    infeasible_visits = 0
+    total_charging_cost_usd  = 0.0
+    battery_violation_kwh    = 0.0
+    infeasible_visits        = 0
 
     for i in range(len(route) - 1):
-        origin = route[i]
+        origin      = route[i]
         destination = route[i + 1]
 
-        if origin not in distance_matrix.index or destination not in distance_matrix.columns:
+        oi = dist_index.get(origin)
+        di = dist_index.get(destination)
+        if oi is None or di is None:
             infeasible_visits += 1
             continue
 
-        distance_km = float(distance_matrix.loc[origin, destination])
-        energy_kwh = energy_needed_kwh(
-            distance_km,
-            ev_params.energy_consumption_kwh_per_km,
-        )
-        travel_h = travel_time_hours(
-            distance_km,
-            ev_params.average_speed_kmh,
-        )
+        distance_km = dist_array[oi, di]
+        energy_kwh  = distance_km * consumption
+        travel_h    = distance_km / speed
 
-        total_distance_km += distance_km
+        total_distance_km         += distance_km
         total_energy_consumed_kwh += energy_kwh
-        total_travel_time_h += travel_h
+        total_travel_time_h       += travel_h
 
         battery_kwh -= energy_kwh
 
         if battery_kwh < 0:
-            battery_violation_kwh += abs(battery_kwh)
+            battery_violation_kwh += -battery_kwh
 
         if node_types.get(destination) == "station":
-            power_kw = station_power.get(destination, 0.0)
+            power_kw      = station_power.get(destination, 0.0)
             price_per_kwh = station_price.get(destination, 0.0)
 
             if power_kw <= 0:
                 infeasible_visits += 1
                 continue
 
-            current_battery_nonnegative = max(battery_kwh, 0.0)
+            current_battery_nonnegative = battery_kwh if battery_kwh > 0.0 else 0.0
 
             if charge_to_full:
-                charged_energy_kwh = ev_params.battery_capacity_kwh - current_battery_nonnegative
+                charged_energy_kwh = capacity - current_battery_nonnegative
             else:
-                charged_energy_kwh = max(0.0, -battery_kwh)
+                charged_energy_kwh = -battery_kwh if battery_kwh < 0.0 else 0.0
 
             if charged_energy_kwh > 0:
-                total_charging_time_h += charging_time_hours(charged_energy_kwh, power_kw)
+                total_charging_time_h   += charged_energy_kwh / power_kw
                 total_charging_cost_usd += charged_energy_kwh * price_per_kwh
-                battery_kwh = min(
-                    ev_params.battery_capacity_kwh,
-                    current_battery_nonnegative + charged_energy_kwh,
-                )
+                battery_kwh = min(capacity, current_battery_nonnegative + charged_energy_kwh)
 
     objective_value = (
-        weights.distance_weight * total_distance_km
-        + weights.travel_time_weight * (total_travel_time_h + total_charging_time_h)
-        + weights.energy_weight * total_energy_consumed_kwh
+        weights.distance_weight        * total_distance_km
+        + weights.travel_time_weight   * (total_travel_time_h + total_charging_time_h)
+        + weights.energy_weight        * total_energy_consumed_kwh
         + weights.charging_cost_weight * total_charging_cost_usd
         + weights.battery_violation_weight * battery_violation_kwh
-        + weights.infeasible_visit_weight * infeasible_visits
+        + weights.infeasible_visit_weight  * infeasible_visits
     )
 
     feasible = (battery_violation_kwh == 0.0) and (infeasible_visits == 0)
