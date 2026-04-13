@@ -116,7 +116,7 @@ def load_problem_data(dataset_dir: str | Path, ev_params: EVParameters) -> Probl
     # Build energy matrix from raw road data + ev_params (single source of truth).
     # Falls back to a flat rate if the road data files haven't been generated yet.
     elev_path = dataset_dir / "sf_node_elevations.csv"
-    dur_path  = dataset_dir / "sf_road_dur_s.csv"
+    dur_path  = dataset_dir / "sf_duration_matrix.csv"
     if elev_path.exists() and dur_path.exists():
         elev_df = pd.read_csv(elev_path).set_index("Node ID")
         elev_df.index = elev_df.index.map(str)

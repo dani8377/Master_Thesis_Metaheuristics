@@ -16,7 +16,7 @@ Output files written to EV_routing/datasets/:
     sf_charging_stations.csv
     sf_all_nodes.csv
     sf_distance_matrix.csv     ← road distances in km (from OSRM)
-    sf_road_dur_s.csv          ← travel durations in seconds (from OSRM)
+    sf_duration_matrix.csv     ← travel durations in seconds (from OSRM)
     sf_node_elevations.csv     ← elevation in metres (from SRTM)
 
 Map written to EV_routing/figures/sf_instance_map.png
@@ -368,7 +368,7 @@ def save_datasets(
     dist_df.to_csv(OUTPUT_DIR / "sf_distance_matrix.csv")
 
     dur_df = pd.DataFrame(dur_s, index=node_ids, columns=node_ids)
-    dur_df.to_csv(OUTPUT_DIR / "sf_road_dur_s.csv")
+    dur_df.to_csv(OUTPUT_DIR / "sf_duration_matrix.csv")
 
     elev_df = pd.DataFrame(
         [{"Node ID": nid, "Elevation_m": elevations_m[nid]} for nid in node_ids]

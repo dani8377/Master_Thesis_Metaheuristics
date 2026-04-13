@@ -29,7 +29,7 @@ Route format: `list[str]` starting and ending with `"DEPOT"`, e.g. `["DEPOT", "C
 
 ## Energy matrix
 
-Computed at load time in `load_problem_data(dataset_dir, ev_params)` from three raw data files (`sf_distance_matrix.csv`, `sf_road_dur_s.csv`, `sf_node_elevations.csv`). Changing `grade_factor` or `speed_exponent` in `EVParameters` takes effect on next run — no script re-run needed.
+Computed at load time in `load_problem_data(dataset_dir, ev_params)` from three raw data files (`sf_distance_matrix.csv`, `sf_duration_matrix.csv`, `sf_node_elevations.csv`). Changing `grade_factor` or `speed_exponent` in `EVParameters` takes effect on next run — no script re-run needed.
 
 ## Objective function
 
