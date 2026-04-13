@@ -6,7 +6,14 @@
       "Bash(python EV_routing/scripts/fetch_elevation_and_roads.py)",
       "Bash(python EV_routing/main.py)",
       "Bash(python -c \":*)",
-      "Bash(python -c \"import sys; sys.path.insert\\(0,''EV_routing''\\); from tools.data_loader import load_problem_data; print\\(''import ok''\\)\")"
+      "Bash(python -c \"import sys; sys.path.insert\\(0,''EV_routing''\\); from tools.data_loader import load_problem_data; print\\(''import ok''\\)\")",
+      "Bash(ls /Users/daniel/Desktop/Master_Thesis_Metaheuristics/EV_routing/datasets/sf_distance_matrix*.csv)",
+      "Bash(python EV_routing/scripts/build_instance.py)",
+      "Bash(python -c ':*)",
+      "Bash(python -m EV_routing.main)",
+      "Bash(python main.py)",
+      "Bash(PYTHONPATH=EV_routing python EV_routing/main.py)",
+      "Bash(git -C /Users/daniel/Desktop/Master_Thesis_Metaheuristics rev-parse --show-toplevel)"
     ]
   }
 }

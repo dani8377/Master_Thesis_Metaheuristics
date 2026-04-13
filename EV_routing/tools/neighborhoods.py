@@ -3,7 +3,7 @@ from __future__ import annotations
 import random
 
 from tools.data_loader import ProblemData
-from tools.energy import EVParameters
+from tools.battery import EVParameters
 
 
 # ---------------------------------------------------------------------------

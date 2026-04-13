@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from tools.data_loader import ProblemData
-from tools.energy import EVParameters
+from tools.battery import EVParameters
 
 
 def build_trivial_initial_solution(data: ProblemData) -> list[str]:

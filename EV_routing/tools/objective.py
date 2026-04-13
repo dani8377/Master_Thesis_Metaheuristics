@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from tools.data_loader import ProblemData
-from tools.energy import EVParameters
+from tools.battery import EVParameters
 
 
 @dataclass

@@ -1,7 +1,7 @@
 import time
 
 from tools.data_loader import load_problem_data
-from tools.energy import EVParameters
+from tools.battery import EVParameters
 from tools.objective import ObjectiveWeights
 from algorithms.simmulated_annealing import simulated_annealing
 from tools.experiment import run_experiments
@@ -9,16 +9,16 @@ from tools.plot import plot_convergence, print_comparison_table
 
 
 def main() -> None:
-    data = load_problem_data("EV_routing/datasets")
-
     ev_params = EVParameters(
         battery_capacity_kwh=20.0,
         initial_battery_kwh=20.0,
         energy_consumption_kwh_per_km=0.50,
         average_speed_kmh=50.0,
-        grade_factor=3.0,    # used when generating sf_energy_matrix.csv
-        speed_exponent=2.0,  # used when generating sf_energy_matrix.csv
+        grade_factor=3.0,
+        speed_exponent=2.0,
     )
+
+    data = load_problem_data("EV_routing/datasets", ev_params)
 
     weights = ObjectiveWeights(
         distance_weight=1.0,

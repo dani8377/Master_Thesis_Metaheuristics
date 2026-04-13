@@ -9,7 +9,7 @@ from tools.neighborhoods import generate_neighbor
 from tools.initial_solution import build_ev_feasible_solution
 from tools.feasibility import is_valid_basic_route
 from tools.data_loader import ProblemData
-from tools.energy import EVParameters
+from tools.battery import EVParameters
 
 
 @dataclass
