@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import math
 import random
+import time
 from dataclasses import dataclass, field
 
 from tools.objective import evaluate_route, ObjectiveWeights, RouteEvaluation
@@ -19,6 +20,9 @@ class SAStatistics:
     best_cost_history: list[float] = field(default_factory=list)
     current_cost_history: list[float] = field(default_factory=list)
     temperature_history: list[float] = field(default_factory=list)
+    # Cumulative evaluations at each temperature step — enables x-axis normalisation
+    # by evaluations when comparing against population-based algorithms.
+    evals_at_step: list[int] = field(default_factory=list)
 
     total_evaluated: int = 0
     total_improving_accepted: int = 0
@@ -46,33 +50,53 @@ def simulated_annealing(
     data: ProblemData,
     ev_params: EVParameters,
     weights: ObjectiveWeights,
-    initial_temperature: float = 1000.0,
+    initial_temperature: float = 400.0,
     cooling_rate: float = 0.995,
     min_temperature: float = 1e-3,
     iterations_per_temperature: int = 50,
-    max_temp_steps: int = 2000,
-    reheat_patience: int = 150,
-    reheat_factor: float = 0.3,
+    reheat_patience: int = 200,
+    reheat_factor: float = 0.4,
+    max_evaluations: int | None = None,
+    time_limit_s: float | None = None,
 ) -> tuple[list[str], RouteEvaluation, SAStatistics]:
     """
     Simulated annealing for EV routing.
 
     Parameters
     ----------
+    initial_temperature:
+        Starting temperature.
+    cooling_rate:
+        Multiplicative cooling factor applied after each temperature step.
+    min_temperature:
+        Temperature floor — the schedule never drops below this value, but the
+        search continues until the evaluation budget is exhausted.  This is
+        intentionally NOT a stopping criterion; ``max_evaluations`` is.
     iterations_per_temperature:
-        Number of neighbor attempts at each temperature level before cooling.
-    max_temp_steps:
-        Maximum number of temperature reductions (hard stopping criterion).
+        Number of neighbour attempts at each temperature level (Markov chain).
     reheat_patience:
-        Temperature steps without improvement before reheating.
+        Temperature steps without global improvement before reheating.
+        At 50 iters/step, patience=200 means ~10,000 evaluations of stagnation.
     reheat_factor:
-        Temperature after reheat = reheat_factor * initial_temperature.
+        After a reheat, T = reheat_factor × initial_temperature.
+    max_evaluations:
+        Hard stopping criterion — primary budget control shared with all algorithms.
+    time_limit_s:
+        Optional wall-clock limit.
 
     Returns
     -------
     (best_solution, best_evaluation, statistics)
     """
     stats = SAStatistics()
+    t_start = time.perf_counter()
+
+    def _over_budget() -> bool:
+        if max_evaluations is not None and stats.total_evaluated >= max_evaluations:
+            return True
+        if time_limit_s is not None and time.perf_counter() - t_start >= time_limit_s:
+            return True
+        return False
 
     current_solution = build_ev_feasible_solution(data, ev_params)
     current_eval = evaluate_route(current_solution, data, ev_params, weights)
@@ -85,13 +109,15 @@ def simulated_annealing(
     temperature = initial_temperature
     steps_without_improvement = 0
 
-    for _ in range(max_temp_steps):
-        if temperature < min_temperature:
-            break
-
+    # Primary stop: evaluation budget.  Temperature schedule is a floor,
+    # not a stopping criterion — SA continues (and reheats) until budget runs out.
+    while not _over_budget():
         step_improved = False
 
         for _ in range(iterations_per_temperature):
+            if _over_budget():
+                break
+
             candidate = generate_neighbor(current_solution, data, ev_params)
 
             if not is_valid_basic_route(candidate, data):
@@ -123,10 +149,12 @@ def simulated_annealing(
                 best_cost = current_cost
                 step_improved = True
 
-        temperature *= cooling_rate
+        # Floor temperature at min_temperature — don't stop because of it
+        temperature = max(temperature * cooling_rate, min_temperature)
         stats.best_cost_history.append(best_cost)
         stats.current_cost_history.append(current_cost)
         stats.temperature_history.append(temperature)
+        stats.evals_at_step.append(stats.total_evaluated)
 
         if step_improved:
             steps_without_improvement = 0

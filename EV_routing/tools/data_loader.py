@@ -24,6 +24,14 @@ class ProblemData:
     station_power: dict[str, float] = field(repr=False)   # node_id -> kW
     energy_array: np.ndarray = field(repr=False)  # NxN float64, arc energy kWh
 
+    # Precomputed sets/index arrays — avoid repeated pandas access in hot loops
+    customer_ids: frozenset[str] = field(repr=False)      # O(1) membership test
+    station_ids: frozenset[str] = field(repr=False)
+    all_customer_ids: list[str] = field(repr=False)       # ordered, matches customer_matrix_idx
+    all_station_ids: list[str] = field(repr=False)        # ordered, matches station_matrix_idx
+    customer_matrix_idx: np.ndarray = field(repr=False)   # customer pos → dist_array index
+    station_matrix_idx: np.ndarray = field(repr=False)    # station pos  → dist_array index
+
 
 def _build_energy_matrix(
     node_ids: list[str],
@@ -136,6 +144,12 @@ def load_problem_data(dataset_dir: str | Path, ev_params: EVParameters) -> Probl
         # Flat-rate fallback — runs before build_instance.py has been executed
         energy_array = dist_array * ev_params.energy_consumption_kwh_per_km
 
+    # Precomputed sets and index arrays (used by neighborhoods / feasibility hot paths)
+    all_customer_ids_list = [str(c) for c in customers["Node ID"].tolist() if str(c) in dist_index]
+    all_station_ids_list  = [str(s) for s in stations["Node ID"].tolist()  if str(s) in dist_index]
+    customer_matrix_idx = np.array([dist_index[c] for c in all_customer_ids_list], dtype=np.intp)
+    station_matrix_idx  = np.array([dist_index[s] for s in all_station_ids_list],  dtype=np.intp)
+
     return ProblemData(
         depot=depot,
         customers=customers,
@@ -147,4 +161,10 @@ def load_problem_data(dataset_dir: str | Path, ev_params: EVParameters) -> Probl
         station_price=station_price,
         station_power=station_power,
         energy_array=energy_array,
+        customer_ids=frozenset(all_customer_ids_list),
+        station_ids=frozenset(all_station_ids_list),
+        all_customer_ids=all_customer_ids_list,
+        all_station_ids=all_station_ids_list,
+        customer_matrix_idx=customer_matrix_idx,
+        station_matrix_idx=station_matrix_idx,
     )
