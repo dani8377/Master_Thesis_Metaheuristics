@@ -1,4 +1,6 @@
+import json
 import time
+from pathlib import Path
 
 from tools.data_loader import load_problem_data
 from tools.battery import EVParameters
@@ -6,8 +8,9 @@ from tools.objective import ObjectiveWeights
 from algorithms.simmulated_annealing import simulated_annealing
 from algorithms.genetic_algorithm import genetic_algorithm
 from algorithms.ant_colony import ant_colony_optimization
-from tools.compare import run_controlled_comparison, print_statistical_summary, print_detailed_metrics
-from tools.tuning import random_search
+from algorithms.greedy import greedy_nearest_neighbor
+from tools.compare import run_controlled_comparison, print_detailed_metrics
+from tools.statistics import pairwise_wilcoxon, print_wilcoxon_table, print_summary_table, to_latex_table
 from tools.plot import (
     plot_convergence,
     plot_convergence_by_evaluations,
@@ -16,56 +19,23 @@ from tools.plot import (
     plot_ga_diagnostics,
     plot_aco_diagnostics,
     plot_cost_breakdown,
+    plot_runtime_comparison,
     print_comparison_table,
 )
 
-FIGURES    = "EV_routing/figures"
+# ── Instance selection ────────────────────────────────────────────────────────
+# Change INSTANCE to switch between problem instances.
+# Each instance lives in EV_routing/instances/<name>/ and outputs go to
+# EV_routing/results/<name>/ — everything is kept separate per instance.
+INSTANCE      = "sf_75"
+INSTANCE_DIR  = Path(f"EV_routing/instances/{INSTANCE}")
+RESULTS_DIR   = Path(f"EV_routing/results/{INSTANCE}")
+FIGURES_DIR   = RESULTS_DIR / "figures"
+PARAMS_FILE   = RESULTS_DIR / "params.json"
+# ─────────────────────────────────────────────────────────────────────────────
+
 SEEDS      = list(range(10))
 MAX_EVALS  = 150_000   # shared evaluation budget for all algorithms
-
-# ── Hyperparameter tuning ─────────────────────────────────────────────────────
-# Set TUNE = True to run random-search tuning before the comparison.
-# Results are printed and used for the final 10-seed comparison.
-# TUNE = False → use the hand-picked defaults below (fast, reproducible).
-TUNE           = True
-TUNE_TRIALS    = 30          # random configurations per algorithm
-TUNE_SEEDS     = [0, 1]      # seeds used during tuning (independent of SEEDS)
-TUNE_EVALS     = 20_000      # evaluation budget per seed during tuning
-
-# Search spaces for random search.
-# Only algorithmic hyperparameters — budget (max_evaluations) is injected separately.
-SA_SPACE = {
-    "initial_temperature":      [50, 100, 200, 400, 600, 800, 1200],
-    "cooling_rate":             [0.988, 0.990, 0.992, 0.993, 0.995, 0.997, 0.999],
-    "iterations_per_temperature": [20, 30, 50, 75, 100],
-    "reheat_patience":          [50, 100, 150, 200, 300, 500],
-    "reheat_factor":            [0.2, 0.3, 0.4, 0.5, 0.7],
-}
-
-GA_SPACE = {
-    "population_size":  [40, 60, 80, 100, 150, 200],
-    "crossover_rate":   [0.70, 0.75, 0.80, 0.85, 0.90, 0.95],
-    "mutation_rate":    [0.05, 0.10, 0.15, 0.20, 0.25, 0.30],
-    "tournament_size":  [2, 3, 4, 5],
-    "elitism_count":    [1, 2, 3, 5],
-}
-
-MA_SPACE = {
-    **GA_SPACE,
-    "local_search_iters": [5, 10, 15, 20, 30, 50],
-}
-
-ACO_SPACE = {
-    "n_ants":                [10, 15, 20, 25, 30],
-    "alpha":                 [0.5, 1.0, 1.5, 2.0],
-    "beta":                  [2.0, 3.0, 4.0, 5.0, 6.0],
-    "rho":                   [0.05, 0.10, 0.15, 0.20, 0.30],
-    "q0":                    [0.70, 0.80, 0.85, 0.90, 0.95],
-    "battery_threshold_frac":[0.10, 0.20, 0.30, 0.40, 0.50],
-    "local_search_iters":    [0, 5, 10, 15, 20],
-    "candidate_list_k":      [0, 10, 15, 20, 30],
-}
-# ─────────────────────────────────────────────────────────────────────────────
 
 
 def main() -> None:
@@ -81,69 +51,41 @@ def main() -> None:
         speed_exponent=2.0,
     )
 
-    data = load_problem_data("EV_routing/datasets", ev_params)
+    data = load_problem_data(INSTANCE_DIR, ev_params)
 
-    weights = ObjectiveWeights(
-        distance_weight=1.0,
-        travel_time_weight=10.0,
-        energy_weight=2.0,
-        charging_cost_weight=20.0,
-        battery_violation_weight=10000.0,
-        infeasible_visit_weight=5000.0,
-    )
-
-    # ------------------------------------------------------------------
-    # Default (hand-picked) parameters — used when TUNE = False
-    # ------------------------------------------------------------------
-    sa_kwargs = dict(
-        initial_temperature=400.0,
-        cooling_rate=0.995,
-        iterations_per_temperature=50,
-        reheat_patience=200,
-        reheat_factor=0.4,
-    )
-
-    ga_kwargs = dict(
-        population_size=80,
-        crossover_rate=0.85,
-        mutation_rate=0.20,
-        tournament_size=3,
-        elitism_count=2,
-    )
-
-    ma_kwargs = {**ga_kwargs, "local_search_iters": 30}
-
-    aco_kwargs = dict(
-        n_ants=20,
-        alpha=1.0,
-        beta=3.0,
-        rho=0.1,
-        q0=0.9,
-        battery_threshold_frac=0.3,
-    )
+    # Load calibrated weights from weights.json (generated by scripts/calibrate_weights.py).
+    # Fall back to hand-picked defaults if the file doesn't exist yet.
+    _weights_file = RESULTS_DIR / "weights.json"
+    if _weights_file.exists():
+        _w = json.loads(_weights_file.read_text())["weights"]
+        weights = ObjectiveWeights(**_w)
+        print(f"Weights loaded from {_weights_file}")
+    else:
+        print("No weights.json found — using defaults. Run scripts/calibrate_weights.py first.")
+        weights = ObjectiveWeights(
+            distance_weight=1.0,
+            travel_time_weight=10.0,
+            energy_weight=2.0,
+            charging_cost_weight=20.0,
+            battery_violation_weight=10000.0,
+            infeasible_visit_weight=5000.0,
+        )
 
     # ------------------------------------------------------------------
-    # Hyperparameter tuning (optional)
+    # Parameters — loaded from params.json (run scripts/tune.py to update)
     # ------------------------------------------------------------------
-    if TUNE:
-        print("=" * 60)
-        print(f"Hyperparameter tuning — {TUNE_TRIALS} trials × {len(TUNE_SEEDS)} seeds"
-              f" × {TUNE_EVALS:,} evals")
-        print("=" * 60)
+    if not PARAMS_FILE.exists():
+        raise FileNotFoundError(
+            f"No params.json found at {PARAMS_FILE}. "
+            "Run: PYTHONPATH=EV_routing python EV_routing/scripts/tune.py"
+        )
+    with open(PARAMS_FILE) as _f:
+        _p = json.load(_f)
 
-        sa_kwargs,  _ = random_search(simulated_annealing,    SA_SPACE,  data, ev_params, weights,
-                                      TUNE_TRIALS, TUNE_SEEDS, TUNE_EVALS, "SA")
-        ga_kwargs,  _ = random_search(genetic_algorithm,       GA_SPACE,  data, ev_params, weights,
-                                      TUNE_TRIALS, TUNE_SEEDS, TUNE_EVALS, "GA")
-        ma_kwargs,  _ = random_search(genetic_algorithm,       MA_SPACE,  data, ev_params, weights,
-                                      TUNE_TRIALS, TUNE_SEEDS, TUNE_EVALS, "MA")
-        aco_kwargs, _ = random_search(ant_colony_optimization, ACO_SPACE, data, ev_params, weights,
-                                      TUNE_TRIALS, TUNE_SEEDS, TUNE_EVALS, "ACO")
-
-        print("Tuned parameters:")
-        for name, kw in [("SA", sa_kwargs), ("GA", ga_kwargs), ("MA", ma_kwargs), ("ACO", aco_kwargs)]:
-            print(f"  {name}: {kw}")
-        print()
+    sa_kwargs  = _p["SA"]
+    ga_kwargs  = _p["GA"]
+    ma_kwargs  = _p["MA"]
+    aco_kwargs = _p["ACO"]
 
     # ------------------------------------------------------------------
     # Single diagnostic run (SA)
@@ -251,7 +193,29 @@ def main() -> None:
     print()
 
     # ------------------------------------------------------------------
-    # Controlled multi-seed comparison  (SA vs GA vs MA vs ACO)
+    # Single diagnostic run (Greedy baseline — deterministic)
+    # ------------------------------------------------------------------
+    print("=" * 60)
+    print("Single Greedy run — baseline")
+    print("=" * 60)
+    t0 = time.perf_counter()
+    _, best_ev_greedy, _ = greedy_nearest_neighbor(data=data, ev_params=ev_params, weights=weights)
+    greedy_single_time = time.perf_counter() - t0
+
+    print(f"  Feasible:            {best_ev_greedy.feasible}")
+    print(f"  Objective:           {best_ev_greedy.objective_value:.4f}")
+    print(f"  Distance (km):       {best_ev_greedy.total_distance_km:.2f}")
+    print(f"  Travel time (h):     {best_ev_greedy.total_travel_time_h:.2f}")
+    print(f"  Charging time (h):   {best_ev_greedy.total_charging_time_h:.2f}")
+    print(f"  Energy (kWh):        {best_ev_greedy.total_energy_consumed_kwh:.2f}")
+    print(f"  Charging cost ($):   {best_ev_greedy.total_charging_cost_usd:.2f}")
+    print(f"  Battery violation:   {best_ev_greedy.battery_violation_kwh:.4f}")
+    print(f"  Infeasible visits:   {best_ev_greedy.infeasible_visits}")
+    print(f"  Runtime:             {greedy_single_time:.2f}s")
+    print()
+
+    # ------------------------------------------------------------------
+    # Controlled multi-seed comparison  (Greedy vs SA vs GA vs MA vs ACO)
     # ------------------------------------------------------------------
     print("=" * 60)
     print(f"Controlled comparison — {len(SEEDS)} seeds, budget={MAX_EVALS:,} evals")
@@ -259,6 +223,7 @@ def main() -> None:
 
     all_results = run_controlled_comparison(
         algorithms={
+            "Greedy":              greedy_nearest_neighbor,
             "Simulated Annealing": simulated_annealing,
             "Genetic Algorithm":   genetic_algorithm,
             "Memetic Algorithm":   genetic_algorithm,
@@ -271,6 +236,7 @@ def main() -> None:
         max_evaluations=MAX_EVALS,
         verbose=True,
         algorithm_kwargs={
+            "Greedy":              {},
             "Simulated Annealing": sa_kwargs,
             "Genetic Algorithm":   ga_kwargs,
             "Memetic Algorithm":   ma_kwargs,
@@ -278,77 +244,85 @@ def main() -> None:
         },
     )
 
-    sa_results, ga_results, ma_results, aco_results = all_results
+    greedy_results, sa_results, ga_results, ma_results, aco_results = all_results
 
     print()
     print_comparison_table(all_results)
     print()
     print_detailed_metrics(all_results)
-    print_statistical_summary(all_results)
+    print()
+    print_summary_table(all_results)
+
+    wilcoxon_tests = pairwise_wilcoxon(all_results)
+    print_wilcoxon_table(wilcoxon_tests)
+
+    print("LaTeX table:")
+    print(to_latex_table(all_results))
+    print()
 
     # ------------------------------------------------------------------
     # Figures
     # ------------------------------------------------------------------
     print("Saving figures …")
 
-    # 1. Per-algorithm convergence by step (internal view)
+    # 1. Per-algorithm convergence by step (not applicable to greedy)
     for res, tag in [(sa_results, "sa"), (ga_results, "ga"), (ma_results, "ma"), (aco_results, "aco")]:
         plot_convergence(
             res,
             title=f"{res.algorithm_name} — Convergence (10 seeds)",
-            save_path=f"{FIGURES}/{tag}_convergence_by_step.png",
+            save_path=FIGURES_DIR / f"{tag}_convergence_by_step.png",
             show=False,
         )
 
-    # 2. Convergence by evaluations — fair cross-algorithm comparison
+    # 2. Convergence by evaluations — fair cross-algorithm comparison (excludes greedy)
     plot_convergence_by_evaluations(
-        all_results,
+        [sa_results, ga_results, ma_results, aco_results],
         title=f"Convergence by objective evaluations (budget = {MAX_EVALS:,})",
-        save_path=f"{FIGURES}/convergence_by_evaluations.png",
+        save_path=FIGURES_DIR / "convergence_by_evaluations.png",
         show=False,
     )
 
-    # 3. Box plots — robustness across seeds
+    # 3. Box plots — all algorithms including greedy baseline
     plot_box_comparison(
         all_results,
         title="Solution quality distribution across 10 seeds",
-        save_path=f"{FIGURES}/box_comparison.png",
+        save_path=FIGURES_DIR / "box_comparison.png",
         show=False,
     )
 
-    # 4. SA diagnostics — temperature schedule + exploration gap + best/current
+    # 4. SA diagnostics
     plot_sa_diagnostics(
         sa_results,
         seed_idx=sa_results.best_run_index,
         title=f"SA diagnostics — best seed ({sa_results.best_seed})",
-        save_path=f"{FIGURES}/sa_diagnostics.png",
+        save_path=FIGURES_DIR / "sa_diagnostics.png",
         show=False,
     )
 
-    # 5. GA diagnostics — best vs mean, diversity, feasibility rate
+    # 5. GA diagnostics
     plot_ga_diagnostics(
         ga_results,
         seed_idx=ga_results.best_run_index,
         title=f"GA diagnostics — best seed ({ga_results.best_seed})",
-        save_path=f"{FIGURES}/ga_diagnostics.png",
+        save_path=FIGURES_DIR / "ga_diagnostics.png",
         show=False,
     )
 
-    # 6. MA diagnostics — same panels, shows effect of local search on population
+    # 6. MA diagnostics
     plot_ga_diagnostics(
         ma_results,
         seed_idx=ma_results.best_run_index,
         title=f"MA diagnostics — best seed ({ma_results.best_seed})",
-        save_path=f"{FIGURES}/ma_diagnostics.png",
+        save_path=FIGURES_DIR / "ma_diagnostics.png",
         show=False,
     )
 
-    # 7. ACO diagnostics — best vs iteration mean, pheromone CV, feasibility
+    # 7. ACO diagnostics
     plot_aco_diagnostics(
         aco_results,
         seed_idx=aco_results.best_run_index,
         title=f"ACO diagnostics — best seed ({aco_results.best_seed})",
-        save_path=f"{FIGURES}/aco_diagnostics.png",
+        save_path=FIGURES_DIR / "aco_diagnostics.png",
         show=False,
     )
 
@@ -356,12 +330,21 @@ def main() -> None:
     plot_cost_breakdown(
         all_results,
         title="Cost component breakdown (best solution per algorithm)",
-        save_path=f"{FIGURES}/cost_breakdown.png",
+        save_path=FIGURES_DIR / "cost_breakdown.png",
+        show=False,
+    )
+
+    # 9. Runtime comparison — wall-clock vs CPU time
+    plot_runtime_comparison(
+        all_results,
+        title=f"Runtime comparison — {len(SEEDS)} seeds, budget={MAX_EVALS:,} evals",
+        save_path=FIGURES_DIR / "runtime_comparison.png",
         show=False,
     )
 
     print()
-    print(f"All figures saved to {FIGURES}/")
+    print(f"All figures saved to {FIGURES_DIR}/")
+    print(f"Greedy best:              {greedy_results.best_solution}")
     print(f"SA  best (seed {sa_results.best_seed}):  {sa_results.best_solution}")
     print(f"GA  best (seed {ga_results.best_seed}):  {ga_results.best_solution}")
     print(f"MA  best (seed {ma_results.best_seed}):  {ma_results.best_solution}")

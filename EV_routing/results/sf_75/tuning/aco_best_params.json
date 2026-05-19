@@ -1,0 +1,14 @@
+{
+  "algorithm": "ACO",
+  "best_mean_cost": 2.62493273696787,
+  "best_params": {
+    "n_ants": 20,
+    "alpha": 0.5,
+    "beta": 6.0,
+    "rho": 0.3,
+    "q0": 0.85,
+    "battery_threshold_frac": 0.4,
+    "local_search_iters": 0,
+    "candidate_list_k": 0
+  }
+}

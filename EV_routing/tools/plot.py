@@ -9,6 +9,7 @@ import matplotlib.figure
 import matplotlib.gridspec as gridspec
 
 from tools.experiment import ExperimentResults
+from tools.tuning import TrialResult
 
 
 # ---------------------------------------------------------------------------
@@ -210,7 +211,81 @@ def plot_box_comparison(
 
 
 # ---------------------------------------------------------------------------
-# 4. SA diagnostics — explains SA's exploration/exploitation transition
+# 4. Runtime comparison — wall-clock vs CPU time per algorithm
+# ---------------------------------------------------------------------------
+
+def plot_runtime_comparison(
+    results: list[ExperimentResults],
+    title: str | None = None,
+    save_path: str | Path | None = None,
+    show: bool = True,
+) -> matplotlib.figure.Figure:
+    """
+    Two-panel figure:
+      Left  — mean wall-clock time ± std per algorithm (grouped bars).
+      Right — CPU efficiency = mean CPU time / mean wall time per algorithm.
+
+    CPU efficiency close to 1.0 means the algorithm is fully CPU-bound.
+    Lower values indicate time spent waiting (I/O, GIL contention, etc.).
+    """
+    names  = [r.algorithm_name for r in results]
+    wall_means = [r.average_runtime  for r in results]
+    wall_stds  = [r.std_runtime      for r in results]
+    cpu_means  = [r.average_cpu_time for r in results]
+    cpu_stds   = [r.std_cpu_time     for r in results]
+    efficiencies = [r.cpu_efficiency for r in results]
+
+    x      = np.arange(len(names))
+    width  = 0.35
+    colors = [_algo_color(i) for i in range(len(results))]
+
+    fig, (ax_time, ax_eff) = plt.subplots(1, 2, figsize=(13, 5))
+
+    # ── Left panel: wall vs CPU time bars ────────────────────────────────
+    for i, (wm, ws, cm, cs, color) in enumerate(
+        zip(wall_means, wall_stds, cpu_means, cpu_stds, colors)
+    ):
+        ax_time.bar(x[i] - width / 2, wm, width, yerr=ws,
+                    color=color, alpha=0.85, capsize=4, label=None)
+        ax_time.bar(x[i] + width / 2, cm, width, yerr=cs,
+                    color=color, alpha=0.40, capsize=4, hatch="//", label=None)
+
+    # Legend proxies
+    import matplotlib.patches as mpatches
+    wall_patch = mpatches.Patch(facecolor="grey", alpha=0.85, label="Wall-clock time")
+    cpu_patch  = mpatches.Patch(facecolor="grey", alpha=0.40, hatch="//", label="CPU time")
+    ax_time.legend(handles=[wall_patch, cpu_patch])
+
+    ax_time.set_xticks(x)
+    ax_time.set_xticklabels(names, rotation=15, ha="right")
+    ax_time.set_ylabel("Time (s)")
+    ax_time.set_title("Mean runtime per seed ± std")
+    ax_time.grid(True, axis="y", alpha=0.3)
+
+    # ── Right panel: CPU efficiency ───────────────────────────────────────
+    bars = ax_eff.bar(names, efficiencies,
+                      color=colors, alpha=0.75, edgecolor="white")
+    ax_eff.axhline(1.0, color="black", linewidth=0.8, linestyle="--",
+                   label="Fully CPU-bound (1.0)")
+    ax_eff.set_ylim(0, max(1.15, max(efficiencies) * 1.1))
+    ax_eff.set_ylabel("CPU time / wall time")
+    ax_eff.set_title("CPU efficiency")
+    ax_eff.set_xticklabels(names, rotation=15, ha="right")
+    ax_eff.legend(fontsize=9)
+    ax_eff.grid(True, axis="y", alpha=0.3)
+
+    for bar, v in zip(bars, efficiencies):
+        ax_eff.text(bar.get_x() + bar.get_width() / 2, v + 0.01,
+                    f"{v:.2f}", ha="center", va="bottom", fontsize=9)
+
+    fig.suptitle(title or "Runtime comparison", fontsize=13)
+    plt.tight_layout()
+    _save_and_show(fig, save_path, show)
+    return fig
+
+
+# ---------------------------------------------------------------------------
+# 5. SA diagnostics — explains SA's exploration/exploitation transition
 # ---------------------------------------------------------------------------
 
 def plot_sa_diagnostics(
@@ -458,7 +533,97 @@ def plot_aco_diagnostics(
 
 
 # ---------------------------------------------------------------------------
-# 8. Summary table (console)
+# 8. Tuning results — search landscape visualisation
+# ---------------------------------------------------------------------------
+
+def plot_tuning_results(
+    results: list[TrialResult],
+    algorithm_name: str = "",
+    save_path: str | Path | None = None,
+    show: bool = True,
+) -> matplotlib.figure.Figure:
+    """
+    Two-panel tuning analysis figure.
+
+    Top panel — Best-score progression over trials:
+        Shows how the search improves over time.  A plateau means more
+        trials are unlikely to help; a still-falling curve means the grid
+        or random search could benefit from more trials.
+
+    Bottom panels — Per-parameter sensitivity (one box per param):
+        Each sub-panel groups all trial scores by the value of one parameter,
+        revealing which parameters matter and which the algorithm is robust to.
+        A flat set of boxes = that parameter has little effect.
+        A steep gradient = worth tuning carefully.
+    """
+    if not results:
+        return plt.figure()
+
+    param_keys = [k for k in results[0] if k not in ("mean_cost", "seed_costs")]
+    costs = np.array([r["mean_cost"] for r in results])
+    n_trials = len(results)
+
+    # Running best (cumulative minimum)
+    running_best = np.minimum.accumulate(costs)
+
+    n_params = len(param_keys)
+    # Layout: 1 row for progression + rows of 3 for param sensitivity
+    n_sens_rows = (n_params + 2) // 3
+    total_rows = 1 + n_sens_rows
+    fig = plt.figure(figsize=(14, 3.5 * total_rows))
+    gs = gridspec.GridSpec(total_rows, 3, figure=fig, hspace=0.55, wspace=0.35)
+
+    title = f"{algorithm_name} — tuning results ({n_trials} trials)" if algorithm_name else f"Tuning results ({n_trials} trials)"
+    fig.suptitle(title, fontsize=12, y=1.0)
+
+    # --- Top: score progression spanning all 3 columns ---
+    ax_prog = fig.add_subplot(gs[0, :])
+    ax_prog.scatter(range(1, n_trials + 1), costs, s=18, alpha=0.5,
+                    color=_algo_color(0), zorder=2, label="Trial score")
+    ax_prog.plot(range(1, n_trials + 1), running_best, color=_algo_color(1),
+                 linewidth=2.0, label="Best so far")
+    ax_prog.set_xlabel("Trial")
+    ax_prog.set_ylabel("Mean objective value")
+    ax_prog.set_title("Score progression")
+    ax_prog.legend(fontsize=9)
+    ax_prog.grid(True, alpha=0.3)
+
+    # --- Bottom: per-parameter sensitivity ---
+    for p_idx, key in enumerate(param_keys):
+        row = 1 + p_idx // 3
+        col = p_idx % 3
+        ax = fig.add_subplot(gs[row, col])
+
+        # Group costs by the unique values of this parameter
+        unique_vals = sorted(set(r[key] for r in results))
+        grouped = [[r["mean_cost"] for r in results if r[key] == v] for v in unique_vals]
+        labels = [str(v) for v in unique_vals]
+
+        bp = ax.boxplot(
+            grouped,
+            labels=labels,
+            patch_artist=True,
+            medianprops={"color": "black", "linewidth": 1.5},
+            whiskerprops={"linewidth": 1.0},
+            capprops={"linewidth": 1.0},
+            flierprops={"markersize": 3},
+        )
+        for patch in bp["boxes"]:
+            patch.set_facecolor(_algo_color(p_idx))
+            patch.set_alpha(0.55)
+
+        ax.set_title(key, fontsize=9)
+        ax.set_ylabel("Score" if col == 0 else "")
+        ax.tick_params(axis="x", labelsize=7.5)
+        ax.grid(True, axis="y", alpha=0.3)
+
+    plt.tight_layout()
+    _save_and_show(fig, save_path, show)
+    return fig
+
+
+# ---------------------------------------------------------------------------
+# 9. Summary table (console)
 # ---------------------------------------------------------------------------
 
 def print_comparison_table(results_list: list[ExperimentResults]) -> None:

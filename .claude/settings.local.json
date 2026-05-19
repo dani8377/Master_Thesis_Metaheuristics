@@ -13,7 +13,10 @@
       "Bash(python -m EV_routing.main)",
       "Bash(python main.py)",
       "Bash(PYTHONPATH=EV_routing python EV_routing/main.py)",
-      "Bash(git -C /Users/daniel/Desktop/Master_Thesis_Metaheuristics rev-parse --show-toplevel)"
+      "Bash(git -C /Users/daniel/Desktop/Master_Thesis_Metaheuristics rev-parse --show-toplevel)",
+      "Bash(python -c ' *)",
+      "Bash(PYTHONPATH=EV_routing python -c \"import EV_routing.scripts.tune as t\")",
+      "Bash(PYTHONPATH=EV_routing python -c ' *)"
     ]
   }
 }
