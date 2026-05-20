@@ -7,7 +7,8 @@
       "Bash(python EV_routing/main.py)",
       "Bash(python -c \":*)",
       "Bash(python -c \"import sys; sys.path.insert\\(0,''EV_routing''\\); from tools.data_loader import load_problem_data; print\\(''import ok''\\)\")",
-      "Bash(/c/Users/chris/.local/bin/uv.exe python:*)"
+      "Bash(/c/Users/chris/.local/bin/uv.exe python:*)",
+      "Bash(python -c ' *)"
     ]
   }
 }

@@ -143,7 +143,7 @@ def run_experiments(
     weights: ObjectiveWeights,
     seeds: list[int],
     algorithm_name: str = "Algorithm",
-    verbose: bool = True,
+    show_progress: bool = True,
     **algorithm_kwargs,
 ) -> ExperimentResults:
     """
@@ -159,9 +159,13 @@ def run_experiments(
     weights:        Objective weights and penalty coefficients.
     seeds:          List of integer seeds — one run per seed.
     algorithm_name: Label used in plots and tables.
-    verbose:        If True, prints a one-line summary after each run.
+    show_progress:  If True, prints a one-line summary after each run.
+                    Named show_progress (not verbose) so that a verbose=True
+                    kwarg in algorithm_kwargs can pass through to the algorithm
+                    without a naming collision.
     **algorithm_kwargs:
-        Passed directly to the algorithm (e.g. SA temperature parameters).
+        Passed directly to the algorithm — including verbose=True/False for
+        per-step progress inside SA / GA / UMDA.
     """
     best_costs: list[float]           = []
     best_solutions: list[list[int]]   = []
@@ -187,7 +191,7 @@ def run_experiments(
         all_stats.append(stats)
         runtimes.append(runtime)
 
-        if verbose:
+        if show_progress:
             feasible_tag = "feasible" if eval_result.feasible else "infeasible"
             print(
                 f"  Run {idx + 1:>2}/{len(seeds)}  seed={seed}"
