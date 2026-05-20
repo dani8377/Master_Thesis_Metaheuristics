@@ -1,0 +1,222 @@
+# Cloud Scheduling — Master Configuration
+#
+# All algorithm hyperparameters, objective weights, and experiment settings.
+# Edit this file to reproduce any experiment; the code reads it at startup.
+#
+# Reproducibility: commit this file alongside results so the exact parameter
+# set that produced each experiment is version-controlled.
+
+experiment:
+  n_seeds: 10
+  n_tasks: 50
+  normalize_objective: true   # master switch; when false the raw-unit objective
+                               # is used and the mode weights apply directly.
+  normalize_method: sample    # 'sample' (Deb 2001, recommended) or 'worst_case'
+                               # sample      -> E_ref / L_ref = empirical mean over
+                               #                 ~150 feasible samples; lambda_cpu /
+                               #                 lambda_mem auto-calibrated to
+                               #                 penalty_multiplier x F_max_feasible
+                               #                 (Deb 2000 parameter-less penalty).
+                               # worst_case  -> legacy upper-bound refs from the
+                               #                 problem instance; cpu_penalty /
+                               #                 mem_penalty taken from this file.
+  n_calibration_samples: 150  # number of candidates drawn for sample-based norm
+  penalty_multiplier: 100.0   # lambda = penalty_multiplier x F_max_feasible (Deb 2000)
+  calibration_seed: 0         # deterministic calibration; report this in the thesis
+  min_feasible_calibration: 10  # min feasibles needed to use sample means; below this
+                                # the calibrator falls back to worst_case and warns.
+                                # Increase for tighter statistical confidence at the
+                                # cost of occasional fallback on hard instances.
+
+# ---------------------------------------------------------------------------
+# Objective function weights per focus mode
+#
+# With normalize_objective: true the four terms of F(X) are all in [0, 1].
+#
+# Weight justification (Balanced mode example):
+#   w_e = w_l = 1.0  -> equal preference for energy and latency reduction.
+#   lambda_cpu = lambda_mem = 10.0  -> a 10%-normalised violation adds 1.0 to
+#     F(X), equal to the full optimisation range of a single objective term.
+#     This ensures any non-trivial constraint violation dominates the objective,
+#     steering the search back to feasibility, while the penalty is not so large
+#     that it flattens the landscape and impedes exploration.
+#   gamma controls how steeply latency rises with server CPU utilisation.
+#     gamma=1 (linear) is the neutral assumption; increase for tighter SLA
+#     enforcement, decrease to tolerate denser packing in eco mode.
+#
+# With normalize_objective: false (raw units), use the original values:
+#   cpu_penalty: 1000.0, mem_penalty: 5.0  (compensate raw unit magnitude gap)
+# ---------------------------------------------------------------------------
+
+objective:
+  performance:
+    energy_weight: 0.2
+    latency_weight: 1.0
+    cpu_penalty: 10.0
+    mem_penalty: 10.0
+    congestion_factor: 1.5
+  balanced:
+    energy_weight: 1.0
+    latency_weight: 1.0
+    cpu_penalty: 10.0
+    mem_penalty: 10.0
+    congestion_factor: 1.0
+  eco:
+    energy_weight: 1.0
+    latency_weight: 0.2
+    cpu_penalty: 10.0
+    mem_penalty: 10.0
+    congestion_factor: 0.5
+
+# ---------------------------------------------------------------------------
+# Algorithm hyperparameters
+#
+# Equal evaluation budget (~150 000 calls to evaluate_schedule) for fair
+# comparison — see thesis Section X for the equal-budget argument.
+#
+#   SA:   iterations_per_temperature x max_temp_steps = 50 x 3000 = 150 000
+#   GA:   population_size x n_generations             = 50 x 3000 = 150 000
+#   UMDA: population_size x n_generations             = 100 x 1500 = 150 000
+#   B&B:  time_limit (seconds) — exact method, budget expressed as wall time
+#
+# SA temperature: initial_temperature: null -> auto-estimated from the problem
+#   instance so the acceptance rate at step 0 is ~80% regardless of whether
+#   the objective is normalised or not.  This is the theoretically correct
+#   approach (Kirkpatrick et al. 1983: T_0 chosen to accept ~80% of worsening
+#   moves at the start).  Override with a float to fix the value manually.
+# ---------------------------------------------------------------------------
+
+algorithms:
+  sa:
+    initial_temperature: null  # null = auto-estimate (recommended)
+    cooling_rate: 0.995
+    min_temperature: 1.0e-8
+    iterations_per_temperature: 50
+    max_temp_steps: 3000
+    reheat_patience: 300
+    reheat_factor: 0.4
+
+  ga:
+    population_size: 50
+    n_generations: 3000
+    tournament_size: 3      # standard setting: moderate selection pressure
+    crossover_prob: 0.8     # De Jong (1975) recommended range 0.6-0.9
+    mutation_prob: null     # null -> 1/n_tasks (Schaffer et al. 1989 rule of thumb)
+    elitism_count: 2
+
+  umda:
+    population_size: 100
+    n_generations: 1500
+    selection_ratio: 0.5    # truncation: keep best 50% (Muhlenbein & Paarmann 1996)
+    smoothing: 0.1          # Laplace smoothing: prevents model collapse
+    elitism_count: 1
+
+  bb:
+    time_limit: 60.0        # seconds; B&B reports optimality gap when stopped early
+    max_nodes: 500000       # node expansion limit (secondary guard)
+
+# ---------------------------------------------------------------------------
+# Sensitivity analysis sweep values (used with --sensitivity flag)
+# ---------------------------------------------------------------------------
+
+sensitivity:
+  n_seeds: 5
+
+  sa:
+    temperatures: [0.005, 0.01, 0.05, 0.1, 0.5, 1.0]  # calibrated for normalised F(X)
+    cooling_rates: [0.990, 0.992, 0.995, 0.997, 0.999]
+
+  ga:
+    population_sizes: [20, 50, 100]
+    crossover_probs: [0.6, 0.7, 0.8, 0.9, 1.0]
+
+  umda:
+    population_sizes: [50, 100, 200]
+    selection_ratios: [0.2, 0.3, 0.5, 0.7]
+
+# ---------------------------------------------------------------------------
+# Grid-search tuning (used with --tune flag)
+#
+# Sweeps the full Cartesian product of parameter values per algorithm,
+# evaluates each combination with n_seeds runs, picks the combination with
+# the lowest mean F(X), and writes:
+#     results/tuning_<algorithm>.csv   — all combinations + scores
+#     results/tuning_summary.md        — recommended values per algorithm
+#
+# This is run ONCE on a representative instance; copy the winning values
+# into the `algorithms:` section above, then run the main experiment.
+# Do NOT grid-search every run — that would multiply runtime by 100x+.
+#
+# Budget tip: keep n_seeds small (3) and grids modest (e.g. 3x3 per algo).
+# Total runs = sum over algos of (|grid|) * n_seeds.
+# ---------------------------------------------------------------------------
+
+tuning:
+  n_seeds: 3
+  reduced_budget: true   # if true, scale each algo's evaluation budget down
+                          # to 1/3 during tuning so the sweep runs in minutes.
+                          # The relative ranking of hyperparameter combinations
+                          # is preserved (Birattari 2009); the absolute F values
+                          # are not directly comparable to the main run.
+
+  # Grids extended past the previous boundary picks so the optimum cannot be
+  # an artefact of a truncated search range:
+  #   SA  cooling_rate     was [0.990, 0.995, 0.999]  -> winner 0.990 (LOWEST)
+  #   SA  iter_per_temp    was [25, 50, 100]          -> winner 100   (HIGHEST)
+  #   GA  population_size  was [25, 50, 100]          -> winner 100   (HIGHEST)
+  # UMDA's winner (pop=100, sel=0.5) sat in the middle of its grid, so its
+  # grid is unchanged.
+  sa:
+    cooling_rates: [0.980, 0.985, 0.990, 0.995, 0.999]
+    iterations_per_temperature: [25, 50, 100, 150, 200]
+
+  ga:
+    population_sizes: [25, 50, 100, 150, 200]
+    crossover_probs: [0.6, 0.8, 0.95]
+
+  umda:
+    population_sizes: [50, 100, 200]
+    selection_ratios: [0.3, 0.5, 0.7]
+
+# ---------------------------------------------------------------------------
+# Scalability analysis (used with --scalability flag)
+#
+# Runs the selected metaheuristics on problem instances of increasing size to
+# show how runtime and solution quality scale with the number of tasks.
+# n_seeds is kept small (3) since we run multiple sizes; the quality trend
+# is more informative than statistical precision at each individual size.
+# ---------------------------------------------------------------------------
+
+scalability:
+  # ---------------------------------------------------------------------------
+  # Axis 1 — Horizontal: synthetic tasks at increasing scale
+  # Synthetic tasks are drawn from the empirical distribution of the real dataset
+  # so instances remain statistically comparable across sizes.
+  # n_servers = max(4, n_tasks // server_ratio)  — keeps utilisation constant at ~50%.
+  # ---------------------------------------------------------------------------
+  horizontal:
+    task_sizes: [20, 50, 100, 200, 500]
+    server_ratio: 5
+    n_seeds: 3
+
+  # ---------------------------------------------------------------------------
+  # Axis 2 — Vertical / constraint tightness: fixed real 50-task instance,
+  # server count varied from loose (20) to near-critical (6).
+  # CPU utilisation rises from ~25% at m=20 to ~80%+ at m=6.
+  # Shows how quality and feasibility degrade as the packing problem gets harder.
+  # ---------------------------------------------------------------------------
+  vertical:
+    n_tasks: 50
+    server_counts: [20, 15, 10, 8, 6]
+    n_seeds: 3
+
+  # ---------------------------------------------------------------------------
+  # Axis 3 — Lower-bound reference: tiny exact-solvable instance.
+  # Branch & Bound is always included here to provide optimality gaps.
+  # Validates that metaheuristics find near-optimal solutions on small instances.
+  # n_servers chosen so utilisation ~50%, consistent with the main experiment.
+  # ---------------------------------------------------------------------------
+  lower_bound:
+    n_tasks: 20
+    n_servers: 4
+    n_seeds: 5

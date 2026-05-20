@@ -1,45 +1,9 @@
 """
-simulated_annealing.py — Simulated Annealing metaheuristic for the Cloud Scheduling problem.
+Simulated Annealing (SA) for the cloud task scheduling problem.
 
-PURPOSE
--------
-Implements the core search algorithm used in the thesis experiments.  Simulated
-Annealing (SA) is a probabilistic local-search metaheuristic that can escape
-local optima by occasionally accepting worsening moves.  The probability of
-accepting a worsening move decreases as the "temperature" cools, so the search
-gradually transitions from broad exploration to fine-grained exploitation.
-
-THE ALGORITHM (high level)
---------------------------
-1.  Build a greedy initial assignment (FFD bin-packing).
-2.  Repeat for up to max_temp_steps temperature levels:
-    a.  Generate iterations_per_temperature candidate neighbours.
-    b.  For each candidate:
-        - Hard-reject if structurally invalid (is_valid_assignment).
-        - Evaluate with evaluate_schedule().
-        - Accept immediately if the candidate improves the objective.
-        - Accept with probability exp(-Δ / T) if it worsens it  ← Metropolis.
-        - Track the global best seen so far.
-    c.  Cool: T ← T × cooling_rate.
-    d.  Reheat if stuck: if no improvement for reheat_patience steps,
-        reset T to reheat_factor × initial_temperature.
-3.  Return the best assignment, its evaluation, and diagnostic statistics.
-
-KEY PARAMETERS
---------------
-initial_temperature:    High → almost all moves accepted (random walk).
-                        Low  → almost no worsening moves accepted (greedy).
-                        Rule of thumb: set so that ~80% of typical worsening
-                        deltas are accepted at step 0.
-cooling_rate:           How fast temperature drops each step (0 < rate < 1).
-                        0.995 means temperature halves roughly every 138 steps.
-reheat_patience / factor: If stuck for this many steps, reheat to reheat_factor ×
-                        initial_temperature to escape a local basin.
-
-STATISTICS
-----------
-SAStatistics records per-step histories and counters useful for diagnosing
-whether the search is exploring well, cooling too fast, or stuck in a basin.
+Metropolis acceptance criterion with geometric cooling and adaptive reheating.
+Initial temperature is estimated automatically from the problem instance so the
+schedule is correctly calibrated regardless of objective function scale.
 """
 from __future__ import annotations
 
@@ -55,47 +19,158 @@ from tools.feasibility import is_valid_assignment
 
 
 # ---------------------------------------------------------------------------
-# Diagnostic statistics container
+# Statistics
 # ---------------------------------------------------------------------------
 
 @dataclass
 class SAStatistics:
-    """
-    Diagnostic data collected during one SA run.
+    """Per-run diagnostics: convergence histories and acceptance counters.
 
-    Histories (one entry per temperature step) let you plot the convergence
-    curve and see whether the search is cooling well.  Counters let you
-    diagnose acceptance behaviour and feasibility.
+    Budget accounting:
+      * total_evaluated         — main-loop evaluate_schedule() calls; this is
+                                   the denominator of acceptance_rate.
+      * t0_probe_evaluations    — calls consumed by the auto-T_0 probe (held
+                                   separately so they do not deflate the
+                                   acceptance-rate metric).
+      * total_budget_consumed   — sum of the two; this is what should be
+                                   compared against GA / UMDA budgets for a
+                                   fair equal-budget comparison.
     """
 
-    # Per-step histories (length = number of completed temperature steps)
     best_cost_history: list[float]    = field(default_factory=list)
     current_cost_history: list[float] = field(default_factory=list)
     temperature_history: list[float]  = field(default_factory=list)
 
-    # Counters accumulated over the whole run
-    total_evaluated: int            = 0   # candidates that passed the structural check
-    total_improving_accepted: int   = 0   # moves that reduced the objective
-    total_worsening_accepted: int   = 0   # moves that worsened the objective but were accepted (Metropolis)
-    total_rejected_structural: int  = 0   # candidates discarded by is_valid_assignment
-    total_feasible_evaluated: int   = 0   # evaluated candidates with zero penalty
+    total_evaluated: int            = 0
+    total_improving_accepted: int   = 0
+    total_worsening_accepted: int   = 0
+    total_rejected_structural: int  = 0
+    total_feasible_evaluated: int   = 0
+    t0_probe_evaluations: int       = 0   # evaluate_schedule() calls in auto-T_0 probe
 
-    reheat_count: int        = 0    # how many times the schedule was reheated
-    final_temperature: float = 0.0  # temperature when the run ended
+    reheat_count: int        = 0
+    final_temperature: float = 0.0
+
+    @property
+    def total_budget_consumed(self) -> int:
+        """Combined evaluation count (main loop + T_0 probe) for budget comparisons."""
+        return self.total_evaluated + self.t0_probe_evaluations
 
     @property
     def acceptance_rate(self) -> float:
-        """Fraction of evaluated candidates that were accepted (improving + Metropolis)."""
         if self.total_evaluated == 0:
             return 0.0
         return (self.total_improving_accepted + self.total_worsening_accepted) / self.total_evaluated
 
     @property
     def feasibility_rate(self) -> float:
-        """Fraction of evaluated candidates that were fully feasible (zero penalty)."""
         if self.total_evaluated == 0:
             return 0.0
         return self.total_feasible_evaluated / self.total_evaluated
+
+
+# ---------------------------------------------------------------------------
+# Temperature auto-estimation
+# ---------------------------------------------------------------------------
+
+def estimate_initial_temperature(
+    data: SchedulingProblemData,
+    weights: ObjectiveWeights,
+    target_acceptance: float = 0.80,
+    n_samples: int = 400,
+    verbose: bool = False,
+) -> tuple[float, int]:
+    """
+    Estimate T_0 so that `target_acceptance` fraction of random worsening moves
+    are accepted at the start of the search.
+
+    Method: sample n_samples random neighbour moves from the greedy solution,
+    collect the positive deltas (worsening), then solve
+        exp(-mean_delta / T_0) = target_acceptance  =>  T_0 = -mean_delta / ln(p).
+
+    Returns
+    -------
+    T_0 : float
+        Calibrated starting temperature.
+    n_evaluated : int
+        Number of evaluate_schedule() calls consumed by the probe (to be added
+        to the algorithm's total budget counter so SA, GA, UMDA budgets remain
+        directly comparable).
+
+    Feasibility filter (theoretical motivation):
+    --------------------------------------------
+    Worsening moves that CHANGE feasibility (e.g. greedy is feasible -> candidate
+    violates capacity) produce huge deltas dominated by the lambda*violation
+    penalty term.  Calibrating T_0 on those deltas inflates the temperature
+    relative to the scale of useful (feasibility-preserving) improvements,
+    causing SA to spend most of its budget bouncing between infeasible
+    neighbourhoods before T finally drops enough to see real improvements.
+
+    We therefore filter deltas to FEASIBILITY-PRESERVING moves: candidate's
+    feasibility status must match the current's.  This calibrates T_0 to the
+    objective-gradient scale within the feasible region (or within the
+    infeasible region, whichever the search starts in).
+
+    If too few feasibility-preserving worsening deltas are found (rare, only at
+    extreme constraint tightness), fall back to the unfiltered set so we
+    still get a non-degenerate T_0 estimate.  If even the unfiltered set is
+    empty (degenerate landscape with no worsening moves observed), fall back
+    to T_0 = 1.0 and emit a warning.
+    """
+    assignment       = build_greedy_assignment(data)
+    current_eval     = evaluate_schedule(assignment, data, weights)
+    current_cost     = current_eval.objective_value
+    current_feasible = current_eval.feasible
+    n_evaluated      = 1  # the greedy evaluation above
+
+    deltas_filtered: list[float] = []   # feasibility-preserving worsening (preferred)
+    deltas_all: list[float]      = []   # all worsening (fallback)
+    for _ in range(n_samples):
+        candidate = generate_neighbor(assignment, data)
+        if not is_valid_assignment(candidate, data):
+            continue
+        candidate_eval = evaluate_schedule(candidate, data, weights)
+        n_evaluated   += 1
+        candidate_cost = candidate_eval.objective_value
+        delta = candidate_cost - current_cost
+        if delta > 0:
+            deltas_all.append(delta)
+            if candidate_eval.feasible == current_feasible:
+                deltas_filtered.append(delta)
+        # Occasionally walk forward so we sample diverse parts of the landscape
+        if random.random() < 0.15:
+            assignment       = candidate
+            current_cost     = candidate_cost
+            current_feasible = candidate_eval.feasible
+
+    # Prefer the feasibility-preserving sample; fall back if too few were found
+    if len(deltas_filtered) >= 10:
+        deltas = deltas_filtered
+        if verbose:
+            print(f"  [SA] T_0 calibration: {len(deltas)} feasibility-preserving"
+                  f" worsening deltas (out of {len(deltas_all)} total worsening)")
+    elif deltas_all:
+        deltas = deltas_all
+        print(
+            "  [SA] T_0 calibration WARNING: only "
+            f"{len(deltas_filtered)} feasibility-preserving worsening deltas found"
+            f" (< 10 threshold); using all {len(deltas_all)} worsening deltas."
+            " T_0 may be inflated by penalty-term magnitudes."
+        )
+    else:
+        print(
+            "  " + "!" * 70 + "\n"
+            "  [SA] T_0 calibration FALLBACK: no worsening moves observed in "
+            f"{n_samples} probes.\n"
+            "    Falling back to T_0 = 1.0 (safe default for normalised F).\n"
+            "    This indicates an extremely flat or degenerate landscape;\n"
+            "    SA may behave like pure hill-climbing.\n"
+            "  " + "!" * 70
+        )
+        return 1.0, n_evaluated
+
+    mean_delta = sum(deltas) / len(deltas)
+    return -mean_delta / math.log(target_acceptance), n_evaluated  # log(p<1) < 0 -> result > 0
 
 
 # ---------------------------------------------------------------------------
@@ -105,52 +180,64 @@ class SAStatistics:
 def simulated_annealing(
     data: SchedulingProblemData,
     weights: ObjectiveWeights,
-    initial_temperature: float = 5000.0,
+    initial_temperature: float | None = None,  # None -> auto-estimate
     cooling_rate: float = 0.995,
-    min_temperature: float = 1e-3,
+    min_temperature: float = 1e-8,
     iterations_per_temperature: int = 50,
-    max_temp_steps: int = 2000,
-    reheat_patience: int = 150,
-    reheat_factor: float = 0.3,
+    max_temp_steps: int = 3000,
+    reheat_patience: int = 300,
+    reheat_factor: float = 0.4,
+    verbose: bool = False,
 ) -> tuple[list[int], ScheduleEvaluation, SAStatistics]:
     """
-    Run Simulated Annealing for cloud resource allocation scheduling.
+    Run Simulated Annealing for cloud resource allocation.
 
-    Returns
-    -------
-    best_assignment:  list[int] of length n_tasks, where entry i is the
-                      index of the server task i is placed on.
-    best_eval:        Full ScheduleEvaluation of that assignment.
-    stats:            SAStatistics with per-step histories and counters.
+    When initial_temperature is None (or 0), it is estimated automatically
+    so that ~80% of random worsening moves are accepted at step 0.  This
+    keeps the annealing schedule correctly calibrated after objective normalisation.
+
+    Returns (best_assignment, best_evaluation, diagnostics).
     """
     stats = SAStatistics()
 
-    # ---- Initialisation ---- #
-    current_solution = build_greedy_assignment(data)  # greedy FFD start
+    # ---- Temperature initialisation ----
+    if initial_temperature is None or initial_temperature <= 0.0:
+        initial_temperature, t0_probes = estimate_initial_temperature(
+            data, weights, verbose=verbose,
+        )
+        # Held in a separate counter so it does not deflate acceptance_rate;
+        # surfaced via stats.total_budget_consumed for budget-comparison plots.
+        stats.t0_probe_evaluations = t0_probes
+        if verbose:
+            print(f"  [SA] Auto T_0 = {initial_temperature:.6f}"
+                  f"  ({t0_probes} probe evaluations consumed)")
+
+    # ---- Solution initialisation ----
+    current_solution = build_greedy_assignment(data)
     current_eval     = evaluate_schedule(current_solution, data, weights)
     current_cost     = current_eval.objective_value
 
-    # Keep a copy of the best solution seen anywhere during the run
     best_solution = current_solution[:]
     best_eval     = current_eval
     best_cost     = current_cost
 
     temperature               = initial_temperature
-    steps_without_improvement = 0  # used to trigger reheats
+    steps_without_improvement = 0
 
-    # ---- Main SA loop ---- #
-    for _ in range(max_temp_steps):
-        # Early termination if temperature has dropped below the threshold
+    verbose_interval = max(1, max_temp_steps // 10)
+    _window_evals    = 0
+    _window_accepts  = 0
+
+    # ---- Main loop ----
+    for step_num in range(max_temp_steps):
         if temperature < min_temperature:
             break
 
-        step_improved = False  # did the global best improve this temperature step?
+        step_improved = False
 
-        # Inner loop: generate and evaluate candidates at this temperature
         for _ in range(iterations_per_temperature):
             candidate = generate_neighbor(current_solution, data)
 
-            # Hard-reject structurally invalid candidates (wrong length / index)
             if not is_valid_assignment(candidate, data):
                 stats.total_rejected_structural += 1
                 continue
@@ -158,50 +245,67 @@ def simulated_annealing(
             candidate_eval = evaluate_schedule(candidate, data, weights)
             candidate_cost = candidate_eval.objective_value
             stats.total_evaluated += 1
+            _window_evals += 1
             if candidate_eval.feasible:
                 stats.total_feasible_evaluated += 1
 
-            delta = candidate_cost - current_cost  # negative = improvement
+            delta = candidate_cost - current_cost
 
             if delta < 0:
-                # Improving move — always accept
                 current_solution = candidate
                 current_eval     = candidate_eval
                 current_cost     = candidate_cost
                 stats.total_improving_accepted += 1
+                _window_accepts += 1
             elif random.random() < math.exp(-delta / temperature):
-                # Worsening move — accept with Metropolis probability
-                # At high T: exp(-Δ/T) ≈ 1 (almost always accept)
-                # At low  T: exp(-Δ/T) ≈ 0 (almost never accept)
+                # Metropolis: accept worsening move with probability exp(-delta/T)
                 current_solution = candidate
                 current_eval     = candidate_eval
                 current_cost     = candidate_cost
                 stats.total_worsening_accepted += 1
+                _window_accepts += 1
 
-            # Update global best if the *current* solution just improved it
             if current_cost < best_cost:
                 best_solution = current_solution[:]
                 best_eval     = current_eval
                 best_cost     = current_cost
                 step_improved = True
 
-        # ---- Cooling ---- #
+        # ---- Cooling ----
         temperature *= cooling_rate
         stats.best_cost_history.append(best_cost)
         stats.current_cost_history.append(current_cost)
         stats.temperature_history.append(temperature)
 
-        # ---- Reheat logic ---- #
+        # ---- Reheat if stuck ----
         if step_improved:
             steps_without_improvement = 0
         else:
             steps_without_improvement += 1
 
         if steps_without_improvement >= reheat_patience:
-            # Stuck: boost temperature to escape the current basin
             temperature               = reheat_factor * initial_temperature
             steps_without_improvement = 0
             stats.reheat_count       += 1
+
+        # ---- Verbose progress ----
+        if verbose and (step_num + 1) % verbose_interval == 0:
+            t_frac      = temperature / initial_temperature
+            window_rate = _window_accepts / max(1, _window_evals)
+            _window_evals = _window_accepts = 0
+            phase = (
+                "exploring  (high T)"   if t_frac > 0.30 else
+                "transitioning"          if t_frac > 0.05 else
+                "exploiting (low T)"
+            )
+            print(
+                f"  [SA] step {step_num+1:>4}/{max_temp_steps}"
+                f"  T={temperature:.4f}"
+                f"  best={best_cost:.4f}"
+                f"  accept={window_rate:.1%}"
+                f"  reheats={stats.reheat_count}"
+                f"  [{phase}]"
+            )
 
     stats.final_temperature = temperature
     return best_solution, best_eval, stats

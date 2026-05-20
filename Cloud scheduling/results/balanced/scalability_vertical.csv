@@ -1,0 +1,16 @@
+algorithm,n_servers,cpu_util_pct,avg_runtime_s,avg_cost,improvement_over_greedy_pct,feasible_pct
+Simulated Annealing,20,26.3,7.6280,1.7692,12.77,100.0
+Simulated Annealing,15,33.7,7.1168,1.8615,8.42,100.0
+Simulated Annealing,10,52.9,7.1057,1.9359,3.78,100.0
+Simulated Annealing,8,63.0,7.0410,1.9021,4.86,100.0
+Simulated Annealing,6,80.6,7.2782,0.8086,0.00,100.0
+Genetic Algorithm,20,26.3,6.5272,1.7155,15.42,100.0
+Genetic Algorithm,15,33.7,6.4058,1.7316,14.81,100.0
+Genetic Algorithm,10,52.9,6.3214,1.8130,9.89,100.0
+Genetic Algorithm,8,63.0,6.3724,1.8254,8.69,100.0
+Genetic Algorithm,6,80.6,6.3808,0.7816,3.35,100.0
+UMDA (EDA),20,26.3,5.6455,1.7156,15.41,100.0
+UMDA (EDA),15,33.7,5.5611,1.7294,14.93,100.0
+UMDA (EDA),10,52.9,5.5219,1.8141,9.84,100.0
+UMDA (EDA),8,63.0,5.6463,1.8314,8.39,100.0
+UMDA (EDA),6,80.6,5.6689,0.7851,2.91,100.0

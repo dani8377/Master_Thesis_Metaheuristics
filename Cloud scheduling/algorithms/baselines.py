@@ -13,7 +13,7 @@ WHY INCLUDE BASELINES?
 Including baselines in the thesis results table answers the fundamental question:
 "How much does the metaheuristic actually contribute?"
 
-  - If SA/GA/UMDA achieve dramatically lower costs than the greedy FFD baseline,
+  - If SA/GA/UMDA achieve dramatically lower costs than the greedy BFD baseline,
     that validates the investment in metaheuristic search.
   - If the greedy baseline is already near-optimal, that tells us the problem
     structure is well-suited to greedy construction and long searches may not
@@ -24,10 +24,11 @@ Including baselines in the thesis results table answers the fundamental question
 THREE BASELINES
 ---------------
 greedy_ffd_baseline:
-    First-Fit Decreasing bin-packing — the same initial solution that SA and
+    Best-Fit Decreasing bin-packing — the same initial solution that SA and
     GA start from.  It is deterministic: all seeds give identical results.
     Including it isolates the improvement attributable to the search beyond
-    the initial construction.
+    the initial construction.  (The "ffd" in the function name is a legacy
+    label kept for backwards-compatible imports; the implementation is BFD.)
 
 round_robin_baseline:
     Cyclic assignment: task i → server (i % n_servers).  Spreads tasks evenly
@@ -91,10 +92,14 @@ def greedy_ffd_baseline(
     **_kwargs,
 ) -> tuple[list[int], ScheduleEvaluation, BaselineStatistics]:
     """
-    One-shot greedy First-Fit Decreasing assignment (same as SA/GA start point).
+    One-shot greedy Best-Fit Decreasing assignment (same as SA/GA start point).
 
     Tasks are sorted heaviest-CPU-first and placed on the most-loaded server
     that still has capacity.  Deterministic — identical result across all seeds.
+
+    The "ffd" in this function name is a legacy label retained for
+    backwards-compatible imports; the implementation in build_greedy_assignment
+    is Best-Fit Decreasing (BFD), not First-Fit Decreasing.
 
     This baseline answers: "How much does the metaheuristic improve on the
     greedy construction it starts from?"

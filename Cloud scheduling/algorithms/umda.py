@@ -1,90 +1,23 @@
 """
-umda.py — UMDA (Univariate Marginal Distribution Algorithm) for Cloud Scheduling.
+UMDA (Univariate Marginal Distribution Algorithm) for the cloud task scheduling problem.
 
-PURPOSE
--------
-Implements UMDA, a member of the Estimation of Distribution Algorithm (EDA) family.
-Unlike Simulated Annealing (which explores via a single trajectory of small moves)
-or Genetic Algorithm (which recombines solutions via crossover and mutation), UMDA
-learns an explicit *probabilistic model* of good solutions and generates new
-candidates by *sampling* from that model.  No crossover or mutation operators are
-needed — the model plays the role of implicit recombination.
+An Estimation of Distribution Algorithm (EDA): instead of crossover and mutation,
+UMDA learns a probability matrix P[task][server] from the best solutions each
+generation and samples new candidates from it.  Laplace smoothing prevents early
+collapse of the model.  Budget calibrated to ~150 000 evaluations to match SA/GA.
 
-THE ALGORITHM (high level)
---------------------------
-1.  Initialise a population of pop_size candidate solutions.
-    One solution is built with the greedy FFD heuristic; the rest are random.
-2.  Evaluate every individual.
-3.  Repeat for n_generations generations:
-    a.  Truncation selection: sort individuals by objective value (ascending)
-        and keep the best n_select = floor(pop_size × selection_ratio) of them.
-    b.  Build the probability model from the selected set:
-        P[i][j] = (count of selected solutions where task i → server j
-                   + smoothing)
-                / (n_selected + n_servers × smoothing)
-        Laplace smoothing prevents zero probabilities that would permanently
-        eliminate a server from consideration for a given task.
-    c.  Sample pop_size new individuals from the model:
-        for each task i independently, draw its server from distribution P[i].
-    d.  Elitism: inject the global best-ever solution into the new population,
-        replacing the worst sampled individual.  This prevents the algorithm
-        from "forgetting" the best solution found.
-    e.  Evaluate all new individuals and update the global best.
-4.  Return the best assignment seen across all generations.
-
-THE UNIVARIATE MODEL
---------------------
-The model is a matrix P of shape (n_tasks × n_servers) where each row P[i]
-is a discrete probability distribution over servers for task i.  Rows are
-treated as *independent* — the probability of task i going to server j does
-not depend on where task k goes.
-
-This independence assumption is the defining feature of UMDA ("univariate" =
-one-dimensional marginals only).  The full joint distribution would have
-n_servers^n_tasks = 10^50 states — completely intractable.  The univariate
-model uses only n_tasks × n_servers = 50 × 10 = 500 parameters.
-
-The independence assumption is approximately valid here: while server loads
-couple tasks together (a task's latency depends on what else is on its server),
-the coupling is mediated through the objective rather than through hard
-combinatorial constraints, so the model still captures the dominant signal.
-
-MODEL ENTROPY
--------------
-The Shannon entropy of each row P[i] indicates how confident the model is
-about task i's server placement:
-  - High entropy (≈ log2(10) ≈ 3.32 bits) → model is uncertain; broad search.
-  - Low entropy (≈ 0 bits) → model has converged; task i always goes to one server.
-Tracking mean entropy over generations shows when the search has converged.
-
-SELECTION
----------
-Truncation selection: keep the top selection_ratio fraction of the population.
-With selection_ratio=0.5 (default), the best 50 of 100 individuals are selected
-each generation.  Truncation selection is simple, deterministic, and standard
-in EDA literature.
-
-COMPUTATIONAL BUDGET
---------------------
-With default parameters (population_size=100, n_generations=1500), the total
-number of evaluate_schedule() calls is approximately:
-    population_size + n_generations × (population_size - elitism_count)
-    = 100 + 1500 × 99 = 148,600
-This is intentionally calibrated to match SA's ~150,000 evaluations for a
-fair algorithm comparison under equal computational budget.
-
-STATISTICS
-----------
-UMDAStatistics mirrors the SAStatistics and GAStatistics interface: it exposes
-best_cost_history (one entry per generation), so plot_convergence() in plot.py
-works for all three algorithms without any code changes.  The additional
-model_entropy_history field provides insight into convergence behaviour.
+Performance note: all inner-loop operations (model building, sampling, entropy)
+are implemented as vectorised NumPy operations.  This keeps UMDA competitive in
+wall-clock time even at n_tasks > 200, where a pure-Python sampling loop would
+be prohibitively slow (each model sample requires n_tasks draws).
 """
 from __future__ import annotations
 
 import math
 import random
 from dataclasses import dataclass, field
+
+import numpy as np
 
 from tools.data_loader import SchedulingProblemData
 from tools.objective import evaluate_schedule, ObjectiveWeights, ScheduleEvaluation
@@ -97,29 +30,18 @@ from tools.initial_solution import build_greedy_assignment, build_random_assignm
 
 @dataclass
 class UMDAStatistics:
-    """
-    Diagnostic data collected during one UMDA run.
+    """Per-run diagnostics: convergence histories, model entropy, and evaluation counts."""
 
-    best_cost_history has one entry per generation and is the field accessed
-    by plot.py to draw convergence curves — it must use exactly this name.
-
-    model_entropy_history provides a diagnostic of model convergence:
-    when entropy stops decreasing, the model has identified stable
-    server-task preferences and is no longer learning new structure.
-    """
-
-    # Per-generation histories (length == n_generations_completed)
-    best_cost_history: list[float]     = field(default_factory=list)
+    best_cost_history: list[float]     = field(default_factory=list)  # one per generation
     mean_cost_history: list[float]     = field(default_factory=list)
-    model_entropy_history: list[float] = field(default_factory=list)
+    model_entropy_history: list[float] = field(default_factory=list)  # mean Shannon entropy of P
 
-    # Aggregate counters
     total_evaluations: int       = 0
     n_generations_completed: int = 0
 
 
 # ---------------------------------------------------------------------------
-# Probability model helpers
+# Probability model helpers (vectorised NumPy implementations)
 # ---------------------------------------------------------------------------
 
 def _build_probability_model(
@@ -127,7 +49,7 @@ def _build_probability_model(
     n_tasks: int,
     n_servers: int,
     smoothing: float,
-) -> list[list[float]]:
+) -> np.ndarray:
     """
     Estimate the univariate probability model from a set of selected solutions.
 
@@ -137,74 +59,81 @@ def _build_probability_model(
         P[i][j] = (count(a[i] == j for a in selected) + smoothing)
                 / (len(selected) + n_servers * smoothing)
 
-    Laplace smoothing ensures P[i][j] > 0 for all (i, j), preventing any
-    server from being permanently excluded from future samples.  A smoothing
-    value of 0.1 is negligible compared to the empirical counts once
-    len(selected) ≥ 2, but sufficient to keep every option reachable.
+    Implementation: fully vectorised via np.bincount on a flat index, avoiding
+    any Python loop over tasks or solutions.
 
-    Returns a list-of-lists (Python floats) so that random.choices() can be
-    used directly for sampling, preserving the experiment harness's seed control.
+    Returns a (n_tasks, n_servers) float64 array where each row is a valid
+    probability distribution (rows sum to 1.0).
     """
     n_selected = len(selected)
-    denominator = float(n_selected + n_servers * smoothing)
-    model: list[list[float]] = []
+    # Stack into array: shape (n_selected, n_tasks); values in [0, n_servers)
+    arr = np.array(selected, dtype=np.intp)  # (n_selected, n_tasks)
 
-    for i in range(n_tasks):
-        # Initialise all counts with the Laplace smoothing term
-        counts = [smoothing] * n_servers
-        for sol in selected:
-            counts[sol[i]] += 1.0  # increment the server this solution chose for task i
+    # Flat index: (task_idx * n_servers + server_idx) uniquely identifies a
+    # (task, server) pair in [0, n_tasks * n_servers).
+    # arr.T has shape (n_tasks, n_selected); ravel gives (n_tasks * n_selected,)
+    # with layout: all solutions for task 0, then task 1, etc.
+    task_idx   = np.repeat(np.arange(n_tasks, dtype=np.intp), n_selected)
+    server_idx = arr.T.ravel()
 
-        # Normalise to a proper probability distribution
-        row = [c / denominator for c in counts]
-        model.append(row)
+    counts = np.bincount(
+        task_idx * n_servers + server_idx,
+        minlength=n_tasks * n_servers,
+    ).reshape(n_tasks, n_servers).astype(np.float64)
 
-    return model
+    counts += smoothing
+    counts /= float(n_selected + n_servers * smoothing)
+    return counts  # shape (n_tasks, n_servers), rows sum to 1.0
 
 
-def _sample_from_model(
-    model: list[list[float]],
-    n_tasks: int,
-    n_servers: int,
-) -> list[int]:
+def _sample_population(
+    model: np.ndarray,
+    n_samples: int,
+    rng: np.random.Generator,
+) -> np.ndarray:
     """
-    Sample one new candidate solution from the univariate probability model.
+    Draw n_samples candidate solutions from the univariate probability model.
 
-    For each task i independently, draw its server assignment from the
-    marginal distribution P[i] using Python's random.choices(), which
-    respects the random state seeded by the experiment harness and therefore
-    makes each run fully reproducible.
+    Uses vectorised inverse-CDF (quantile) sampling:
+      1. Compute CDF along the server axis: shape (n_tasks, n_servers).
+      2. Draw n_samples × n_tasks uniform values in [0, 1).
+      3. For each (sample, task) pair find the first server j where CDF[task,j] >= u.
+         np.argmax on the boolean mask returns that index efficiently.
 
-    Independence means we make n_tasks = 50 separate single-draw decisions,
-    one for each task.
+    Returns an integer array of shape (n_samples, n_tasks) where each value is
+    the server index assigned to that task in that candidate solution.
+
+    The intermediate boolean tensor has shape (n_samples, n_tasks, n_servers).
+    At the config default of population_size=100 and n_tasks=500, n_servers=100
+    this is 100 × 500 × 100 = 5 M bools ≈ 5 MB — well within typical memory.
     """
-    server_range = list(range(n_servers))
-    assignment: list[int] = []
-    for i in range(n_tasks):
-        # random.choices returns a list; [0] extracts the single drawn value
-        server = random.choices(server_range, weights=model[i], k=1)[0]
-        assignment.append(server)
-    return assignment
+    n_tasks, n_servers = model.shape
+    cdf = np.cumsum(model, axis=1)
+    cdf[:, -1] = 1.0  # clamp last column to exactly 1.0 (float rounding guard)
+
+    # u: (n_samples, n_tasks), each value in [0, 1)
+    u = rng.random((n_samples, n_tasks))
+
+    # Comparison broadcast: cdf (1, n_tasks, n_servers) vs u (n_samples, n_tasks, 1)
+    # Result shape: (n_samples, n_tasks, n_servers) — True where cdf >= u
+    # argmax along server axis returns the first True index per (sample, task) pair.
+    return np.argmax(cdf[np.newaxis] >= u[:, :, np.newaxis], axis=-1)  # (n_samples, n_tasks)
 
 
-def _model_entropy(model: list[list[float]]) -> float:
+def _model_entropy(model: np.ndarray) -> float:
     """
     Compute the mean Shannon entropy across all rows of the probability model.
 
-    Entropy of row i:   H_i = -Σ_j P[i][j] * log2(P[i][j])
+    Entropy of row i:   H_i = -sum_j P[i][j] * log2(P[i][j])
+    Maximum (uniform):  log2(n_servers) bits  -> broad, uncertain model.
+    Minimum (degenerate): 0 bits  -> task i always placed on one specific server.
 
-    Maximum (uniform):  log2(n_servers) ≈ 3.32 bits  →  broad, uncertain model.
-    Minimum (degenerate): 0 bits  →  task i always placed on one specific server.
-
-    Mean entropy is averaged across all n_tasks rows.
+    Vectorised: avoids any Python loop; the eps guard prevents log2(0).
     """
-    total_entropy = 0.0
-    for row in model:
-        for p in row:
-            if p > 1e-15:
-                total_entropy -= p * math.log2(p)
-    # Normalise by number of tasks to get average per-task entropy
-    return total_entropy / len(model)
+    eps  = 1e-15
+    safe = np.where(model > eps, model, 1.0)   # avoid log2(0) — replaced with log2(1)=0
+    h_per_row = -np.sum(model * np.where(model > eps, np.log2(safe), 0.0), axis=1)
+    return float(h_per_row.mean())
 
 
 # ---------------------------------------------------------------------------
@@ -219,6 +148,7 @@ def umda(
     selection_ratio: float = 0.5,
     smoothing: float = 0.1,
     elitism_count: int = 1,
+    verbose: bool = False,
 ) -> tuple[list[int], ScheduleEvaluation, UMDAStatistics]:
     """
     Run UMDA for cloud resource allocation scheduling.
@@ -228,10 +158,10 @@ def umda(
     population_size:
         Number of candidate solutions per generation.  Larger populations
         give more reliable probability estimates but cost more per generation.
-        100 is a reasonable default for 50 tasks × 10 servers.
+        100 is a reasonable default for 50 tasks x 10 servers.
     n_generations:
         Maximum number of model-learning and sampling iterations.
-        With population_size=100 and elitism_count=1, total evaluations ≈ 148,600
+        With population_size=100 and elitism_count=1, total evaluations ~148,600
         (matching SA's ~150,000 for a fair budget comparison).
     selection_ratio:
         Fraction of the population retained for model estimation (truncation
@@ -252,66 +182,101 @@ def umda(
     stats:            UMDAStatistics with per-generation histories and counters.
     """
     stats    = UMDAStatistics()
-    # Ensure at least 2 individuals selected so the model is non-trivial
     n_select = max(2, int(population_size * selection_ratio))
+
+    verbose_interval = max(1, n_generations // 10)
+
+    # Create a reproducible NumPy RNG seeded from the Python random state.
+    # The experiment harness seeds random.seed(seed) before calling this function,
+    # so random.randint(...) here is deterministic per seed.
+    np_rng = np.random.default_rng(random.randint(0, 2**31 - 1))
 
     # ------------------------------------------------------------------ #
     # Initialise population                                                #
+    #                                                                      #
+    # Theoretical motivation for the mixed strategy:                       #
+    #                                                                      #
+    # Pure random initialisation gives UMDA's univariate model an almost   #
+    # uniform marginal distribution as input — at large n the random       #
+    # assignments are heavily infeasible and dominated by penalty terms,   #
+    # so the model can't learn meaningful task-server preferences and      #
+    # tends to return the greedy elite unchanged.                          #
+    #                                                                      #
+    # Strategy: seed half the population with PERTURBED greedy variants    #
+    # (each task reassigned with probability 0.1 to a random server) and   #
+    # the rest with pure random assignments.  This gives the model         #
+    # information-rich starting points (which it can learn from) while     #
+    # preserving exploration via random samples.  At n=50 this slightly    #
+    # speeds convergence; at n>=200 it is what allows the model to learn   #
+    # at all.                                                              #
     # ------------------------------------------------------------------ #
     population: list[list[int]] = [build_greedy_assignment(data)]
-    for _ in range(population_size - 1):
+    greedy_base = population[0]
+    n_perturbed = (population_size - 1) // 2  # roughly half perturbed, half random
+    perturb_rate = 0.10                       # probability each gene is mutated
+    for _ in range(n_perturbed):
+        perturbed = greedy_base[:]
+        for i in range(data.n_tasks):
+            if random.random() < perturb_rate:
+                perturbed[i] = random.randrange(data.n_servers)
+        population.append(perturbed)
+    for _ in range(population_size - 1 - n_perturbed):
         population.append(build_random_assignment(data))
 
     # ------------------------------------------------------------------ #
     # Evaluate initial population                                          #
+    # Track the best ScheduleEvaluation as we go so we don't pay for a    #
+    # redundant re-evaluation of the winner afterwards.                    #
     # ------------------------------------------------------------------ #
-    fitness: list[float] = [
-        evaluate_schedule(ind, data, weights).objective_value
-        for ind in population
-    ]
+    fitness: list[float]     = []
+    best_solution: list[int] = population[0][:]
+    best_eval                = evaluate_schedule(population[0], data, weights)
+    best_cost                = best_eval.objective_value
+    fitness.append(best_cost)
+    for ind in population[1:]:
+        ev = evaluate_schedule(ind, data, weights)
+        fitness.append(ev.objective_value)
+        if ev.objective_value < best_cost:
+            best_solution = ind[:]
+            best_eval     = ev
+            best_cost     = ev.objective_value
     stats.total_evaluations += population_size
-
-    # Global best seen so far — tracked across all generations
-    best_idx      = min(range(population_size), key=lambda i: fitness[i])
-    best_solution = population[best_idx][:]
-    best_eval     = evaluate_schedule(best_solution, data, weights)
-    best_cost     = best_eval.objective_value
 
     # ------------------------------------------------------------------ #
     # Main UMDA loop                                                       #
     # ------------------------------------------------------------------ #
+    n_new = population_size - elitism_count  # candidates to sample each generation
+
     for _ in range(n_generations):
 
         # --- Truncation selection: keep the top n_select individuals ---
         ranked   = sorted(range(population_size), key=lambda i: fitness[i])
         selected = [population[ranked[k]] for k in range(n_select)]
 
-        # --- Build probability model from selected individuals ---
+        # --- Build probability model (vectorised) ---
         model = _build_probability_model(
             selected, data.n_tasks, data.n_servers, smoothing
         )
 
-        # --- Sample a completely new population from the model ---
-        new_population: list[list[int]] = []
-        new_fitness: list[float]        = []
+        # --- Sample n_new candidates at once (vectorised) ---
+        # candidates: (n_new, n_tasks) integer array
+        candidates_arr = _sample_population(model, n_new, np_rng)
 
-        # Elitism: inject the global best-ever solution directly into the
-        # new population before sampling.  This guarantees the best solution
-        # is never lost even if the model has drifted away from its region.
-        for _ in range(elitism_count):
-            new_population.append(best_solution[:])
-            new_fitness.append(best_cost)
+        # --- Compose new population: elites first, then sampled ---
+        new_population: list[list[int]] = [best_solution[:] for _ in range(elitism_count)]
+        new_fitness: list[float]        = [best_cost] * elitism_count
 
-        # Sample the remaining individuals from the learned model
-        while len(new_population) < population_size:
-            candidate = _sample_from_model(model, data.n_tasks, data.n_servers)
+        for row in candidates_arr:
+            candidate = row.tolist()
             ev        = evaluate_schedule(candidate, data, weights)
             new_population.append(candidate)
             new_fitness.append(ev.objective_value)
             stats.total_evaluations += 1
 
-            # Update global best if this sampled individual is better
             if ev.objective_value < best_cost:
+                # NOTE: copy with [:] to avoid aliasing — `candidate` is also
+                # appended to new_population above, and best_solution must not
+                # share storage with any list that future code may mutate.
                 best_solution = candidate[:]
                 best_eval     = ev
                 best_cost     = ev.objective_value
@@ -320,10 +285,30 @@ def umda(
         fitness    = new_fitness
 
         # --- Record per-generation diagnostics ---
-        mean_cost = sum(fitness) / len(fitness)
+        mean_cost   = sum(fitness) / len(fitness)
+        gen_entropy = _model_entropy(model)
         stats.best_cost_history.append(best_cost)
         stats.mean_cost_history.append(mean_cost)
-        stats.model_entropy_history.append(_model_entropy(model))
+        stats.model_entropy_history.append(gen_entropy)
         stats.n_generations_completed += 1
+
+        gen = stats.n_generations_completed
+        if verbose and gen % verbose_interval == 0:
+            max_entropy = math.log2(data.n_servers)
+            rel_entropy = gen_entropy / max_entropy if max_entropy > 0 else 0.0
+            t_frac      = gen / n_generations
+            if rel_entropy > 0.7:
+                phase = "model uncertain - sampling broadly across all servers"
+            elif rel_entropy > 0.3:
+                phase = "model learning - server preferences emerging per task"
+            else:
+                phase = "model converged - focused sampling in high-confidence region"
+            feasible_tag = "feasible" if best_eval.feasible else "infeasible"
+            print(
+                f"  [UMDA] gen {gen:>4}/{n_generations}"
+                f"  best_F={best_cost:>10.2f} ({feasible_tag})"
+                f"  entropy={gen_entropy:>5.2f}/{max_entropy:.2f} bits"
+                f"  -> {phase}"
+            )
 
     return best_solution, best_eval, stats
