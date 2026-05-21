@@ -18,8 +18,8 @@ def is_valid_basic_route(route: list[str], data: ProblemData) -> bool:
     if route[0] != "DEPOT" or route[-1] != "DEPOT":
         return False
 
-    customer_ids  = set(data.customers["Node ID"].tolist())
-    station_ids   = set(data.stations["Node ID"].tolist())
+    customer_ids  = data.customer_ids
+    station_ids   = data.station_ids
     allowed_nodes = {"DEPOT"} | customer_ids | station_ids
 
     if any(node not in allowed_nodes for node in route):
@@ -48,7 +48,7 @@ def is_energy_feasible(
     """
     dist_index   = data.dist_index
     energy_array = data.energy_array
-    station_ids  = set(data.stations["Node ID"].tolist())
+    station_ids  = data.station_ids
 
     battery_kwh = battery_capacity_kwh
 

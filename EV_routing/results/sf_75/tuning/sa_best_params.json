@@ -1,0 +1,11 @@
+{
+  "algorithm": "SA",
+  "best_mean_cost": 2.524973970225339,
+  "best_params": {
+    "initial_temperature": 0.1,
+    "cooling_rate": 0.993,
+    "iterations_per_temperature": 20,
+    "reheat_patience": 250,
+    "reheat_factor": 0.4
+  }
+}

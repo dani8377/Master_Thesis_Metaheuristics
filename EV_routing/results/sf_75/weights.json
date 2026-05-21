@@ -1,0 +1,28 @@
+{
+  "instance": "sf_75",
+  "n_samples": 150,
+  "n_perturb": 3,
+  "penalty_factor": 100,
+  "method": "sample-based normalization \u2014 Deb (2001)",
+  "penalty_method": "big-M \u2014 Deb (2000)",
+  "component_means": {
+    "distance_km": 338.0455,
+    "time_h": 8.17,
+    "energy_kwh": 123.3487,
+    "charging_cost_usd": 27.8672
+  },
+  "component_stds": {
+    "distance_km": 23.229,
+    "time_h": 0.6267,
+    "energy_kwh": 11.2567,
+    "charging_cost_usd": 3.439
+  },
+  "weights": {
+    "distance_weight": 0.002958,
+    "travel_time_weight": 0.122399,
+    "energy_weight": 0.008107,
+    "charging_cost_weight": 0.035884,
+    "battery_violation_weight": 400.0,
+    "infeasible_visit_weight": 400.0
+  }
+}

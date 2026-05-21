@@ -1,0 +1,11 @@
+{
+  "algorithm": "GA",
+  "best_mean_cost": 2.980676043639505,
+  "best_params": {
+    "population_size": 200,
+    "crossover_rate": 0.85,
+    "mutation_rate": 0.15,
+    "tournament_size": 4,
+    "elitism_count": 3
+  }
+}
