@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import random
 
+import numpy as np
+
 from tools.data_loader import ProblemData
-from tools.energy import EVParameters
+from tools.battery import EVParameters
 
 
 # ---------------------------------------------------------------------------
@@ -13,7 +15,7 @@ from tools.energy import EVParameters
 def swap_customers(route: list[str], data: ProblemData, ev_params: EVParameters) -> list[str]:
     """Swap two customer nodes. Leaves depot and station positions untouched."""
     new_route    = route[:]
-    customer_ids = set(data.customers["Node ID"].tolist())
+    customer_ids = data.customer_ids
     positions    = [i for i, n in enumerate(new_route) if n in customer_ids]
     if len(positions) < 2:
         return new_route
@@ -25,7 +27,7 @@ def swap_customers(route: list[str], data: ProblemData, ev_params: EVParameters)
 def relocate_customer(route: list[str], data: ProblemData, ev_params: EVParameters) -> list[str]:
     """Remove a random customer and reinsert it at a different position."""
     new_route    = route[:]
-    customer_ids = set(data.customers["Node ID"].tolist())
+    customer_ids = data.customer_ids
     positions    = [i for i, n in enumerate(new_route) if n in customer_ids]
     if not positions:
         return new_route
@@ -55,19 +57,19 @@ def two_opt(route: list[str], data: ProblemData, ev_params: EVParameters) -> lis
 
 def insert_charging_station(route: list[str], data: ProblemData, ev_params: EVParameters) -> list[str]:
     """Insert a randomly chosen charging station at a random interior position."""
-    new_route   = route[:]
-    station_ids = data.stations["Node ID"].tolist()
-    if not station_ids:
+    new_route    = route[:]
+    all_stations = data.all_station_ids
+    if not all_stations:
         return new_route
-    new_route.insert(random.randint(1, len(new_route) - 1), random.choice(station_ids))
+    new_route.insert(random.randint(1, len(new_route) - 1), random.choice(all_stations))
     return new_route
 
 
 def remove_charging_station(route: list[str], data: ProblemData, ev_params: EVParameters) -> list[str]:
     """Remove a random charging station from the route."""
-    new_route   = route[:]
-    station_ids = set(data.stations["Node ID"].tolist())
-    positions   = [i for i, n in enumerate(new_route) if n in station_ids]
+    new_route    = route[:]
+    station_ids  = data.station_ids
+    positions    = [i for i, n in enumerate(new_route) if n in station_ids]
     if not positions:
         return new_route
     new_route.pop(random.choice(positions))
@@ -77,10 +79,10 @@ def remove_charging_station(route: list[str], data: ProblemData, ev_params: EVPa
 def replace_charging_station(route: list[str], data: ProblemData, ev_params: EVParameters) -> list[str]:
     """Replace a station in the route with a different one."""
     new_route    = route[:]
-    all_stations = data.stations["Node ID"].tolist()
+    all_stations = data.all_station_ids
     if len(all_stations) < 2:
         return new_route
-    station_ids = set(all_stations)
+    station_ids = data.station_ids
     positions   = [i for i, n in enumerate(new_route) if n in station_ids]
     if not positions:
         return insert_charging_station(route, data, ev_params)
@@ -95,7 +97,7 @@ def replace_charging_station(route: list[str], data: ProblemData, ev_params: EVP
 def move_charging_station(route: list[str], data: ProblemData, ev_params: EVParameters) -> list[str]:
     """Remove a charging station and reinsert it at a different position."""
     new_route   = route[:]
-    station_ids = set(data.stations["Node ID"].tolist())
+    station_ids = data.station_ids
     positions   = [i for i, n in enumerate(new_route) if n in station_ids]
     if not positions:
         return insert_charging_station(route, data, ev_params)
@@ -114,13 +116,15 @@ def repair_battery_violation(route: list[str], data: ProblemData, ev_params: EVP
     Simulate battery along the route. At the first arc where battery would go
     negative, insert the nearest reachable charging station before that arc.
     """
-    new_route    = route[:]
-    dist_array   = data.dist_array
-    dist_index   = data.dist_index
-    energy_array = data.energy_array
-    station_ids  = set(data.stations["Node ID"].tolist())
-    all_stations = data.stations["Node ID"].tolist()
-    battery      = ev_params.initial_battery_kwh
+    new_route          = route[:]
+    dist_array         = data.dist_array
+    dist_index         = data.dist_index
+    energy_array       = data.energy_array
+    station_ids        = data.station_ids
+    station_matrix_idx = data.station_matrix_idx
+    all_stations       = data.all_station_ids
+    battery            = ev_params.initial_battery_kwh
+    capacity           = ev_params.battery_capacity_kwh
 
     for i in range(len(new_route) - 1):
         origin = new_route[i]
@@ -134,22 +138,20 @@ def repair_battery_violation(route: list[str], data: ProblemData, ev_params: EVP
         energy = energy_array[oi, di]
 
         if battery - energy < 0:
-            best_station: str | None = None
-            best_dist = float("inf")
-            for s in all_stations:
-                si = dist_index.get(s)
-                if si is None or s == dest:
-                    continue
-                if energy_array[oi, si] <= battery and dist_array[oi, si] < best_dist:
-                    best_station = s
-                    best_dist    = dist_array[oi, si]
-            if best_station is not None:
-                new_route.insert(i + 1, best_station)
+            energy_to_sta = energy_array[oi, station_matrix_idx]
+            reachable = energy_to_sta <= battery
+            # Avoid re-inserting the station that is already the next node
+            if dest in station_ids and di is not None:
+                reachable &= station_matrix_idx != di
+            if reachable.any():
+                dists    = dist_array[oi, station_matrix_idx]
+                best_pos = int(np.where(reachable, dists, np.inf).argmin())
+                new_route.insert(i + 1, all_stations[best_pos])
             return new_route
 
         battery -= energy
         if dest in station_ids:
-            battery = ev_params.battery_capacity_kwh
+            battery = capacity
 
     return new_route
 
@@ -163,7 +165,7 @@ def generate_neighbor(route: list[str], data: ProblemData, ev_params: EVParamete
     Randomly select a neighborhood move. EV modify-moves are only included
     when the route already contains at least one charging station.
     """
-    station_ids       = set(data.stations["Node ID"].tolist())
+    station_ids        = data.station_ids
     route_has_stations = any(n in station_ids for n in route)
 
     classic   = [swap_customers, relocate_customer, two_opt]

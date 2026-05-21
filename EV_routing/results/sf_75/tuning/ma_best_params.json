@@ -1,0 +1,12 @@
+{
+  "algorithm": "MA",
+  "best_mean_cost": 2.89351576572811,
+  "best_params": {
+    "population_size": 40,
+    "crossover_rate": 0.75,
+    "mutation_rate": 0.15,
+    "tournament_size": 4,
+    "elitism_count": 3,
+    "local_search_iters": 5
+  }
+}

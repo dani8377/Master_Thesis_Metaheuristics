@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from typing import Any, Callable
 
 from tools.data_loader import ProblemData
-from tools.energy import EVParameters
+from tools.battery import EVParameters
 from tools.objective import ObjectiveWeights, RouteEvaluation
 
 
@@ -26,6 +26,7 @@ class ExperimentResults:
     best_evals: list[RouteEvaluation]
     all_stats: list[Any]        # algorithm-specific stats objects
     runtimes: list[float]       # wall-clock seconds per run
+    cpu_times: list[float]      # CPU seconds per run (process_time)
     seeds: list[int]
 
     # ------------------------------------------------------------------
@@ -85,8 +86,26 @@ class ExperimentResults:
         return statistics.mean(self.runtimes)
 
     @property
+    def std_runtime(self) -> float:
+        return statistics.stdev(self.runtimes) if len(self.runtimes) >= 2 else 0.0
+
+    @property
     def total_runtime(self) -> float:
         return sum(self.runtimes)
+
+    @property
+    def average_cpu_time(self) -> float:
+        return statistics.mean(self.cpu_times)
+
+    @property
+    def std_cpu_time(self) -> float:
+        return statistics.stdev(self.cpu_times) if len(self.cpu_times) >= 2 else 0.0
+
+    @property
+    def cpu_efficiency(self) -> float:
+        """CPU time / wall time — close to 1.0 means fully CPU-bound."""
+        wall = self.average_runtime
+        return self.average_cpu_time / wall if wall > 0 else 0.0
 
 
 def run_experiments(
@@ -114,30 +133,34 @@ def run_experiments(
     best_evals: list[RouteEvaluation] = []
     all_stats: list[Any] = []
     runtimes: list[float] = []
+    cpu_times: list[float] = []
 
     for idx, seed in enumerate(seeds):
         random.seed(seed)
-        t0 = time.perf_counter()
+        t0_wall = time.perf_counter()
+        t0_cpu  = time.process_time()
         solution, eval_result, stats = algorithm(
             data=data,
             ev_params=ev_params,
             weights=weights,
             **algorithm_kwargs,
         )
-        runtime = time.perf_counter() - t0
+        wall_time = time.perf_counter() - t0_wall
+        cpu_time  = time.process_time() - t0_cpu
 
         best_costs.append(eval_result.objective_value)
         best_solutions.append(solution)
         best_evals.append(eval_result)
         all_stats.append(stats)
-        runtimes.append(runtime)
+        runtimes.append(wall_time)
+        cpu_times.append(cpu_time)
 
         if verbose:
             feasible_tag = "feasible" if eval_result.feasible else "infeasible"
             print(
                 f"  Run {idx + 1:>2}/{len(seeds)}  seed={seed}"
                 f"  cost={eval_result.objective_value:.2f}"
-                f"  time={runtime:.1f}s"
+                f"  wall={wall_time:.1f}s  cpu={cpu_time:.1f}s"
                 f"  [{feasible_tag}]"
             )
 
@@ -148,5 +171,6 @@ def run_experiments(
         best_evals=best_evals,
         all_stats=all_stats,
         runtimes=runtimes,
+        cpu_times=cpu_times,
         seeds=seeds,
     )
