@@ -211,12 +211,16 @@ scalability:
     n_seeds: 3
 
   # ---------------------------------------------------------------------------
-  # Axis 3 — Lower-bound reference: tiny exact-solvable instance.
-  # Branch & Bound is always included here to provide optimality gaps.
-  # Validates that metaheuristics find near-optimal solutions on small instances.
+  # Optimality-gap benchmark (NOT a scalability axis — runs at one fixed size).
+  # Tiny exact-solvable instance where Branch & Bound is guaranteed to be
+  # included.  Reports the absolute %-gap of each metaheuristic vs the B&B
+  # reference solution, anchoring the relative %-vs-greedy numbers reported
+  # by the horizontal/vertical axes.
   # n_servers chosen so utilisation ~50%, consistent with the main experiment.
+  # Kept nested under `scalability:` because the same --scalability CLI flag
+  # triggers it.
   # ---------------------------------------------------------------------------
-  lower_bound:
+  optimality_gap:
     n_tasks: 20
     n_servers: 4
     n_seeds: 5

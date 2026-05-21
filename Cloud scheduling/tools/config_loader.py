@@ -75,7 +75,7 @@ class VerticalScalingConfig:
 
 
 @dataclass
-class LowerBoundConfig:
+class OptimalityGapConfig:
     n_tasks: int
     n_servers: int
     n_seeds: int
@@ -85,7 +85,7 @@ class LowerBoundConfig:
 class ScalabilityConfig:
     horizontal: HorizontalScalingConfig
     vertical: VerticalScalingConfig
-    lower_bound: LowerBoundConfig
+    optimality_gap: OptimalityGapConfig
 
 
 @dataclass
@@ -195,7 +195,7 @@ _DEFAULT_SCALABILITY = ScalabilityConfig(
         server_counts=[20, 15, 10, 8, 6],
         n_seeds=3,
     ),
-    lower_bound=LowerBoundConfig(
+    optimality_gap=OptimalityGapConfig(
         n_tasks=20,
         n_servers=4,
         n_seeds=5,
@@ -332,18 +332,20 @@ def load_config(config_path: Path | None = None) -> AppConfig:
         n_seeds=int(v_raw.get("n_seeds", dv.n_seeds)),
     )
 
-    lb_raw = scal_raw.get("lower_bound", {})
-    dlb = _DEFAULT_SCALABILITY.lower_bound
-    lower_bound = LowerBoundConfig(
-        n_tasks=int(lb_raw.get("n_tasks", dlb.n_tasks)),
-        n_servers=int(lb_raw.get("n_servers", dlb.n_servers)),
-        n_seeds=int(lb_raw.get("n_seeds", dlb.n_seeds)),
+    # Accept legacy key `lower_bound` as a fallback so existing config.yaml files
+    # with the old name still load.  Prefer the new `optimality_gap` key.
+    og_raw = scal_raw.get("optimality_gap", scal_raw.get("lower_bound", {}))
+    dog = _DEFAULT_SCALABILITY.optimality_gap
+    optimality_gap = OptimalityGapConfig(
+        n_tasks=int(og_raw.get("n_tasks", dog.n_tasks)),
+        n_servers=int(og_raw.get("n_servers", dog.n_servers)),
+        n_seeds=int(og_raw.get("n_seeds", dog.n_seeds)),
     )
 
     scalability = ScalabilityConfig(
         horizontal=horizontal,
         vertical=vertical,
-        lower_bound=lower_bound,
+        optimality_gap=optimality_gap,
     )
 
     return AppConfig(

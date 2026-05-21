@@ -1,9 +1,9 @@
-generated_at: '2026-05-19 16:47:04'
+generated_at: '2026-05-21 16:44:16'
 cli:
   algorithms:
   - all
   focus: performance
-  seeds: 20
+  seeds: null
   sensitivity: true
   scalability: true
   tune: false
@@ -15,7 +15,7 @@ instance:
   total_mem_demand_MB: 446274.92682704434
   total_cpu_capacity: 4300.0
   total_mem_capacity_MB: 901120.0
-  n_seeds: 20
+  n_seeds: 10
 objective:
   focus_mode: performance
   energy_weight: 0.2

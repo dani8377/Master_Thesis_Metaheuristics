@@ -99,23 +99,34 @@ def estimate_initial_temperature(
 
     Feasibility filter (theoretical motivation):
     --------------------------------------------
-    Worsening moves that CHANGE feasibility (e.g. greedy is feasible -> candidate
-    violates capacity) produce huge deltas dominated by the lambda*violation
-    penalty term.  Calibrating T_0 on those deltas inflates the temperature
-    relative to the scale of useful (feasibility-preserving) improvements,
-    causing SA to spend most of its budget bouncing between infeasible
-    neighbourhoods before T finally drops enough to see real improvements.
+    Worsening moves that involve the infeasible region produce huge deltas
+    dominated by the lambda*violation penalty term, not the objective gradient
+    we actually want to calibrate against.  Two failure modes if we include
+    those deltas:
 
-    We therefore filter deltas to FEASIBILITY-PRESERVING moves: candidate's
-    feasibility status must match the current's.  This calibrates T_0 to the
-    objective-gradient scale within the feasible region (or within the
-    infeasible region, whichever the search starts in).
+      (a) feasibility-changing moves (feasible -> infeasible, or vice-versa)
+          jump the full lambda*violation step and skew mean_delta upward.
+      (b) infeasible -> infeasible moves are STILL dominated by penalty-term
+          changes because lambda is ~100x F_max_feasible; their mean delta is
+          one to two orders of magnitude larger than the feasible-to-feasible
+          objective-gradient deltas that matter for SA's actual search.
 
-    If too few feasibility-preserving worsening deltas are found (rare, only at
-    extreme constraint tightness), fall back to the unfiltered set so we
-    still get a non-degenerate T_0 estimate.  If even the unfiltered set is
-    empty (degenerate landscape with no worsening moves observed), fall back
-    to T_0 = 1.0 and emit a warning.
+    The previous version filtered to "feasibility-preserving" (current and
+    candidate share feasibility status), accepting (b).  Combined with the 15%
+    walk-forward (which drifts the probe into the infeasible region — empirically
+    ~68% of probe steps end up infeasible even when starting from feasible
+    greedy), this inflated mean_delta by ~20-30x and produced T_0 values that
+    caused SA to random-walk away from the strong greedy starting basin instead
+    of exploiting it.
+
+    We therefore restrict the calibration sample to **feasible -> feasible**
+    worsening moves and prevent the walk-forward from drifting into the
+    infeasible region once the probe has reached a feasible state.
+
+    If too few feasible-to-feasible worsening deltas are found (e.g. when
+    greedy itself is infeasible at extreme constraint tightness), fall back
+    progressively: same-feasibility-class deltas, then all worsening deltas,
+    then T_0 = 1.0.
     """
     assignment       = build_greedy_assignment(data)
     current_eval     = evaluate_schedule(assignment, data, weights)
@@ -123,8 +134,9 @@ def estimate_initial_temperature(
     current_feasible = current_eval.feasible
     n_evaluated      = 1  # the greedy evaluation above
 
-    deltas_filtered: list[float] = []   # feasibility-preserving worsening (preferred)
-    deltas_all: list[float]      = []   # all worsening (fallback)
+    deltas_feas: list[float]      = []   # feasible -> feasible (preferred)
+    deltas_same_class: list[float] = []  # same feasibility class (fallback 1)
+    deltas_all: list[float]       = []   # all worsening (fallback 2)
     for _ in range(n_samples):
         candidate = generate_neighbor(assignment, data)
         if not is_valid_assignment(candidate, data):
@@ -136,25 +148,38 @@ def estimate_initial_temperature(
         if delta > 0:
             deltas_all.append(delta)
             if candidate_eval.feasible == current_feasible:
-                deltas_filtered.append(delta)
-        # Occasionally walk forward so we sample diverse parts of the landscape
-        if random.random() < 0.15:
+                deltas_same_class.append(delta)
+                if current_feasible and candidate_eval.feasible:
+                    deltas_feas.append(delta)
+        # Walk forward to sample diverse parts of the landscape, but once we
+        # are in the feasible region stay there — drifting into infeasibility
+        # would let penalty-term magnitudes dominate the calibration sample.
+        if random.random() < 0.15 and (not current_feasible or candidate_eval.feasible):
             assignment       = candidate
             current_cost     = candidate_cost
             current_feasible = candidate_eval.feasible
 
-    # Prefer the feasibility-preserving sample; fall back if too few were found
-    if len(deltas_filtered) >= 10:
-        deltas = deltas_filtered
+    if len(deltas_feas) >= 10:
+        deltas = deltas_feas
         if verbose:
-            print(f"  [SA] T_0 calibration: {len(deltas)} feasibility-preserving"
-                  f" worsening deltas (out of {len(deltas_all)} total worsening)")
+            print(f"  [SA] T_0 calibration: {len(deltas)} feasible-to-feasible"
+                  f" worsening deltas (of {len(deltas_all)} total worsening)")
+    elif len(deltas_same_class) >= 10:
+        deltas = deltas_same_class
+        print(
+            "  [SA] T_0 calibration NOTE: only "
+            f"{len(deltas_feas)} feasible-to-feasible worsening deltas found"
+            f" (< 10 threshold); falling back to {len(deltas_same_class)}"
+            " same-feasibility-class deltas. Greedy may be infeasible —"
+            " expect T_0 calibrated against penalty-dominated deltas."
+        )
     elif deltas_all:
         deltas = deltas_all
         print(
             "  [SA] T_0 calibration WARNING: only "
-            f"{len(deltas_filtered)} feasibility-preserving worsening deltas found"
-            f" (< 10 threshold); using all {len(deltas_all)} worsening deltas."
+            f"{len(deltas_feas)} feasible-to-feasible and"
+            f" {len(deltas_same_class)} same-feasibility-class worsening deltas"
+            f" found; falling back to all {len(deltas_all)} worsening deltas."
             " T_0 may be inflated by penalty-term magnitudes."
         )
     else:

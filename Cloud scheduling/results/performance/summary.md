@@ -152,7 +152,7 @@ Scalability results saved to:
 
 - `results/performance/scalability_vertical.csv` — quality vs server count (constraint tightness)
 
-- `results/performance/scalability_lower_bound.csv` — optimality gaps vs Branch & Bound
+- `results/performance/optimality_gap.csv` — optimality gaps vs Branch & Bound (separate quality benchmark, not a scalability axis)
 
 
 

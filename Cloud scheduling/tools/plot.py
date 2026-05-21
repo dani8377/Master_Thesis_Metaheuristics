@@ -829,7 +829,7 @@ def plot_vertical_scaling(vert_data: dict, figures_dir) -> None:
     print(f"  Vertical scalability plot    -> {save_path}")
 
 
-def plot_lower_bound_comparison(
+def plot_optimality_gap_comparison(
     all_results: list,
     bb_cost: float,
     figures_dir,
@@ -838,7 +838,7 @@ def plot_lower_bound_comparison(
 ) -> None:
     """
     Bar chart comparing every algorithm (SA, GA, UMDA, Greedy, B&B) on the
-    small lower-bound instance.  The B&B optimal/best cost is drawn as a
+    small exact-solvable instance.  The B&B optimal/best cost is drawn as a
     dashed reference line; gap annotations show how far each metaheuristic
     is from the exact solution.
 
@@ -889,7 +889,7 @@ def plot_lower_bound_comparison(
     # is a SEED VALUE (e.g. 0), not a task count, so the title was wrong.
     size_str = f"{n_tasks} tasks x {n_servers} servers" if n_tasks is not None else "small instance"
     ax.set_title(
-        "Lower-Bound Comparison — Optimality gaps vs. B&B exact solution\n"
+        "Optimality Gap — metaheuristics vs. B&B exact reference\n"
         f"({size_str} — small enough for B&B to find optimal or near-optimal)",
         fontsize=11, fontweight="bold",
     )
@@ -898,9 +898,9 @@ def plot_lower_bound_comparison(
 
     plt.tight_layout()
 
-    save_path = str(Path(figures_dir) / "scalability_lower_bound.png")
+    save_path = str(Path(figures_dir) / "optimality_gap.png")
     fig.savefig(save_path, dpi=_FIGURE_DPI, bbox_inches="tight")
     plt.close(fig)
-    print(f"  Lower-bound comparison plot  -> {save_path}")
+    print(f"  Optimality-gap plot          -> {save_path}")
 
 

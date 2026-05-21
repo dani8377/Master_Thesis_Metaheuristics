@@ -1452,10 +1452,15 @@ def _save_vertical_csv(vert_data: dict, results_dir) -> None:
 
 
 # ---------------------------------------------------------------------------
-# Scalability — Axis 3: Lower-bound reference (B&B exact on small instance)
+# Optimality-gap benchmark (B&B exact reference on small, tractable instance)
+#
+# NOT a scalability test — runs at a single fixed (small) size.  Its purpose
+# is to anchor the relative %-vs-greedy numbers from the horizontal/vertical
+# axes with an absolute %-vs-optimum measurement on the one size where B&B
+# can reach the true optimum within the time limit.
 # ---------------------------------------------------------------------------
 
-def run_lower_bound_analysis(
+def run_optimality_gap_analysis(
     run_flags: dict[str, bool],
     weights_base,
     normalize: bool,
@@ -1463,7 +1468,7 @@ def run_lower_bound_analysis(
     dataset_dir,
     figures_dir,
     results_dir,
-    cfg,           # LowerBoundConfig
+    cfg,           # OptimalityGapConfig
     sa_kwargs: dict,
     ga_kwargs: dict,
     umda_kwargs: dict,
@@ -1475,10 +1480,10 @@ def run_lower_bound_analysis(
     solver can close the optimality gap within the time limit.
 
     Reports the gap between each metaheuristic's best solution and the B&B
-    bound, giving a direct measure of solution quality independent of the
+    reference, giving a direct measure of solution quality independent of the
     greedy baseline.  B&B is always included here regardless of --algorithms.
     """
-    _print_section("Scalability Axis 3 — Lower-Bound Reference (Optimality Gaps)")
+    _print_section("Solution Quality Benchmark — Optimality Gaps vs. Exact Reference")
     servers = generate_server_pool(cfg.n_servers, seed=42)
     data    = load_problem_data(dataset_dir, n_tasks=cfg.n_tasks, servers=servers)
     w       = _reweight(weights_base, data, normalize, **calib)
@@ -1514,14 +1519,14 @@ def run_lower_bound_analysis(
         algos_to_run = [("Simulated Annealing", simulated_annealing, sa_kwargs)]
         print("  (No metaheuristics in --algorithms; running SA as default reference)")
 
-    meta_lb: list = []
+    meta_opt: list = []
     for name, fn, kwargs in algos_to_run:
         print(f"\n  Running {name} ({cfg.n_seeds} seeds) ...")
         res = run_experiments(
             algorithm=fn, algorithm_name=name,
             data=data, weights=w, seeds=seeds, show_progress=True, **kwargs,
         )
-        meta_lb.append(res)
+        meta_opt.append(res)
         gap = (res.best_cost - bb_cost) / max(1e-10, abs(bb_cost)) * 100
         print(f"    Best={res.best_cost:.4f}  B&B={bb_cost:.4f}  "
               f"optimality_gap=+{gap:.1f}%  feasible={res.feasible_run_count}/{cfg.n_seeds}")
@@ -1533,14 +1538,14 @@ def run_lower_bound_analysis(
     )
 
     # ---- Summary table ----
-    _print_section("Lower-Bound Summary — Optimality Gaps vs. B&B")
+    _print_section("Optimality Gap Summary — vs. B&B Exact Reference")
     opt_label = "(proven optimal)" if bb_stats.proven_optimal else f"(gap={bb_stats.optimality_gap:.1%})"
     print(f"  B&B reference cost: {bb_cost:.4f}  {opt_label}")
     print()
     print(f"  {'Algorithm':<27} {'Best F(X)':>10} {'Gap vs B&B':>12}"
           f" {'Avg Time':>9} {'Feasible':>9}")
     print("  " + "-" * 72)
-    for res in meta_lb:
+    for res in meta_opt:
         gap = (res.best_cost - bb_cost) / max(1e-10, abs(bb_cost)) * 100
         print(
             f"  {res.algorithm_name:<27}"
@@ -1554,17 +1559,17 @@ def run_lower_bound_analysis(
           f" {greedy_gap:>+11.1f}%   (deterministic)")
     print()
 
-    all_lb_results = meta_lb + [greedy_res, bb_res]
+    all_opt_results = meta_opt + [greedy_res, bb_res]
 
-    from tools.plot import plot_lower_bound_comparison
-    plot_lower_bound_comparison(
-        all_lb_results, bb_cost, figures_dir,
+    from tools.plot import plot_optimality_gap_comparison
+    plot_optimality_gap_comparison(
+        all_opt_results, bb_cost, figures_dir,
         n_tasks=cfg.n_tasks, n_servers=cfg.n_servers,
     )
-    _save_lower_bound_csv(meta_lb, greedy_res, bb_res, bb_stats, results_dir)
+    _save_optimality_gap_csv(meta_opt, greedy_res, bb_res, bb_stats, results_dir)
 
 
-def _save_lower_bound_csv(
+def _save_optimality_gap_csv(
     meta_results: list,
     greedy_res,
     bb_res,
@@ -1572,7 +1577,7 @@ def _save_lower_bound_csv(
     results_dir,
 ) -> None:
     import csv as _csv
-    path = results_dir / "scalability_lower_bound.csv"
+    path = results_dir / "optimality_gap.csv"
     with open(path, "w", newline="", encoding="utf-8") as f:
         w = _csv.DictWriter(f, fieldnames=[
             "algorithm", "best_cost", "avg_cost", "gap_vs_bb_pct",
@@ -1968,14 +1973,30 @@ def _save_summary_md(
         p("Scalability results saved to:")
         p(f"- `{res_rel}/scalability_horizontal.csv` — quality and runtime vs task count (n=20…500+)")
         p(f"- `{res_rel}/scalability_vertical.csv` — quality vs server count (constraint tightness)")
-        p(f"- `{res_rel}/scalability_lower_bound.csv` — optimality gaps vs Branch & Bound")
         p()
-        p("**Key pattern at large n (≥200 tasks):** SA and UMDA often show near-zero improvement")
-        p("over Greedy BFD. This is expected fixed-budget behaviour — the 150K evaluation budget")
-        p("was calibrated for n=50. GA maintains improvement because population diversity allows")
-        p("broader exploration without relying on a single greedy initialisation or a learned model.")
+        p("**Cross-instance cost values are NOT directly comparable.** Each row in the scalability")
+        p("CSVs is normalised with refs (E_ref, L_ref, λ) computed against the calibration pool")
+        p("of *that specific instance*. At very high utilisation (e.g. vertical's 6-server point at")
+        p("~80% CPU util) the random feasible samples cluster around heavily congested configurations,")
+        p("so L_ref can be much larger than at low utilisation — making normalised F drop even though")
+        p("the raw latency rises. Use `improvement_over_greedy_pct` for cross-instance comparison;")
+        p("treat `avg_cost` as a within-instance quantity only.")
     else:
         p("Skipped. Run with `--scalability` to test how algorithms perform at increasing problem sizes.")
+    p()
+
+    # ---- Optimality-gap benchmark (separate from scalability — it runs at one fixed small size) ----
+    h("Solution Quality Benchmark (Optimality Gap vs. Exact Reference)")
+    if run_scalability:
+        p(f"- `{res_rel}/optimality_gap.csv` — gap between each metaheuristic and the B&B exact solution")
+        p()
+        p("Run on a small instance (n=20, m=4) where Branch & Bound can reach the true optimum within")
+        p("the time limit. This gives an _absolute_ quality measurement (% from optimum), anchoring the")
+        p("relative %-vs-greedy numbers from the scalability axes. Note: this is **not** a scalability")
+        p("test — it runs at a single fixed size and says nothing about how algorithms scale.")
+    else:
+        p("Skipped. Run with `--scalability` (which also triggers this benchmark) to measure how close")
+        p("each metaheuristic gets to the true optimum on a small exact-solvable instance.")
     p()
 
     # ---- Output files ----
@@ -2432,9 +2453,9 @@ def main() -> None:
         )
         run_horizontal_scaling_analysis(**_shared, cfg=cfg.scalability.horizontal)
         run_vertical_scaling_analysis(**_shared, cfg=cfg.scalability.vertical)
-        run_lower_bound_analysis(
+        run_optimality_gap_analysis(
             **_shared,
-            cfg=cfg.scalability.lower_bound,
+            cfg=cfg.scalability.optimality_gap,
             bb_kwargs=bb_kwargs,
             verbose=verbose,
         )

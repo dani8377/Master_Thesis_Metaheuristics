@@ -419,8 +419,11 @@ GA and UMDA also run for 150,000 evaluations for a fair budget comparison.
 **Q: Why is the initial temperature `None` in the default config?**
 `initial_temperature: null` in config.yaml tells SA to auto-estimate T₀ using
 `estimate_initial_temperature()`. This samples 400 random moves and computes the T₀
-that gives ~80% acceptance. It adapts automatically to different objective scales
-(normalised vs. raw), so you never need to tune it manually.
+that gives ~80% acceptance of **feasible-to-feasible** worsening deltas. Restricting
+to feasible-to-feasible (rather than the broader "feasibility-preserving") avoids
+inflating mean_delta with penalty-dominated infeasibility deltas, which previously
+gave T₀ values ~20-30× too large. It adapts automatically to different objective
+scales (normalised vs. raw), so you never need to tune it manually.
 
 **Q: What is `energy_ref` and why is it `None` at first?**
 The `ObjectiveWeights` dataclass is created with `energy_ref=None`. Then in `main.py`,
@@ -572,15 +575,15 @@ them to this file. It is the single source of truth for what happened.
 | `figures/umda_sensitivity.png` (with `--sensitivity`) | Same for UMDA population size and selection ratio. |
 | `figures/scalability_horizontal.png` (with `--scalability`) | Runtime and quality vs n_tasks (log x). |
 | `figures/scalability_vertical.png` (with `--scalability`) | Quality and feasibility % vs n_servers (inverted x — left=loose, right=tight). |
-| `figures/scalability_lower_bound.png` (with `--scalability`) | Each algorithm's gap from the B&B reference on the 20-task instance. |
+| `figures/optimality_gap.png` (with `--scalability`) | Each algorithm's gap from the B&B reference on the 20-task instance. (Separate quality benchmark, not a scalability axis.) |
 
-### Scalability CSVs (only with `--scalability`)
+### Scalability + quality CSVs (only with `--scalability`)
 
 | File | Columns |
 |---|---|
 | `results/scalability_horizontal.csv` | `algorithm, n_tasks, n_servers, avg_runtime_s, avg_cost, improvement_over_greedy_pct` |
 | `results/scalability_vertical.csv`   | `algorithm, n_servers, cpu_util_pct, avg_runtime_s, avg_cost, improvement_over_greedy_pct, feasible_pct` |
-| `results/scalability_lower_bound.csv`| `algorithm, best_cost, avg_cost, gap_vs_bb_pct, avg_runtime_s, feasible_runs, n_runs` |
+| `results/optimality_gap.csv`         | `algorithm, best_cost, avg_cost, gap_vs_bb_pct, avg_runtime_s, feasible_runs, n_runs` — runs at one fixed small size; measures absolute gap from the B&B exact reference, **not** a scalability axis. |
 
 ### Tuning CSVs (only with `--tune`)
 
@@ -787,8 +790,8 @@ lower-bound estimate at the root of the tree was 0.5865. The 29.2 % gap means
 *the optimum could in principle be as low as 0.5865*, but B&B couldn't prove
 that within the time limit. **B&B did not find the optimum on the 50-task
 instance — that instance is too large for exact methods.** This is *exactly*
-why B&B is only used as a reference on the 20-task lower-bound axis, where it
-typically runs to provable optimality.
+why B&B is only used as a reference on the 20-task optimality-gap benchmark,
+where it typically runs to provable optimality.
 
 **Q: How does UMDA "start with 100 candidates"?**
 [`umda.py`](algorithms/umda.py) initialises the population (size 100) as
@@ -905,7 +908,7 @@ All preserve backward compatibility and pass the test suite.
 | # | Issue | Fix | File |
 |---|---|---|---|
 | 1 | Older versions labelled the construction baseline "Greedy FFD" although the implementation is **Best-Fit Decreasing (BFD)** | User-facing labels are now **"Greedy BFD"** everywhere; the legacy function name `greedy_ffd_baseline` is kept for backwards-compatible imports | [`tools/initial_solution.py`](tools/initial_solution.py), [`algorithms/baselines.py`](algorithms/baselines.py) |
-| 2 | SA T₀ inflated by penalty-dominated samples at large n | T₀ estimation filters to **feasibility-preserving** worsening deltas | [`algorithms/simulated_annealing.py`](algorithms/simulated_annealing.py) `estimate_initial_temperature()` |
+| 2 | SA T₀ inflated by penalty-dominated samples (the calibration probe drifted into the infeasible region, where worsening deltas are dominated by lambda*violation rather than the objective gradient) — caused SA to random-walk away from greedy and miss improvements at n>=200 | T₀ estimation now filters to **feasible-to-feasible** worsening deltas and prevents the walk-forward from drifting into infeasibility | [`algorithms/simulated_annealing.py`](algorithms/simulated_annealing.py) `estimate_initial_temperature()` |
 | 3 | UMDA model couldn't learn from mostly-random pop at large n | Initial pop is now **1 greedy + ~half perturbed-greedy + ~half random** | [`algorithms/umda.py`](algorithms/umda.py) |
 | 4 | Greedy/FFD naming inconsistency in docs | README, README_kids, this guide all updated | docs |
 
