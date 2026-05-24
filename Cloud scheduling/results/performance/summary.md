@@ -1,6 +1,6 @@
 # Cloud Scheduling — Experiment Summary
 
-_Generated: 2026-05-24 19:51_
+_Generated: 2026-05-25 00:16_
 
 ## Setup
 
@@ -39,27 +39,27 @@ Sorted by average F(X) — lower is better.  All runs: n=50 real tasks, 20 seeds
 
 | Algorithm | Best F | Avg F | Worst F | Std Dev | Feasible | Avg Time |
 |---|---|---|---|---|---|---|
-| Simulated Annealing | 0.9540 | 0.9566 | 0.9610 | 0.0021 | 20/20 | 6.39s |
-| Genetic Algorithm | 0.9572 | 0.9619 | 0.9656 | 0.0023 | 20/20 | 6.32s |
-| UMDA (EDA) | 0.9585 | 0.9644 | 0.9709 | 0.0037 | 20/20 | 4.83s |
-| Branch & Bound | 1.2268 | 1.2268 | 1.2268 | 0.0000 | 1/1 | 60.85s |
+| Simulated Annealing | 0.9539 | 0.9574 | 0.9639 | 0.0025 | 20/20 | 5.49s |
+| Genetic Algorithm | 0.9575 | 0.9615 | 0.9656 | 0.0026 | 20/20 | 7.38s |
+| UMDA (EDA) | 0.9585 | 0.9644 | 0.9709 | 0.0037 | 20/20 | 6.88s |
+| Branch & Bound | 1.2277 | 1.2277 | 1.2277 | 0.0000 | 1/1 | 60.58s |
 | Greedy BFD (baseline) | 1.2608 | 1.2608 | 1.2608 | 0.0000 | 20/20 | 0.00s |
 | Round-Robin (baseline) | 9.0235 | 9.0235 | 9.0235 | 0.0000 | 0/1 | 0.00s |
 | Random (baseline) | 2.9691 | 16.8491 | 32.7830 | 10.3226 | 0/20 | 0.00s |
 
 ## Winner
 
-**Simulated Annealing** achieved the best average F(X) = **0.9566** (best seed: 0.9540).
-- **Simulated Annealing**: +24.12% vs Greedy BFD (avg F=0.9566 vs 1.2608)
-- **Genetic Algorithm**: +23.71% vs Greedy BFD (avg F=0.9619 vs 1.2608)
+**Simulated Annealing** achieved the best average F(X) = **0.9574** (best seed: 0.9539).
+- **Simulated Annealing**: +24.06% vs Greedy BFD (avg F=0.9574 vs 1.2608)
+- **Genetic Algorithm**: +23.74% vs Greedy BFD (avg F=0.9615 vs 1.2608)
 - **UMDA (EDA)**: +23.51% vs Greedy BFD (avg F=0.9644 vs 1.2608)
 
 ## Energy vs Latency Decomposition (best run per algorithm)
 
 | Algorithm | Energy (W) | Latency (ms) | Active Servers | E-contrib % | L-contrib % |
 |---|---|---|---|---|---|
-| Simulated Annealing | 13068 | 26688 | 10/10 | 21.8% | 78.2% |
-| Genetic Algorithm | 13204 | 26726 | 10/10 | 21.9% | 78.1% |
+| Simulated Annealing | 13058 | 26689 | 10/10 | 21.8% | 78.2% |
+| Genetic Algorithm | 13240 | 26714 | 10/10 | 22.0% | 78.0% |
 | UMDA (EDA) | 13185 | 26782 | 10/10 | 21.9% | 78.1% |
 
 ## Feasibility
