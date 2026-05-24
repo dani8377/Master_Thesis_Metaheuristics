@@ -7,7 +7,7 @@
 # set that produced each experiment is version-controlled.
 
 experiment:
-  n_seeds: 10
+  n_seeds: 20
   n_tasks: 50
   normalize_objective: true   # master switch; when false the raw-unit objective
                                # is used and the mode weights apply directly.
