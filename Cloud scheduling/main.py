@@ -1819,10 +1819,15 @@ def _save_summary_md(
     lines: list[str] = []
 
     def h(text: str, level: int = 2) -> None:
-        lines.append(f"{'#' * level} {text}\n")
+        # Blank line before a heading so renderers separate it from the
+        # preceding block; `"\n".join(lines)` adds the line break after.
+        if lines and lines[-1] != "":
+            lines.append("")
+        lines.append(f"{'#' * level} {text}")
+        lines.append("")
 
     def p(text: str = "") -> None:
-        lines.append(text + "\n")
+        lines.append(text)
 
     now = _dt.datetime.now().strftime("%Y-%m-%d %H:%M")
     h("Cloud Scheduling — Experiment Summary", level=1)
@@ -1876,7 +1881,7 @@ def _save_summary_md(
     if not all_results:
         p("No algorithm results to summarise.")
         path = results_dir / "summary.md"
-        path.write_text("\n".join(lines), encoding="utf-8")
+        path.write_text("\n".join(lines) + "\n", encoding="utf-8")
         return
 
     # ---- Main results table ----
@@ -2014,7 +2019,7 @@ def _save_summary_md(
     p()
 
     path = results_dir / "summary.md"
-    path.write_text("\n".join(lines), encoding="utf-8")
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"  Summary saved                -> {path}")
 
 

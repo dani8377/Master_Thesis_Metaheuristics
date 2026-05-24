@@ -26,144 +26,111 @@
   Penalty coefficients: lambda_cpu=127  lambda_mem=127.1
 
 ============================================================
-  Single SA Diagnostic Run
+  Hyperparameter Tuning (Grid Search)
 ============================================================
-  Feasible:              True
-  Objective value F(X):  1.1076
-  Total energy (W):      11266.96
-  Total latency (ms):    24066.27
-  CPU violation (%):     0.0000
-  Memory violation (MB): 0.00
-  Active servers:        4/10
-  Runtime:               10.61s
-
-  SA search statistics:
-    Candidates evaluated:    150000  (+ 401 T_0 probe evals  -> total budget 150401)
-    Improving accepted:      20447
-    Worsening accepted:      29969
-    Structural rejections:   0
-    Acceptance rate:         33.61%
-    Feasibility rate:        73.63%
-    Reheat count:            5
-    Final temperature:       0.014020
-
-  Per-server task distribution (# = 1 task):
-    Server  0:   0 tasks  
-    Server  1:  10 tasks  ##########
-    Server  2:   0 tasks  
-    Server  3:   5 tasks  #####
-    Server  4:  27 tasks  ###########################
-    Server  5:   0 tasks  
-    Server  6:   0 tasks  
-    Server  7:   8 tasks  ########
-    Server  8:   0 tasks  
-    Server  9:   0 tasks  
+  Seeds per combination: 3  |  Budget factor: 0.33  (reduced)
 
 ============================================================
-  Multi-Seed Experiments  (20 runs per algorithm)
+  Tuning Simulated Annealing
 ============================================================
+  Equal-budget target: 50,000 evaluations per cell  (max_temp_steps recomputed per cell from iter_per_temp)
 
-  Running Simulated Annealing (20 seeds) ...
-  Run  1/20  seed=0  cost=1.11  time=7.4s  [feasible]
-  Run  2/20  seed=1  cost=1.11  time=8.8s  [feasible]
-  Run  3/20  seed=2  cost=1.11  time=9.1s  [feasible]
-  Run  4/20  seed=3  cost=1.11  time=10.1s  [feasible]
-  Run  5/20  seed=4  cost=1.11  time=8.3s  [feasible]
-  Run  6/20  seed=5  cost=1.11  time=8.0s  [feasible]
-  Run  7/20  seed=6  cost=1.11  time=7.3s  [feasible]
-  Run  8/20  seed=7  cost=1.11  time=7.4s  [feasible]
-  Run  9/20  seed=8  cost=1.11  time=7.5s  [feasible]
-  Run 10/20  seed=9  cost=1.11  time=6.9s  [feasible]
-  Run 11/20  seed=10  cost=1.11  time=7.4s  [feasible]
-  Run 12/20  seed=11  cost=1.11  time=7.2s  [feasible]
-  Run 13/20  seed=12  cost=1.11  time=7.3s  [feasible]
-  Run 14/20  seed=13  cost=1.11  time=7.7s  [feasible]
-  Run 15/20  seed=14  cost=1.11  time=9.5s  [feasible]
-  Run 16/20  seed=15  cost=1.11  time=13.4s  [feasible]
-  Run 17/20  seed=16  cost=1.11  time=13.5s  [feasible]
-  Run 18/20  seed=17  cost=1.11  time=17.6s  [feasible]
-  Run 19/20  seed=18  cost=1.11  time=17.1s  [feasible]
-  Run 20/20  seed=19  cost=1.11  time=20.8s  [feasible]
-
-  Running Genetic Algorithm (20 seeds) ...
-  Run  1/20  seed=0  cost=1.11  time=14.3s  [feasible]
-  Run  2/20  seed=1  cost=1.12  time=12.4s  [feasible]
-  Run  3/20  seed=2  cost=1.11  time=10.0s  [feasible]
-  Run  4/20  seed=3  cost=1.12  time=11.4s  [feasible]
-  Run  5/20  seed=4  cost=1.12  time=9.3s  [feasible]
-  Run  6/20  seed=5  cost=1.12  time=10.7s  [feasible]
-  Run  7/20  seed=6  cost=1.12  time=12.7s  [feasible]
-  Run  8/20  seed=7  cost=1.12  time=13.4s  [feasible]
-  Run  9/20  seed=8  cost=1.13  time=17.0s  [feasible]
-  Run 10/20  seed=9  cost=1.12  time=13.0s  [feasible]
-  Run 11/20  seed=10  cost=1.11  time=8.9s  [feasible]
-  Run 12/20  seed=11  cost=1.12  time=8.4s  [feasible]
-  Run 13/20  seed=12  cost=1.11  time=8.7s  [feasible]
-  Run 14/20  seed=13  cost=1.12  time=10.7s  [feasible]
-  Run 15/20  seed=14  cost=1.13  time=8.2s  [feasible]
-  Run 16/20  seed=15  cost=1.11  time=8.4s  [feasible]
-  Run 17/20  seed=16  cost=1.12  time=7.6s  [feasible]
-  Run 18/20  seed=17  cost=1.12  time=8.1s  [feasible]
-  Run 19/20  seed=18  cost=1.11  time=7.4s  [feasible]
-  Run 20/20  seed=19  cost=1.13  time=9.1s  [feasible]
-
-  Running UMDA (EDA) (20 seeds) ...
-  Run  1/20  seed=0  cost=1.11  time=8.7s  [feasible]
-  Run  2/20  seed=1  cost=1.11  time=8.5s  [feasible]
-  Run  3/20  seed=2  cost=1.11  time=11.0s  [feasible]
-  Run  4/20  seed=3  cost=1.11  time=11.2s  [feasible]
-  Run  5/20  seed=4  cost=1.11  time=7.0s  [feasible]
-  Run  6/20  seed=5  cost=1.11  time=7.3s  [feasible]
-  Run  7/20  seed=6  cost=1.11  time=8.4s  [feasible]
-  Run  8/20  seed=7  cost=1.11  time=8.9s  [feasible]
-  Run  9/20  seed=8  cost=1.11  time=10.2s  [feasible]
-  Run 10/20  seed=9  cost=1.11  time=8.7s  [feasible]
-  Run 11/20  seed=10  cost=1.11  time=12.5s  [feasible]
-  Run 12/20  seed=11  cost=1.11  time=9.6s  [feasible]
-  Run 13/20  seed=12  cost=1.11  time=8.3s  [feasible]
-  Run 14/20  seed=13  cost=1.11  time=8.3s  [feasible]
-  Run 15/20  seed=14  cost=1.11  time=8.0s  [feasible]
-  Run 16/20  seed=15  cost=1.11  time=7.6s  [feasible]
-  Run 17/20  seed=16  cost=1.11  time=8.4s  [feasible]
-  Run 18/20  seed=17  cost=1.11  time=12.6s  [feasible]
-  Run 19/20  seed=18  cost=1.11  time=12.8s  [feasible]
-  Run 20/20  seed=19  cost=1.11  time=13.2s  [feasible]
-
-  Running Branch and Bound (time limit=60s) ...
-  Run  1/1  seed=0  cost=1.14  time=61.1s  [feasible]
-  B&B: nodes=45,337  root_lb=0.9377  best=1.1379  gap=21.4%  proven_optimal=False
-
-  Running Greedy BFD baseline ...
-  Running Round-Robin baseline (deterministic — 1 run) ...
-  Running Random baseline ...
+  Grid: 25 combinations x 3 seeds  =  75 runs
+    cooling_rate  iterations_per_temperature      mean_F     std_F   mean_t  feas%
+  ----------------------------------------------------------------------
+            0.98              25      1.1099     0.0012     1.72s    100%
+            0.98              50      1.1113     0.0021     2.08s    100%
+            0.98             100      1.1096     0.0019     2.83s    100%
+            0.98             150      1.1112     0.0032     3.02s    100%
+            0.98             200      1.1111     0.0030     2.84s    100%
+           0.985              25      1.1125     0.0040     1.40s    100%
+           0.985              50      1.1116     0.0066     3.10s    100%
+           0.985             100      1.1084     0.0007     3.50s    100%
+           0.985             150      1.1098     0.0011     3.42s    100%
+           0.985             200      1.1190     0.0038     9.45s    100%
+            0.99              25      1.1106     0.0021     6.36s    100%
+            0.99              50      1.1082     0.0006     3.21s    100%
+            0.99             100      1.1099     0.0010     2.99s    100%
+            0.99             150      1.1240     0.0037     2.96s    100%
+            0.99             200      1.1382     0.0041     2.99s    100%
+           0.995              25      1.1090     0.0020     3.10s    100%
+           0.995              50      1.1109     0.0009     3.30s    100%
+           0.995             100      1.1411     0.0036     2.98s    100%
+           0.995             150      1.1453     0.0091     2.81s    100%
+           0.995             200      1.1538     0.0032     2.80s    100%
+           0.999              25      1.1528     0.0050     2.93s    100%
+           0.999              50      1.1544     0.0021     2.83s    100%
+           0.999             100      1.1544     0.0021     2.94s    100%
+           0.999             150      1.1544     0.0021     2.94s    100%
+           0.999             200      1.1544     0.0021     3.03s    100%
+  Tuning CSV saved -> C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Christian\University\DTU - Computer Science and Engineering\Masters Thesis\Master_Thesis_Metaheuristics\Cloud scheduling\results\eco\tuning_sa.csv
 
 ============================================================
-  Results Summary Table  [focus=eco]
+  Tuning Genetic Algorithm
 ============================================================
-Algorithm                                Best      Average        Worst    Std Dev   Feasible   Avg Time
---------------------------------------------------------------------------------------------------------
-Simulated Annealing                      1.11         1.11         1.11       0.00      20/20     10.12s
-Genetic Algorithm                        1.11         1.12         1.13       0.01      20/20     10.48s
-UMDA (EDA)                               1.11         1.11         1.11       0.00      20/20      9.57s
-Branch & Bound                           1.14         1.14         1.14       0.00       1/1     61.08s
-Greedy BFD (baseline)                    1.16         1.16         1.16       0.00      20/20      0.00s
-Round-Robin (baseline)                   9.29         9.29         9.29       0.00       0/1      0.00s
-Random (baseline)                        3.25        16.96        32.72      10.22       0/20      0.00s
+  Equal-budget target: 50,000 evaluations per cell  (n_generations recomputed per cell from population_size)
 
-  Pairwise Wilcoxon signed-rank test  (two-sided, per-seed costs)
-  *** p<0.001   ** p<0.01   * p<0.05   ns = not significant
-
-                       Simulated Ann  Genetic Algor     UMDA (EDA)
-  ----------------------------------------------------------------
-  Simulated Annealing            ---      0.000 ***      0.000 ***
-  Genetic Algorithm        0.000 ***            ---      0.000 ***
-  UMDA (EDA)               0.000 ***      0.000 ***            ---
-
-
-  Simulated Annealing best run (seed 0):  energy=11263.5W  latency=24078.8ms  active=4/10  feasible=True
-
-  Genetic Algorithm best run (seed 15):  energy=11286.0W  latency=24027.3ms  active=4/10  feasible=True
-
-  UMDA (EDA) best run (seed 17):  energy=11296.9W  latency=23898.1ms  active=4/10  feasible=True
+  Grid: 15 combinations x 3 seeds  =  45 runs
+  population_size  crossover_prob      mean_F     std_F   mean_t  feas%
+  ----------------------------------------------------------------------
+              25             0.6      1.1221     0.0095     2.68s    100%
+              25             0.8      1.1193     0.0064     2.51s    100%
+              25            0.95      1.1313     0.0032     2.60s    100%
+              50             0.6      1.1307     0.0087     2.73s    100%
+              50             0.8      1.1177     0.0058     2.56s    100%
+              50            0.95      1.1288     0.0030     2.75s    100%
+             100             0.6      1.1241     0.0021     2.89s    100%
+             100             0.8      1.1252     0.0089     3.04s    100%
+             100            0.95      1.1112     0.0027     3.01s    100%
+             150             0.6      1.1182     0.0125     2.97s    100%
+             150             0.8      1.1121     0.0024     2.83s    100%
+             150            0.95      1.1135     0.0033     2.73s    100%
+             200             0.6      1.1184     0.0064     2.48s    100%
+             200             0.8      1.1102     0.0007     2.66s    100%
+             200            0.95      1.1115     0.0022     2.55s    100%
+  Tuning CSV saved -> C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Christian\University\DTU - Computer Science and Engineering\Masters Thesis\Master_Thesis_Metaheuristics\Cloud scheduling\results\eco\tuning_ga.csv
 
 ============================================================
+  Tuning UMDA
+============================================================
+  Equal-budget target: 50,000 evaluations per cell  (n_generations recomputed per cell from population_size)
+
+  Grid: 9 combinations x 3 seeds  =  27 runs
+  population_size  selection_ratio      mean_F     std_F   mean_t  feas%
+  ----------------------------------------------------------------------
+              50             0.3      1.1212     0.0015     2.46s    100%
+              50             0.5      1.1210     0.0011     2.29s    100%
+              50             0.7      1.1345     0.0081     2.47s    100%
+             100             0.3      1.1195     0.0074     2.22s    100%
+             100             0.5      1.1154     0.0007     2.19s    100%
+             100             0.7      1.1169     0.0007     2.32s    100%
+             200             0.3      1.1299     0.0175     2.37s    100%
+             200             0.5      1.1136     0.0037     2.26s    100%
+             200             0.7      1.1166     0.0029     2.30s    100%
+  Tuning CSV saved -> C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Christian\University\DTU - Computer Science and Engineering\Masters Thesis\Master_Thesis_Metaheuristics\Cloud scheduling\results\eco\tuning_umda.csv
+
+  Tuning summary saved -> C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Christian\University\DTU - Computer Science and Engineering\Masters Thesis\Master_Thesis_Metaheuristics\Cloud scheduling\results\eco\tuning_summary.md
+
+============================================================
+  Tuning recommendation
+============================================================
+  Simulated Annealing:
+    cooling_rate = 0.99
+    iterations_per_temperature = 50
+    -> mean_F = 1.1082  +/- 0.0006  (mean_time = 3.21s)
+  Genetic Algorithm:
+    population_size = 200
+    crossover_prob = 0.8
+    -> mean_F = 1.1102  +/- 0.0007  (mean_time = 2.66s)
+  UMDA (EDA):
+    population_size = 200
+    selection_ratio = 0.5
+    -> mean_F = 1.1136  +/- 0.0037  (mean_time = 2.26s)
+
+  Copy the recommended values into config.yaml -> algorithms: section, then re-run without --tune for the main experiment.
+
+============================================================
+  Done (tuning only)
+============================================================
+  Copy the recommended values from results/tuning_summary.md into
+  config.yaml, then re-run without --tune for the main experiment.

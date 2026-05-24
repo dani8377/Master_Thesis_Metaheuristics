@@ -89,25 +89,25 @@ objective:
 algorithms:
   sa:
     initial_temperature: null  # null = auto-estimate (recommended)
-    cooling_rate: 0.995
+    cooling_rate: 0.99         # tuned: robust region [0.98, 0.99] across all focus modes
     min_temperature: 1.0e-8
-    iterations_per_temperature: 50
-    max_temp_steps: 3000
+    iterations_per_temperature: 50   # tuned: robust region [25, 100]
+    max_temp_steps: 3000             # 50 × 3000 = 150,000 evaluations
     reheat_patience: 300
     reheat_factor: 0.4
 
   ga:
-    population_size: 50
-    n_generations: 3000
+    population_size: 100    # tuned: balanced-mode winner, top-3 in eco/performance
+    n_generations: 1500         # 100 × 1500 = 150,000 evaluations
     tournament_size: 3      # standard setting: moderate selection pressure
-    crossover_prob: 0.8     # De Jong (1975) recommended range 0.6-0.9
+    crossover_prob: 0.8     # tuned: top-3 in all modes and De Jong (1975) recommended range 0.6-0.9
     mutation_prob: null     # null -> 1/n_tasks (Schaffer et al. 1989 rule of thumb)
     elitism_count: 2
 
   umda:
-    population_size: 100
+    population_size: 100     # tuned: balanced & eco winner
     n_generations: 1500
-    selection_ratio: 0.5    # truncation: keep best 50% (Muhlenbein & Paarmann 1996)
+    selection_ratio: 0.5    # tuned: balanced & eco winner — truncation, keep best 50% (Muhlenbein & Paarmann 1996)
     smoothing: 0.1          # Laplace smoothing: prevents model collapse
     elitism_count: 1
 
