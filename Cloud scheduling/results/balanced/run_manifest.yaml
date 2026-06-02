@@ -1,11 +1,11 @@
-generated_at: '2026-05-21 17:27:56'
+generated_at: '2026-05-25 00:33:46'
 cli:
   algorithms:
   - all
   focus: balanced
   seeds: 20
-  sensitivity: true
-  scalability: true
+  sensitivity: false
+  scalability: false
   tune: false
   verbose: false
 instance:
@@ -45,15 +45,15 @@ calibration_diagnostics:
 algorithm_hyperparameters:
   sa:
     initial_temperature: null
-    cooling_rate: 0.995
+    cooling_rate: 0.99
     min_temperature: 1.0e-08
     iterations_per_temperature: 50
     max_temp_steps: 3000
     reheat_patience: 300
     reheat_factor: 0.4
   ga:
-    population_size: 50
-    n_generations: 3000
+    population_size: 100
+    n_generations: 1500
     tournament_size: 3
     crossover_prob: 0.8
     mutation_prob: null

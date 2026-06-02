@@ -1,0 +1,94 @@
+# Cloud Scheduling — Experiment Summary
+
+_Generated: 2026-05-25 00:33_
+
+## Setup
+
+| Parameter | Value |
+|---|---|
+| Focus mode | **balanced** (wₑ=1.0, wₗ=1.0, γ=1.0) |
+| Tasks / Servers | 50 tasks × 10 servers |
+| Seeds per algorithm | 20 |
+| Objective normalised | Yes |
+| Sensitivity analysis | Skipped (use --sensitivity) |
+| Scalability analysis | Skipped (use --scalability) |
+
+## F(X) Coefficients (as actually used in this run)
+
+These are the values that were plugged into
+`F(X) = wₑ·E/E_ref + wₗ·L/L_ref + λ_cpu·CPU_viol/CPU_ref + λ_mem·Mem_viol/Mem_ref`
+after any sample-based calibration.
+
+| Coefficient | Value | Source |
+|---|---|---|
+| wₑ (energy weight)    |     1.0000 | focus mode `balanced` |
+| wₗ (latency weight)   |     1.0000 | focus mode `balanced` |
+| γ (congestion factor) |     1.0000 | focus mode `balanced` |
+| E_ref                  | 12572.2044 W | sample mean over feasible calibration draws |
+| L_ref                  | 29266.6374 ms | sample mean over feasible calibration draws |
+| CPU_ref                |  2256.6576 % | total CPU demand Σᵢ cᵢ |
+| Mem_ref                | 446274.9268 MB | total memory demand Σᵢ mᵢ |
+| λ_cpu (CPU penalty)   |   206.4673 | Deb-2000 rule: 100 × F_max(feasible) |
+| λ_mem (memory penalty)|   206.4673 | Deb-2000 rule: 100 × F_max(feasible) |
+
+**Note:** when sample-based normalisation is enabled (`normalize_method: sample` in `config.yaml`), the `cpu_penalty` / `mem_penalty` values in `config.yaml` are overwritten by the Deb-2000 rule. The configured numbers are only used when `normalize_method: worst_case` is selected.
+
+## Main Results — Multi-Seed Comparison
+
+Sorted by average F(X) — lower is better.  All runs: n=50 real tasks, 20 seeds.
+
+| Algorithm | Best F | Avg F | Worst F | Std Dev | Feasible | Avg Time |
+|---|---|---|---|---|---|---|
+| Simulated Annealing | 1.8086 | 1.8133 | 1.8237 | 0.0034 | 20/20 | 7.25s |
+| Genetic Algorithm | 1.8128 | 1.8155 | 1.8201 | 0.0020 | 20/20 | 6.83s |
+| UMDA (EDA) | 1.8141 | 1.8175 | 1.8248 | 0.0031 | 20/20 | 6.00s |
+| Branch & Bound | 1.9981 | 1.9981 | 1.9981 | 0.0000 | 1/1 | 60.68s |
+| Greedy BFD (baseline) | 2.0062 | 2.0062 | 2.0062 | 0.0000 | 20/20 | 0.00s |
+| Round-Robin (baseline) | 14.9027 | 14.9027 | 14.9027 | 0.0000 | 0/1 | 0.00s |
+| Random (baseline) | 5.1077 | 27.4391 | 53.0855 | 16.6268 | 0/20 | 0.00s |
+
+## Winner
+
+**Simulated Annealing** achieved the best average F(X) = **1.8133** (best seed: 1.8086).
+- **Simulated Annealing**: +9.61% vs Greedy BFD (avg F=1.8133 vs 2.0062)
+- **Genetic Algorithm**: +9.50% vs Greedy BFD (avg F=1.8155 vs 2.0062)
+- **UMDA (EDA)**: +9.40% vs Greedy BFD (avg F=1.8175 vs 2.0062)
+
+## Energy vs Latency Decomposition (best run per algorithm)
+
+| Algorithm | Energy (W) | Latency (ms) | Active Servers | E-contrib % | L-contrib % |
+|---|---|---|---|---|---|
+| Simulated Annealing | 12566 | 23678 | 10/10 | 55.3% | 44.7% |
+| Genetic Algorithm | 12617 | 23686 | 10/10 | 55.4% | 44.6% |
+| UMDA (EDA) | 12558 | 23858 | 10/10 | 55.1% | 44.9% |
+
+## Feasibility
+
+Always infeasible: Round-Robin (baseline), Random (baseline) — expected for naive baselines (no capacity awareness).
+
+## Sensitivity Analysis
+
+Skipped. Run with `--sensitivity` to sweep hyperparameters and verify robustness.
+
+## Scalability Analysis
+
+Skipped. Run with `--scalability` to test how algorithms perform at increasing problem sizes.
+
+## Solution Quality Benchmark (Optimality Gap vs. Exact Reference)
+
+Skipped. Run with `--scalability` (which also triggers this benchmark) to measure how close
+each metaheuristic gets to the true optimum on a small exact-solvable instance.
+
+## Output Files
+
+| File | Contents |
+|---|---|
+| `results/balanced/results_per_seed.csv` | Raw per-seed costs, feasibility, runtimes |
+| `results/balanced/results_summary.csv` | Per-algorithm statistics (best/avg/worst/std) |
+| `results/balanced/summary.md` | This file |
+| `figures/balanced/convergence_all_algorithms.png` | Convergence curves for all metaheuristics |
+| `figures/balanced/convergence_sa/ga/umda.png` | Per-algorithm convergence detail |
+| `figures/balanced/boxplot_comparison.png` | Cost distribution across seeds |
+| `figures/balanced/algorithm_comparison_bar.png` | Best / Avg / Worst bar chart |
+| `figures/balanced/metaheuristics_comparison.png` | Zoomed metaheuristic comparison + energy/latency breakdown |
+
