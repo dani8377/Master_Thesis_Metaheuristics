@@ -285,7 +285,7 @@ def main() -> None:
     # 3. Box plots — all algorithms including greedy baseline
     plot_box_comparison(
         all_results,
-        title="Solution quality distribution across 10 seeds",
+        title=f"Solution quality distribution — {len(SEEDS)} seeds, budget={MAX_EVALS:,} evals",
         save_path=FIGURES_DIR / "box_comparison.png",
         show=False,
     )

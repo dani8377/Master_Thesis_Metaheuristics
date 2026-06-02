@@ -244,8 +244,13 @@ def _load_params(params_file: Path, data, ev_params, weights) -> dict:
 # Plotting
 # =============================================================================
 
+def _is_fully_feasible(r, n_seeds: int) -> bool:
+    return r.feasible_run_count == n_seeds
+
+
 def _plot_quality(instance_results: dict, algo_names: list[str]) -> None:
-    ns = [int(inst.split("_")[1]) for inst in INSTANCES if inst in instance_results]
+    """Per-algorithm subplots. Only feasible instances are plotted; infeasible
+    ones are marked with red dashed vertical lines so the y-axis stays readable."""
     colors = plt.cm.Set1(np.linspace(0, 0.8, len(algo_names)))
     FIGURES_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -255,32 +260,144 @@ def _plot_quality(instance_results: dict, algo_names: list[str]) -> None:
     axes = np.array(axes).flatten()
 
     for ax, algo, color in zip(axes, algo_names, colors):
-        means = [
-            statistics.mean(instance_results[inst][algo].best_costs)
-            for inst in INSTANCES if inst in instance_results
-        ]
-        stds = [
-            instance_results[inst][algo].std_cost
-            for inst in INSTANCES if inst in instance_results
-        ]
-        ax.plot(ns, means, marker="o", color=color, linewidth=1.5)
-        ax.fill_between(
-            ns,
-            [m - s for m, s in zip(means, stds)],
-            [m + s for m, s in zip(means, stds)],
-            alpha=0.15, color=color,
-        )
+        feas_ns, feas_means, feas_stds = [], [], []
+        infeas_ns = []
+
+        for inst in INSTANCES:
+            if inst not in instance_results:
+                continue
+            n = int(inst.split("_")[1])
+            r = instance_results[inst][algo]
+            if _is_fully_feasible(r, len(SEEDS)):
+                feas_ns.append(n)
+                feas_means.append(r.average_cost)
+                feas_stds.append(r.std_cost)
+            else:
+                infeas_ns.append(n)
+
+        if feas_ns:
+            ax.plot(feas_ns, feas_means, marker="o", color=color, linewidth=1.5)
+            ax.fill_between(
+                feas_ns,
+                [m - s for m, s in zip(feas_means, feas_stds)],
+                [m + s for m, s in zip(feas_means, feas_stds)],
+                alpha=0.15, color=color,
+            )
+
+        for xn in infeas_ns:
+            ax.axvline(xn, color="red", linestyle="--", alpha=0.55, linewidth=1.0)
+            ax.text(xn, 0.02, "✗", transform=ax.get_xaxis_transform(),
+                    color="red", ha="center", va="bottom", fontsize=9)
+
+        if infeas_ns:
+            ax.axvline(-999, color="red", linestyle="--", alpha=0.55,
+                       linewidth=1.0, label="0 % feasible")
+            ax.legend(fontsize=8, loc="upper left")
+
         ax.set_title(algo)
         ax.set_xlabel("Number of customers")
-        ax.set_ylabel("Mean objective")
+        ax.set_ylabel("Mean objective (feasible runs only)")
         ax.grid(True, alpha=0.3)
 
     for ax in axes[len(algo_names):]:
         ax.set_visible(False)
 
-    fig.suptitle("Solution quality vs. instance size", fontsize=13, y=1.01)
+    fig.suptitle(
+        f"Solution quality vs. instance size\n"
+        f"Evaluation budget: {BASE_EVALS:,} evals at n={BASE_N}, scaled as {BASE_EVALS:,}×{BASE_N}/n",
+        fontsize=12,
+    )
     plt.tight_layout()
     fig.savefig(FIGURES_DIR / "quality_vs_size.png", dpi=150, bbox_inches="tight")
+    plt.close(fig)
+
+
+def _plot_improvement_over_greedy(instance_results: dict, algo_names: list[str]) -> None:
+    """% improvement over greedy for instances where BOTH greedy and the
+    algorithm are 100% feasible.  Puts all metaheuristics on a single shared
+    axis so relative rankings are directly visible."""
+    FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+    fig, ax = plt.subplots(figsize=(10, 5))
+
+    greedy_name = "Greedy"
+    meta_names = [a for a in algo_names if a != greedy_name]
+    colors = plt.cm.Set1(np.linspace(0, 0.8, len(meta_names)))
+
+    for algo, color in zip(meta_names, colors):
+        plot_ns, plot_pcts = [], []
+        for inst in INSTANCES:
+            if inst not in instance_results:
+                continue
+            n = int(inst.split("_")[1])
+            gr = instance_results[inst].get(greedy_name)
+            ar = instance_results[inst][algo]
+            if (gr is not None
+                    and _is_fully_feasible(gr, len(SEEDS))
+                    and _is_fully_feasible(ar, len(SEEDS))):
+                pct = (gr.average_cost - ar.average_cost) / gr.average_cost * 100
+                plot_ns.append(n)
+                plot_pcts.append(pct)
+        if plot_ns:
+            ax.plot(plot_ns, plot_pcts, marker="o", color=color,
+                    linewidth=1.5, label=algo)
+            ax.fill_between(plot_ns, [0] * len(plot_ns), plot_pcts,
+                            alpha=0.07, color=color)
+
+    ax.axhline(0, color="gray", linestyle="--", linewidth=0.9, label="Greedy baseline")
+
+    # Annotate the budget-dependence finding at sf_BASE_N
+    ax.axvline(BASE_N, color="black", linestyle=":", alpha=0.4, linewidth=1.0)
+    ax.annotate(
+        f"n={BASE_N}: ranking reverses at ~45k evals\n(SA best in main experiment @ 150k evals)",
+        xy=(BASE_N, ax.get_ylim()[0] if ax.get_ylim()[0] > 0 else 2),
+        xytext=(BASE_N + 20, 5),
+        fontsize=7.5,
+        color="dimgray",
+        arrowprops=dict(arrowstyle="->", color="dimgray", lw=0.8),
+    )
+
+    ax.set_xlabel("Number of customers")
+    ax.set_ylabel("Improvement over Greedy (%)")
+    ax.set_title(
+        f"Improvement over greedy baseline  "
+        f"(budget: {BASE_EVALS:,}×{BASE_N}/n evals)\n"
+        "Only instances where greedy is 100 % feasible"
+    )
+    ax.legend()
+    ax.grid(True, alpha=0.3)
+    plt.tight_layout()
+    fig.savefig(FIGURES_DIR / "improvement_over_greedy.png", dpi=150, bbox_inches="tight")
+    plt.close(fig)
+
+
+def _plot_consistency(instance_results: dict, algo_names: list[str]) -> None:
+    """Coefficient of variation (std / mean × 100 %) per algorithm.
+    Lower CV = more reproducible results across seeds."""
+    FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+    fig, ax = plt.subplots(figsize=(10, 5))
+    colors = plt.cm.Set1(np.linspace(0, 0.8, len(algo_names)))
+
+    for algo, color in zip(algo_names, colors):
+        cv_ns, cv_vals = [], []
+        for inst in INSTANCES:
+            if inst not in instance_results:
+                continue
+            n = int(inst.split("_")[1])
+            r = instance_results[inst][algo]
+            if _is_fully_feasible(r, len(SEEDS)) and r.average_cost > 0:
+                cv_ns.append(n)
+                cv_vals.append(r.std_cost / r.average_cost * 100)
+        if cv_ns:
+            ax.plot(cv_ns, cv_vals, marker="s", color=color,
+                    linewidth=1.5, label=algo)
+
+    ax.set_xlabel("Number of customers")
+    ax.set_ylabel("CV = std / mean  (%)")
+    ax.set_title("Algorithm consistency across seeds (lower = more reproducible)")
+    ax.legend()
+    ax.grid(True, alpha=0.3)
+    plt.tight_layout()
+    fig.savefig(FIGURES_DIR / "consistency_vs_size.png", dpi=150, bbox_inches="tight")
     plt.close(fig)
 
 
@@ -307,25 +424,37 @@ def _plot_runtime(instance_results: dict, algo_names: list[str]) -> None:
 
 
 def _plot_feasibility(instance_results: dict, algo_names: list[str]) -> None:
-    fig, ax = plt.subplots(figsize=(9, 5))
-    ns = [int(inst.split("_")[1]) for inst in INSTANCES if inst in instance_results]
-    colors = plt.cm.Set1(np.linspace(0, 0.8, len(algo_names)))
+    """Heatmap (algorithm × instance) coloured by feasibility rate.
+    Much easier to read than overlapping lines when many cells are 0 or 100 %."""
+    FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+    inst_list = [inst for inst in INSTANCES if inst in instance_results]
+    ns_labels = [f"n={inst.split('_')[1]}" for inst in inst_list]
 
-    for algo, color in zip(algo_names, colors):
-        rates = [
-            instance_results[inst][algo].feasible_run_count / len(SEEDS) * 100
-            for inst in INSTANCES if inst in instance_results
-        ]
-        ax.plot(ns, rates, marker="^", label=algo, color=color)
+    matrix = np.array([
+        [instance_results[inst][algo].feasible_run_count / len(SEEDS) * 100
+         for inst in inst_list]
+        for algo in algo_names
+    ])
 
-    ax.set_xlabel("Number of customers")
-    ax.set_ylabel("Feasibility rate (%)")
-    ax.set_ylim(-5, 105)
-    ax.set_title("Feasibility rate vs. instance size")
-    ax.legend()
-    ax.grid(True, alpha=0.3)
+    fig, ax = plt.subplots(figsize=(max(10, len(inst_list) * 1.1), len(algo_names) * 0.9 + 1))
+    im = ax.imshow(matrix, aspect="auto", cmap="RdYlGn", vmin=0, vmax=100)
+    plt.colorbar(im, ax=ax, label="Feasibility rate (%)")
+
+    ax.set_xticks(range(len(inst_list)))
+    ax.set_xticklabels(ns_labels, rotation=45, ha="right")
+    ax.set_yticks(range(len(algo_names)))
+    ax.set_yticklabels(algo_names)
+
+    for i in range(len(algo_names)):
+        for j in range(len(inst_list)):
+            v = matrix[i, j]
+            txt_color = "white" if v < 50 else "black"
+            ax.text(j, i, f"{v:.0f}%", ha="center", va="center",
+                    fontsize=9, color=txt_color, fontweight="bold")
+
+    ax.set_title("Feasibility rate (%) — algorithm × instance size")
     plt.tight_layout()
-    fig.savefig(FIGURES_DIR / "feasibility_vs_size.png", dpi=150)
+    fig.savefig(FIGURES_DIR / "feasibility_heatmap.png", dpi=150, bbox_inches="tight")
     plt.close(fig)
 
 
@@ -471,6 +600,8 @@ def main() -> None:
     print("\n" + "=" * 60)
     print("Saving plots and tables …")
     _plot_quality(instance_results, algo_names)
+    _plot_improvement_over_greedy(instance_results, algo_names)
+    _plot_consistency(instance_results, algo_names)
     _plot_runtime(instance_results, algo_names)
     _plot_feasibility(instance_results, algo_names)
     _save_csv_and_table(instance_results, algo_names)
