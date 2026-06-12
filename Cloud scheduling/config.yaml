@@ -72,10 +72,10 @@ objective:
 # Algorithm hyperparameters
 #
 # Equal evaluation budget (~150 000 calls to evaluate_schedule) for fair
-# comparison — see thesis Section X for the equal-budget argument.
+# comparison — see thesis Section 7.5 (Equal Evaluation Budget) for the argument.
 #
 #   SA:   iterations_per_temperature x max_temp_steps = 50 x 3000 = 150 000
-#   GA:   population_size x n_generations             = 50 x 3000 = 150 000
+#   GA:   population_size x n_generations             = 100 x 1500 = 150 000
 #   UMDA: population_size x n_generations             = 100 x 1500 = 150 000
 #   B&B:  time_limit (seconds) — exact method, budget expressed as wall time
 #
@@ -90,7 +90,9 @@ algorithms:
   sa:
     initial_temperature: null  # null = auto-estimate (recommended)
     cooling_rate: 0.99         # tuned: robust region [0.98, 0.99] across all focus modes
-    min_temperature: 1.0e-8
+    min_temperature: 1.0e-8    # temperature FLOOR (not a stopping criterion) — SA
+                               # always runs max_temp_steps so it consumes the full
+                               # 150k evaluation budget like GA/UMDA
     iterations_per_temperature: 50   # tuned: robust region [25, 100]
     max_temp_steps: 3000             # 50 × 3000 = 150,000 evaluations
     reheat_patience: 300

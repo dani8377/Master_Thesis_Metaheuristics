@@ -479,12 +479,16 @@ def plot_box_comparison(
     fig, ax = plt.subplots(figsize=(max(8, n_algs * 2.0), 6))
 
     bp = ax.boxplot(
-        data, labels=names, patch_artist=True,
+        data, patch_artist=True,
         medianprops=dict(color="black", linewidth=2),
         # hide flier markers — we draw our own scatter points instead
         flierprops=dict(marker="", markersize=0),
         widths=0.5,
     )
+    # Tick labels set explicitly: boxplot(labels=...) was removed in
+    # matplotlib >= 3.11 (renamed tick_labels=); this form works on every version.
+    ax.set_xticks(range(1, len(names) + 1))
+    ax.set_xticklabels(names)
     for patch, color in zip(bp["boxes"], colors):
         patch.set_facecolor(color)
         patch.set_alpha(0.45)

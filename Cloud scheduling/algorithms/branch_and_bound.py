@@ -103,6 +103,9 @@ def _lower_bound(
     mem_loads: np.ndarray,
     data: SchedulingProblemData,
     weights: ObjectiveWeights,
+    p_weights: np.ndarray,
+    work_remain_suffix: np.ndarray,
+    plat_suffix: np.ndarray,
 ) -> float:
     """
     Compute an admissible lower bound on any completion of the partial assignment.
@@ -114,10 +117,16 @@ def _lower_bound(
 
     The bound is admissible: it never exceeds the true cost of any completion,
     so B&B never incorrectly prunes an optimal branch.
-    """
-    n = data.n_tasks
-    m = data.n_servers
 
+    The depth-independent ingredients are precomputed once per run by
+    branch_and_bound() and passed in:
+      p_weights          : priority weights omega(p_i), shape (n,)
+      work_remain_suffix : min(eta) * sum(energy[d:]) for every d, shape (n+1,)
+      plat_suffix        : sum(p_weights[d:] * latency[d:]) for every d, shape (n+1,)
+    This turns the two O(n) remaining-task sums into O(1) lookups — the bound
+    is evaluated for every child of every expanded node, so this dominates
+    B&B's per-node cost.
+    """
     # --- Energy ---
     # Idle: only currently active servers (adding tasks can only increase this)
     active  = cpu_loads > 0
@@ -126,33 +135,18 @@ def _lower_bound(
     if depth > 0:
         a_arr       = np.array(assignment, dtype=np.int32)
         work_done   = float(np.dot(data.server_efficiency[a_arr], data.energy[:depth]))
-    else:
-        work_done   = 0.0
-
-    # Remaining tasks: optimistic — all on the most efficient server (lowest eta)
-    min_eff      = float(data.server_efficiency.min())
-    work_remain  = min_eff * float(data.energy[depth:].sum()) if depth < n else 0.0
-    total_energy = idle_e + work_done + work_remain
-
-    # --- Latency ---
-    # Use cached priority_weights to skip clip + lookup on every B&B node.
-    p_weights = data.priority_weights
-    if p_weights is None:
-        p_idx     = np.clip(data.priority, 0, 2).astype(np.int32)
-        p_weights = _PRIORITY_WEIGHTS[p_idx]
-
-    if depth > 0:
-        a_arr      = np.array(assignment, dtype=np.int32)
         # Use current CPU loads (underestimate: adding tasks increases congestion)
         load_ratio = cpu_loads[a_arr] / data.server_cpu_cap[a_arr]
         eff_lat    = data.latency[:depth] * (1.0 + weights.congestion_factor * load_ratio)
         lat_done   = float(np.dot(p_weights[:depth], eff_lat))
     else:
-        lat_done   = 0.0
+        work_done   = 0.0
+        lat_done    = 0.0
 
-    # Remaining tasks: no congestion (optimistic)
-    lat_remain   = float(np.dot(p_weights[depth:], data.latency[depth:])) if depth < n else 0.0
-    total_latency = lat_done + lat_remain
+    # Remaining tasks: optimistic — all on the most efficient server (energy)
+    # and with no congestion (latency).  Suffix arrays end in 0.0 at depth=n.
+    total_energy  = idle_e + work_done + float(work_remain_suffix[depth])
+    total_latency = lat_done + float(plat_suffix[depth])
 
     # --- Current violations (can only worsen as more tasks are added) ---
     cpu_viol = float(np.sum(np.maximum(0.0, cpu_loads - data.server_cpu_cap)))
@@ -210,8 +204,26 @@ def branch_and_bound(
     best_eval       = evaluate_schedule(best_assignment, data, weights)
     best_cost       = best_eval.objective_value
 
+    # ---- Precompute depth-independent lower-bound ingredients (once per run) ----
+    # The bound is evaluated for every child of every expanded node, so the
+    # remaining-task sums must be O(1) lookups, not O(n) re-sums per call.
+    p_weights = data.priority_weights
+    if p_weights is None:
+        p_idx     = np.clip(data.priority, 0, 2).astype(np.int32)
+        p_weights = _PRIORITY_WEIGHTS[p_idx]
+
+    # work_remain_suffix[d] = min(eta) * sum(energy[d:]);  [n] = 0.0
+    energy_suffix        = np.zeros(n + 1, dtype=np.float64)
+    energy_suffix[:n]    = np.cumsum(data.energy[::-1])[::-1]
+    work_remain_suffix   = float(data.server_efficiency.min()) * energy_suffix
+
+    # plat_suffix[d] = sum(p_weights[d:] * latency[d:]);  [n] = 0.0
+    plat_suffix          = np.zeros(n + 1, dtype=np.float64)
+    plat_suffix[:n]      = np.cumsum((p_weights * data.latency)[::-1])[::-1]
+
     # Root lower bound (empty partial assignment)
-    root_lb = _lower_bound(0, [], np.zeros(m), np.zeros(m), data, weights)
+    root_lb = _lower_bound(0, [], np.zeros(m), np.zeros(m), data, weights,
+                           p_weights, work_remain_suffix, plat_suffix)
 
     # Heap elements: (lb, tie_break_counter, depth, assignment, cpu_loads, mem_loads)
     counter = 0
@@ -280,7 +292,8 @@ def branch_and_bound(
             new_mem[j] += task_mem
 
             new_assign = assignment + [j]
-            child_lb   = _lower_bound(depth + 1, new_assign, new_cpu, new_mem, data, weights)
+            child_lb   = _lower_bound(depth + 1, new_assign, new_cpu, new_mem, data, weights,
+                                      p_weights, work_remain_suffix, plat_suffix)
 
             if child_lb < best_cost:   # only push if this branch can improve
                 counter += 1
