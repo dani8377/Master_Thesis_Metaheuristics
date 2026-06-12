@@ -1,0 +1,241 @@
+Console log -> EV_routing/results/sf_75/run_log.txt
+Weights loaded from EV_routing/results/sf_75/weights.json
+
+============================================================
+  Single SA run — diagnostics
+============================================================
+  Feasible:            True
+  Objective:           2.6674
+  Distance (km):       292.67
+  Travel time (h):     5.85
+  Charging time (h):   0.33
+  Energy (kWh):        84.92
+  Charging cost ($):   9.92
+  Battery violation:   0.0000
+  Infeasible visits:   0
+  Evaluations:         150,000
+  Acceptance rate:     15.37%
+  Feasibility rate:    30.87%
+  Reheats:             23
+  Runtime:             6.09s
+
+============================================================
+  Single GA run — diagnostics
+============================================================
+  Feasible:            True
+  Objective:           2.8720
+  Distance (km):       286.05
+  Travel time (h):     5.72
+  Charging time (h):   0.50
+  Energy (kWh):        90.10
+  Charging cost ($):   14.90
+  Battery violation:   0.0000
+  Infeasible visits:   0
+  Evaluations:         150,000
+  Generations:         761
+  Feasibility rate:    90.36%
+  Runtime:             29.47s
+
+============================================================
+  Single MA run — diagnostics
+============================================================
+  Feasible:            True
+  Objective:           2.5437
+  Distance (km):       273.23
+  Travel time (h):     5.46
+  Charging time (h):   0.50
+  Energy (kWh):        80.78
+  Charging cost ($):   9.76
+  Battery violation:   0.0000
+  Infeasible visits:   0
+  Evaluations:         150,000
+  Generations:         676
+  Feasibility rate:    100.00%
+  Runtime:             15.98s
+
+============================================================
+  Single ACO run — diagnostics
+============================================================
+  Feasible:            True
+  Objective:           2.6081
+  Distance (km):       273.32
+  Travel time (h):     5.47
+  Charging time (h):   0.53
+  Energy (kWh):        83.37
+  Charging cost ($):   10.86
+  Battery violation:   0.0000
+  Infeasible visits:   0
+  Evaluations:         150,000
+  Iterations:          7,500
+  Feasibility rate:    94.74%
+  Runtime:             53.67s
+
+============================================================
+  Single Greedy run — baseline
+============================================================
+  Feasible:            True
+  Objective:           3.5789
+  Distance (km):       309.22
+  Travel time (h):     6.18
+  Charging time (h):   1.15
+  Energy (kWh):        111.27
+  Charging cost ($):   24.10
+  Battery violation:   0.0000
+  Infeasible visits:   0
+  Runtime:             0.00s
+
+============================================================
+  Controlled comparison — 10 seeds, budget=150,000 evals
+============================================================
+
+----------------------------------------------------------------------------------------------
+Algorithm                     Best     Average       Worst     Std Dev    Feasible    Avg Time
+----------------------------------------------------------------------------------------------
+Greedy                        3.58        3.58        3.58        0.00       10/10        0.0s
+Simulated Annealing           2.44        2.51        2.69        0.09       10/10        6.3s
+Genetic Algorithm             2.68        2.91        3.11        0.16       10/10       36.9s
+Memetic Algorithm             2.52        2.65        2.77        0.09       10/10       22.2s
+ACO                           2.62        2.63        2.67        0.02       10/10       54.3s
+----------------------------------------------------------------------------------------------
+
+=== Detailed Metrics ===
+----------------------------------------------------------------------------------------------
+Algorithm                     Best      Mean       Std     CV%  Feasible   Avg evals  Avg time
+----------------------------------------------------------------------------------------------
+Greedy                        3.58      3.58      0.00     0.0     10/10           1       0.0s
+Simulated Annealing           2.44      2.51      0.09     3.5     10/10      150000       6.3s
+Genetic Algorithm             2.68      2.91      0.16     5.5     10/10      150000      36.9s
+Memetic Algorithm             2.52      2.65      0.09     3.3     10/10      150000      22.2s
+ACO                           2.62      2.63      0.02     0.7     10/10      150000      54.3s
+----------------------------------------------------------------------------------------------
+
+
+=== Result Summary Table ===
+---------------------------------------------------------------------------------------------
+Algorithm                     Best            Mean ± Std    Median    CV%  Feasible  Avg time
+---------------------------------------------------------------------------------------------
+Greedy                       3.579         3.579 ± 0.000     3.579    0.0      100%      0.0s
+Simulated Annealing          2.439         2.514 ± 0.089     2.467    3.5      100%      6.3s
+Genetic Algorithm            2.681         2.913 ± 0.160     2.946    5.5      100%     36.9s
+Memetic Algorithm            2.523         2.647 ± 0.087     2.658    3.3      100%     22.2s
+ACO                          2.615         2.633 ± 0.020     2.626    0.7      100%     54.3s
+---------------------------------------------------------------------------------------------
+
+=== Pairwise Wilcoxon Signed-Rank Tests (paired, two-sided, α=0.05) ===
+  Pair                                             W    p-value  Result
+  ----------------------------------------  --------  ---------  ------------------------
+  Greedy vs Simulated Annealing                  0.0     0.0020  Simulated Annealing better *
+  Greedy vs Genetic Algorithm                    0.0     0.0020  Genetic Algorithm better *
+  Greedy vs Memetic Algorithm                    0.0     0.0020  Memetic Algorithm better *
+  Greedy vs ACO                                  0.0     0.0020  ACO better *
+  Simulated Annealing vs Genetic Algorithm       0.0     0.0020  Simulated Annealing better *
+  Simulated Annealing vs Memetic Algorithm       4.0     0.0137  Simulated Annealing better *
+  Simulated Annealing vs ACO                     3.0     0.0098  Simulated Annealing better *
+  Genetic Algorithm vs Memetic Algorithm         2.0     0.0059  Memetic Algorithm better *
+  Genetic Algorithm vs ACO                       0.0     0.0020  ACO better *
+  Memetic Algorithm vs ACO                      23.0     0.6953  no sig. difference
+  (* p < 0.05)
+
+LaTeX table:
+\begin{table}[ht]
+  \centering
+  \caption{Algorithm comparison results (10 seeds, mean ± std).}
+  \label{tab:results}
+  \begin{tabular}{lrrrrrr}
+    \hline
+    \textbf{Algorithm} & \textbf{Best} & \textbf{Mean $\pm$ Std} & \textbf{CV\%} & \textbf{Feasible\%} & \textbf{Avg time (s)} \\
+    \hline
+  Greedy & 3.579 & $3.579 \pm 0.000$ & 0.0 & 100 & 0.0 \\
+  Simulated Annealing & 2.439 & $\textbf{2.514} \pm 0.089$ & 3.5 & 100 & 6.3 \\
+  Genetic Algorithm & 2.681 & $2.913 \pm 0.160$ & 5.5 & 100 & 36.9 \\
+  Memetic Algorithm & 2.523 & $2.647 \pm 0.087$ & 3.3 & 100 & 22.2 \\
+  ACO & 2.615 & $2.633 \pm 0.020$ & 0.7 & 100 & 54.3 \\
+    \hline
+  \end{tabular}
+\end{table}
+
+
+============================================================
+  Results Interpretation
+============================================================
+
+  Evaluation budget: 150,000 evals/run  |  Seeds: 10
+
+  Metaheuristic ranking (lower objective = better):
+  Rank  Algorithm                         Best        Avg   StdDev  Feasible  Avg time
+  --------------------------------------------------------------------------------
+  1     Simulated Annealing             2.4391     2.5137   0.0886     10/10     6.27s  (winner)
+  2     ACO                             2.6154     2.6327   0.0197     10/10    54.27s  (+4.7%)
+  3     Memetic Algorithm               2.5225     2.6468   0.0869     10/10    22.16s  (+5.3%)
+  4     Genetic Algorithm               2.6813     2.9126   0.1596     10/10    36.93s  (+15.9%)
+
+  Cost component decomposition (best run per algorithm):
+  Algorithm                     Dist(km)   Time(h)  Energy(kWh)   Cost($)  BattViol
+  ----------------------------------------------------------------------------------
+  Simulated Annealing             263.0      5.74       78.41     8.98    0.0000
+  Genetic Algorithm               272.8      5.86       85.47    12.95    0.0000
+  Memetic Algorithm               265.2      5.87       82.47     9.77    0.0000
+  ACO                             274.4      6.02       83.46    10.87    0.0000
+
+  Improvement over Greedy baseline  (F_greedy avg = 3.5789):
+    Simulated Annealing           +29.8%  [better]
+    Genetic Algorithm             +18.6%  [better]
+    Memetic Algorithm             +26.0%  [better]
+    ACO                           +26.4%  [better]
+
+  Wall-clock speed (avg per single run, 150,000 evals):
+    Simulated Annealing          avg 6.27s  <- fastest
+    Genetic Algorithm            avg 36.93s
+    Memetic Algorithm            avg 22.16s
+    ACO                          avg 54.27s  <- slowest
+
+  Automated checks:
+  [OK] All metaheuristics beat Greedy — search adds genuine value over construction.
+  [OK] All metaheuristics found feasible solutions on every seed.
+
+
+============================================================
+  Saving figures
+============================================================
+Saved: EV_routing/results/sf_75/figures/sa_convergence_by_step.png
+Saved: EV_routing/results/sf_75/figures/ga_convergence_by_step.png
+Saved: EV_routing/results/sf_75/figures/ma_convergence_by_step.png
+Saved: EV_routing/results/sf_75/figures/aco_convergence_by_step.png
+Saved: EV_routing/results/sf_75/figures/convergence_by_evaluations.png
+Saved: EV_routing/results/sf_75/figures/box_comparison.png
+Saved: EV_routing/results/sf_75/figures/sa_diagnostics.png
+Saved: EV_routing/results/sf_75/figures/ga_diagnostics.png
+Saved: EV_routing/results/sf_75/figures/ma_diagnostics.png
+Saved: EV_routing/results/sf_75/figures/aco_diagnostics.png
+Saved: EV_routing/results/sf_75/figures/cost_breakdown.png
+Saved: EV_routing/results/sf_75/figures/runtime_comparison.png
+
+============================================================
+  Saving CSV output and metadata
+============================================================
+  Per-seed CSV            -> EV_routing/results/sf_75/results_per_seed.csv
+  Summary CSV             -> EV_routing/results/sf_75/results_summary.csv
+  Algorithm diagnostics   -> EV_routing/results/sf_75/algorithm_diagnostics.csv
+  Run manifest            -> EV_routing/results/sf_75/run_manifest.yaml
+  Summary markdown        -> EV_routing/results/sf_75/summary.md
+
+============================================================
+  Optimality Gap Analysis
+============================================================
+  BKS (Best-Known Solution) = 2.439099
+  (minimum best cost across all 50 runs)
+
+  Greedy                       best=    3.5789  gap_best= 46.73%  avg=    3.5789  gap_avg=  46.73%  feasible=10/10
+  Simulated Annealing          best=    2.4391  gap_best=  0.00%  avg=    2.5137  gap_avg=   3.06%  feasible=10/10
+  Genetic Algorithm            best=    2.6813  gap_best=  9.93%  avg=    2.9126  gap_avg=  19.41%  feasible=10/10
+  Memetic Algorithm            best=    2.5225  gap_best=  3.42%  avg=    2.6468  gap_avg=   8.52%  feasible=10/10
+  ACO                          best=    2.6154  gap_best=  7.23%  avg=    2.6327  gap_avg=   7.94%  feasible=10/10
+  Optimality gap CSV      -> EV_routing/results/sf_75/optimality_gap.csv
+  Optimality gap plot     -> EV_routing/results/sf_75/figures/optimality_gap.png
+
+All figures saved to EV_routing/results/sf_75/figures/
+Greedy best:              ['DEPOT', 'C075', 'C045', 'C026', 'C016', 'C043', 'C041', 'C027', 'C073', 'C068', 'C057', 'C020', 'C061', 'C056', 'C024', 'C053', 'C044', 'C015', 'C013', 'C029', 'C035', 'C038', 'C069', 'C067', 'C047', 'C055', 'C010', 'C074', 'C028', 'C009', 'C033', 'C042', 'C034', 'C030', 'C014', 'C023', 'C065', 'C011', 'C006', 'C032', 'C040', 'EVS04889', 'C012', 'C037', 'C002', 'C004', 'C021', 'C072', 'C025', 'C039', 'C005', 'C001', 'C050', 'C051', 'C052', 'C064', 'C070', 'EVS00405', 'C060', 'C008', 'C063', 'C017', 'C018', 'C048', 'C036', 'C062', 'C058', 'EVS01245', 'C007', 'C046', 'EVS04734', 'C022', 'EVS02273', 'C049', 'EVS01245', 'C019', 'EVS04293', 'C066', 'EVS02443', 'C059', 'C071', 'C031', 'C054', 'EVS04298', 'C003', 'EVS04400', 'DEPOT']
+SA  best (seed 9):  ['DEPOT', 'C024', 'C056', 'C061', 'C043', 'C069', 'C067', 'C062', 'EVS04734', 'C046', 'C007', 'C022', 'C058', 'C036', 'C048', 'C049', 'C042', 'C028', 'C074', 'C034', 'C018', 'C023', 'C014', 'C065', 'C025', 'C021', 'C072', 'EVS01509', 'C039', 'C017', 'C063', 'C008', 'C060', 'C070', 'C064', 'C019', 'C051', 'C052', 'C050', 'C001', 'C005', 'EVS01509', 'C004', 'C002', 'C037', 'C012', 'C040', 'C032', 'C006', 'C011', 'C030', 'C033', 'C009', 'C010', 'C055', 'C047', 'C020', 'C057', 'C016', 'C075', 'C045', 'C053', 'C044', 'C015', 'C013', 'C066', 'C059', 'EVS02556', 'C054', 'C031', 'EVS02556', 'C071', 'EVS04400', 'C003', 'C035', 'C029', 'C038', 'C041', 'C027', 'C073', 'C068', 'C026', 'DEPOT']
+GA  best (seed 1):  ['DEPOT', 'C041', 'C073', 'C026', 'C045', 'C068', 'C057', 'C020', 'C061', 'C056', 'C024', 'C075', 'C053', 'C044', 'C015', 'C016', 'C043', 'C013', 'C029', 'C035', 'C038', 'C069', 'C067', 'C047', 'C055', 'C010', 'C074', 'C028', 'C009', 'C033', 'C042', 'C034', 'C030', 'C014', 'C023', 'C065', 'C011', 'C006', 'C032', 'C004', 'C002', 'C037', 'C012', 'C040', 'C021', 'C072', 'C025', 'C039', 'EVS01509', 'C005', 'C001', 'C050', 'C052', 'C051', 'C019', 'C064', 'C070', 'C060', 'C008', 'C063', 'C017', 'C018', 'C048', 'C036', 'C062', 'C058', 'C022', 'C007', 'C046', 'EVS04734', 'C049', 'EVS01245', 'C066', 'C059', 'C054', 'C031', 'C071', 'EVS02443', 'C003', 'EVS04400', 'C027', 'DEPOT']
+MA  best (seed 4):  ['DEPOT', 'C043', 'C069', 'C067', 'C047', 'C062', 'C022', 'EVS04734', 'C046', 'C007', 'C058', 'C036', 'C048', 'C049', 'C055', 'C010', 'C074', 'C028', 'C009', 'C033', 'C042', 'C034', 'C030', 'C014', 'C018', 'C023', 'C065', 'C011', 'C006', 'C032', 'C040', 'C012', 'C037', 'C002', 'C004', 'EVS01509', 'C072', 'C039', 'C025', 'C021', 'C005', 'C001', 'C050', 'C051', 'C052', 'C019', 'C064', 'C070', 'C060', 'C008', 'C063', 'C053', 'C015', 'C066', 'C059', 'C071', 'EVS02556', 'C031', 'C054', 'EVS04400', 'C003', 'C038', 'C027', 'C073', 'C016', 'C026', 'C075', 'C045', 'C044', 'C013', 'C035', 'C029', 'C041', 'C057', 'C020', 'C024', 'C017', 'C056', 'C061', 'C068', 'DEPOT']
+ACO best (seed 9): ['DEPOT', 'C026', 'C075', 'C053', 'C044', 'C015', 'C013', 'C041', 'C027', 'C073', 'C016', 'C043', 'C038', 'C069', 'C067', 'C055', 'C047', 'C010', 'C074', 'C028', 'C009', 'C033', 'C042', 'C034', 'C030', 'C018', 'C023', 'C014', 'C065', 'C011', 'C006', 'C032', 'C040', 'C012', 'C037', 'C002', 'C004', 'C021', 'C072', 'C025', 'C039', 'EVS01509', 'C005', 'C001', 'C050', 'C051', 'C052', 'C019', 'C064', 'C070', 'C060', 'C008', 'C063', 'C017', 'C024', 'C045', 'C068', 'C056', 'C057', 'C020', 'C061', 'C035', 'C029', 'C066', 'C059', 'EVS02556', 'C054', 'C031', 'C071', 'C003', 'EVS04400', 'EVS02443', 'C048', 'C036', 'C062', 'C058', 'EVS04734', 'C046', 'C007', 'C022', 'C049', 'DEPOT']

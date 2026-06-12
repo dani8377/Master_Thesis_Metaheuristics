@@ -1,0 +1,37 @@
+algorithm,n_customers,avg_runtime_s,avg_cost
+Simulated Annealing,25,0.5640,1.9251
+Simulated Annealing,50,0.9326,2.4045
+Simulated Annealing,75,1.2735,2.6797
+Simulated Annealing,100,1.6668,3.2868
+Simulated Annealing,150,2.3534,4.6382
+Simulated Annealing,200,3.0467,4.7039
+Simulated Annealing,300,4.5971,5.4279
+Simulated Annealing,400,6.1944,6.9518
+Simulated Annealing,500,7.6416,6.9543
+Genetic Algorithm,25,2.6848,2.3364
+Genetic Algorithm,50,7.3765,3.8783
+Genetic Algorithm,75,8.6955,3.0605
+Genetic Algorithm,100,22.3153,7.7381
+Genetic Algorithm,150,43.4665,8.2961
+Genetic Algorithm,200,37.6576,4.5546
+Genetic Algorithm,300,130.2931,5.2112
+Genetic Algorithm,400,188.9743,8.1454
+Genetic Algorithm,500,494.8170,6.8893
+Memetic Algorithm,25,1.1751,2.1824
+Memetic Algorithm,50,2.6170,3.5433
+Memetic Algorithm,75,4.1867,2.9037
+Memetic Algorithm,100,6.6487,6.8370
+Memetic Algorithm,150,24.7729,6.8699
+Memetic Algorithm,200,30.3875,4.2605
+Memetic Algorithm,300,55.6006,4.8055
+Memetic Algorithm,400,111.7656,5.3913
+Memetic Algorithm,500,156.5755,6.1449
+ACO,25,4.1742,2.1917
+ACO,50,7.4230,2.6686
+ACO,75,10.9981,2.6468
+ACO,100,14.3374,2.9825
+ACO,150,22.4965,3.3535
+ACO,200,30.9127,3.6795
+ACO,300,50.8128,4.2418
+ACO,400,76.7289,4.6876
+ACO,500,98.1316,5.2409

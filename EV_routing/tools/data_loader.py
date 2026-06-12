@@ -168,3 +168,83 @@ def load_problem_data(dataset_dir: str | Path, ev_params: EVParameters) -> Probl
         customer_matrix_idx=customer_matrix_idx,
         station_matrix_idx=station_matrix_idx,
     )
+
+
+def subsample_problem_data(
+    data: ProblemData,
+    n_customers: int,
+    seed: int = 42,
+) -> ProblemData:
+    """
+    Return a new ProblemData containing only ``n_customers`` of the original
+    customers using farthest-point spatial sampling on lat/lon coordinates.
+    All charging stations and the depot are kept intact.
+
+    Farthest-point sampling ensures geographic spread: start with a random
+    customer, then repeatedly pick the customer farthest from the already-
+    selected set.  This avoids clustered subsets that create degenerate
+    routing problems at small N.
+
+    Subsets are nested (seed controls the initial point).
+    """
+    import random as _random
+
+    n = min(n_customers, len(data.all_customer_ids))
+    if n == len(data.all_customer_ids):
+        return data
+
+    # Build lat/lon coordinate array aligned with all_customer_ids ordering
+    cust_df = data.customers.copy()
+    cust_df["Node ID"] = cust_df["Node ID"].astype(str)
+    cust_df = cust_df.set_index("Node ID")
+
+    all_ids = data.all_customer_ids
+    n_total = len(all_ids)
+    coords = np.array(
+        [[float(cust_df.loc[c, "Latitude"]), float(cust_df.loc[c, "Longitude"])]
+         for c in all_ids],
+        dtype=np.float64,
+    )
+
+    # Farthest-point sampling: start at a random customer, greedily add
+    # the customer that maximises the minimum distance to all selected so far.
+    rng = _random.Random(seed)
+    selected_idx: list[int] = [rng.randrange(n_total)]
+    min_dists = np.full(n_total, np.inf)
+
+    for _ in range(n - 1):
+        last = selected_idx[-1]
+        d = np.linalg.norm(coords - coords[last], axis=1)
+        np.minimum(min_dists, d, out=min_dists)
+        min_dists[selected_idx] = 0.0   # already selected — never re-pick
+        selected_idx.append(int(np.argmax(min_dists)))
+
+    selected = [all_ids[i] for i in selected_idx]
+    selected_set = frozenset(selected)
+
+    new_customers = data.customers[
+        data.customers["Node ID"].astype(str).isin(selected_set)
+    ].reset_index(drop=True)
+
+    new_customer_matrix_idx = np.array(
+        [data.dist_index[c] for c in selected], dtype=np.intp
+    )
+
+    return ProblemData(
+        depot=data.depot,
+        customers=new_customers,
+        stations=data.stations,
+        distance_matrix=data.distance_matrix,
+        node_types=data.node_types,
+        dist_array=data.dist_array,
+        dist_index=data.dist_index,
+        station_price=data.station_price,
+        station_power=data.station_power,
+        energy_array=data.energy_array,
+        customer_ids=selected_set,
+        station_ids=data.station_ids,
+        all_customer_ids=selected,
+        all_station_ids=data.all_station_ids,
+        customer_matrix_idx=new_customer_matrix_idx,
+        station_matrix_idx=data.station_matrix_idx,
+    )

@@ -14,7 +14,7 @@ from typing import Any
 from tools.data_loader import ProblemData
 from tools.battery import EVParameters
 from tools.objective import ObjectiveWeights, RouteEvaluation, evaluate_route
-from tools.initial_solution import build_ev_feasible_solution
+from tools.initial_solution import build_ev_feasible_solution, repair_ev_route
 
 
 @dataclass
@@ -38,6 +38,7 @@ def greedy_nearest_neighbor(
     the seed parameter has no effect.
     """
     route = build_ev_feasible_solution(data, ev_params)
+    route = repair_ev_route(route, data, ev_params)
     ev = evaluate_route(route, data, ev_params, weights)
     feasibility = 1.0 if ev.feasible else 0.0
     return route, ev, GreedyStats(total_evaluated=1, feasibility_rate=feasibility)

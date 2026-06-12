@@ -1,0 +1,41 @@
+generated_at: '2026-06-10 17:49:17'
+instance: sf_75
+n_seeds: 10
+max_evaluations: 150000
+run_sensitivity: false
+algorithm_hyperparameters:
+  SA:
+    initial_temperature: 0.1
+    cooling_rate: 0.993
+    iterations_per_temperature: 20
+    reheat_patience: 250
+    reheat_factor: 0.4
+  GA:
+    population_size: 200
+    crossover_rate: 0.85
+    mutation_rate: 0.15
+    tournament_size: 4
+    elitism_count: 3
+  MA:
+    population_size: 40
+    crossover_rate: 0.75
+    mutation_rate: 0.15
+    tournament_size: 4
+    elitism_count: 3
+    local_search_iters: 5
+  ACO:
+    n_ants: 20
+    alpha: 0.5
+    beta: 6.0
+    rho: 0.3
+    q0: 0.85
+    battery_threshold_frac: 0.4
+    local_search_iters: 0
+    candidate_list_k: 0
+objective_weights:
+  distance_weight: 0.002958
+  travel_time_weight: 0.122399
+  energy_weight: 0.008107
+  charging_cost_weight: 0.035884
+  battery_violation_weight: 400.0
+  infeasible_visit_weight: 400.0
