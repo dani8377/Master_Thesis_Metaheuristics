@@ -23,6 +23,7 @@ class ProblemData:
     station_price: dict[str, float] = field(repr=False)   # node_id -> USD/kWh
     station_power: dict[str, float] = field(repr=False)   # node_id -> kW
     energy_array: np.ndarray = field(repr=False)  # NxN float64, arc energy kWh
+    dur_array: np.ndarray = field(repr=False)     # NxN float64, arc travel time in seconds (0 = unknown)
 
     # Precomputed sets/index arrays — avoid repeated pandas access in hot loops
     customer_ids: frozenset[str] = field(repr=False)      # O(1) membership test
@@ -143,6 +144,7 @@ def load_problem_data(dataset_dir: str | Path, ev_params: EVParameters) -> Probl
     else:
         # Flat-rate fallback — runs before build_instance.py has been executed
         energy_array = dist_array * ev_params.energy_consumption_kwh_per_km
+        dur_s = np.zeros_like(dist_array)
 
     # Precomputed sets and index arrays (used by neighborhoods / feasibility hot paths)
     all_customer_ids_list = [str(c) for c in customers["Node ID"].tolist() if str(c) in dist_index]
@@ -161,6 +163,7 @@ def load_problem_data(dataset_dir: str | Path, ev_params: EVParameters) -> Probl
         station_price=station_price,
         station_power=station_power,
         energy_array=energy_array,
+        dur_array=dur_s,
         customer_ids=frozenset(all_customer_ids_list),
         station_ids=frozenset(all_station_ids_list),
         all_customer_ids=all_customer_ids_list,
@@ -241,6 +244,7 @@ def subsample_problem_data(
         station_price=data.station_price,
         station_power=data.station_power,
         energy_array=data.energy_array,
+        dur_array=data.dur_array,
         customer_ids=selected_set,
         station_ids=data.station_ids,
         all_customer_ids=selected,

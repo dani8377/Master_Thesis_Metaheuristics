@@ -53,6 +53,17 @@ PARAMS_FILE   = RESULTS_DIR / "params.json"
 
 MAX_EVALS = 150_000
 
+# ── Focus modes ───────────────────────────────────────────────────────────────
+# Weight presets applied on top of the calibrated weights, mirroring the cloud
+# module's Performance/Balanced/Eco modes.  Each multiplier vector sums to 4.0,
+# so a typical feasible route still scores ~4.0 and the 100x big-M penalty
+# ratio is preserved; only the emphasis among the four real-cost terms shifts.
+FOCUS_MODES = {
+    "balanced": {"distance": 1.0, "time": 1.0, "energy": 1.0, "charging_cost": 1.0},
+    "eco":      {"distance": 0.4, "time": 0.4, "energy": 2.8, "charging_cost": 0.4},
+    "time":     {"distance": 0.4, "time": 2.8, "energy": 0.4, "charging_cost": 0.4},
+}
+
 
 # ---------------------------------------------------------------------------
 # Console log capture — tee stdout to run_log.txt
@@ -154,7 +165,7 @@ def parse_args() -> argparse.Namespace:
             "Run scalability analysis: (1) vary customer count across dedicated "
             "instances sf_25 … sf_500 (9 points) to show runtime and quality "
             "trends, and (2) vary battery capacity from 5 to 20 kWh (7 points) "
-            "on the sf_75 instance.  Uses 5 seeds and a 75 k eval budget per point."
+            "on the sf_75 instance.  Uses 3 seeds and a 30 k eval budget per point."
         ),
     )
     parser.add_argument(
@@ -166,6 +177,17 @@ def parse_args() -> argparse.Namespace:
             "main comparison.  BKS = best cost found across all algorithms and "
             "seeds in that run.  Saves optimality_gap.csv and "
             "figures/optimality_gap.png.  Use --seeds 20 for a robust estimate."
+        ),
+    )
+    parser.add_argument(
+        "--mode", "-M",
+        choices=list(FOCUS_MODES),
+        default="balanced",
+        help=(
+            "Objective focus mode: 'balanced' uses the calibrated weights "
+            "unchanged; 'eco' shifts 70%% of the real-cost weight onto energy; "
+            "'time' shifts 70%% onto total (travel + charging) time.  "
+            "Non-balanced modes write to results/<instance>_<mode>/."
         ),
     )
     parser.add_argument(
@@ -722,7 +744,7 @@ def run_scalability_analysis(
         print("  No metaheuristics selected — skipping scalability.")
         return
 
-    SCALE_SEEDS = [0, 1, 2, 3, 4]
+    SCALE_SEEDS = [0, 1, 2]
     SCALE_EVALS = 30_000
 
     _print_section(
@@ -945,6 +967,7 @@ def _save_run_manifest(
     weights,
     run_sensitivity: bool,
     instance: str,
+    focus_mode: str = "balanced",
 ) -> None:
     import datetime as _dt
     try:
@@ -956,6 +979,7 @@ def _save_run_manifest(
     manifest: dict = {
         "generated_at":    _dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "instance":        instance,
+        "focus_mode":      focus_mode,
         "n_seeds":         n_seeds,
         "max_evaluations": max_evals,
         "run_sensitivity": run_sensitivity,
@@ -1088,6 +1112,8 @@ def _save_summary_md(
 # ---------------------------------------------------------------------------
 
 def main() -> None:
+    global RESULTS_DIR, FIGURES_DIR
+
     args             = parse_args()
     run_flags        = _resolve_algorithms(args.algorithms)
     n_seeds          = args.seeds if args.seeds is not None else 10
@@ -1096,6 +1122,13 @@ def main() -> None:
     run_scalability  = args.scalability
     run_opt_gap      = args.opt_gap
     verbose          = args.verbose
+    mode             = args.mode
+
+    # Non-balanced modes get their own results directory; weights.json and
+    # params.json are always read from the base (balanced) instance directory.
+    if mode != "balanced":
+        RESULTS_DIR = Path(f"EV_routing/results/{INSTANCE}_{mode}")
+        FIGURES_DIR = RESULTS_DIR / "figures"
 
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     FIGURES_DIR.mkdir(parents=True, exist_ok=True)
@@ -1117,7 +1150,7 @@ def main() -> None:
 
     data = load_problem_data(INSTANCE_DIR, ev_params)
 
-    _weights_file = RESULTS_DIR / "weights.json"
+    _weights_file = Path(f"EV_routing/results/{INSTANCE}") / "weights.json"
     if _weights_file.exists():
         _w = json.loads(_weights_file.read_text())["weights"]
         weights = ObjectiveWeights(**_w)
@@ -1132,6 +1165,15 @@ def main() -> None:
             battery_violation_weight=10000.0,
             infeasible_visit_weight=5000.0,
         )
+
+    _mult = FOCUS_MODES[mode]
+    weights.distance_weight      *= _mult["distance"]
+    weights.travel_time_weight   *= _mult["time"]
+    weights.energy_weight        *= _mult["energy"]
+    weights.charging_cost_weight *= _mult["charging_cost"]
+    print(f"Focus mode '{mode}': multipliers {_mult}")
+    if mode != "balanced":
+        print(f"Results directory: {RESULTS_DIR}")
 
     # ------------------------------------------------------------------
     # Load hyperparameters from params.json
@@ -1489,6 +1531,7 @@ def main() -> None:
         RESULTS_DIR, n_seeds, MAX_EVALS,
         sa_kwargs, ga_kwargs, ma_kwargs, aco_kwargs,
         weights, run_sensitivity, INSTANCE,
+        focus_mode=mode,
     )
     _save_summary_md(
         all_results, meta_results, n_seeds, MAX_EVALS,

@@ -23,13 +23,15 @@ Adjusting the search
   Use "random" for GA / MA / ACO — same quality, much faster.
 - N_RANDOM_TRIALS — number of random trials (used when strategy is "random").
 - TUNE_SEEDS       — seeds per trial. More = slower but more reliable.
-- TUNE_EVALS       — eval budget per seed per trial.
+- TUNE_EVALS       — eval budget per seed per trial.  Kept EQUAL across all
+  algorithms (50k) so no algorithm is tuned closer to the final 150k
+  deployment budget than another.
 
-Grid size reference (@ 20k evals on this machine, 3 seeds):
-  SA  243 combos × 3 seeds × ~0.5s  ≈  6 min  ✓  grid OK
-  GA  108 combos × 3 seeds × ~5s    ≈ 27 min  ✗  use random
-  MA  324 combos × 3 seeds × ~3s    ≈ 16 min  ✗  use random
-  ACO 1944 combos × 3 seeds × ~3s   ≈ 97 min  ✗  use random
+Runtime reference (@ 50k evals on this machine, 30 random trials × 2 seeds):
+  SA   60 runs × ~2s   ≈  2 min
+  GA   60 runs × ~12s  ≈ 12 min
+  MA   60 runs × ~7s   ≈  7 min
+  ACO  60 runs × ~18s  ≈ 18 min
 """
 
 import json
@@ -76,14 +78,16 @@ N_RANDOM_TRIALS = 30       # used when strategy is "random"
 
 # ── Tuning budget ─────────────────────────────────────────────────────────────
 TUNE_SEEDS  = [0, 1]       # seeds per trial (more = slower but more reliable)
-# SA needs the full 50k budget so slow-cooling schedules can complete one cycle.
-# GA / MA / ACO params are much less budget-sensitive, so 20k is sufficient and
-# saves significant time (each GA/ACO run is ~5-19s vs ~2.5s for SA).
+# All algorithms get the SAME reduced tuning budget (50k).  Equal budgets
+# ensure no algorithm's hyperparameters are selected under conditions closer
+# to the final 150k experiment than another's — the asymmetry, not the
+# reduction, is what would bias the comparison.  Any reduced-budget transfer
+# error applies to all four algorithms identically.
 TUNE_EVALS  = {
     "SA":  50_000,
-    "GA":  20_000,
-    "MA":  20_000,
-    "ACO": 20_000,
+    "GA":  50_000,
+    "MA":  50_000,
+    "ACO": 50_000,
 }
 
 # =============================================================================
@@ -95,17 +99,15 @@ TUNE_EVALS  = {
 # For random search the lists act as the sampling pool.
 
 SA_GRID = {
-    # Calibrated for TUNE_EVALS=50k and MAX_EVALS=150k.
+    # Calibrated for TUNE_EVALS=50k (equal across algorithms), MAX_EVALS=150k.
     # Objective is normalised to ~4.0 for a feasible route.
     #
     # Temperature scale: exp(-delta/T) ≈ 0.8 for a typical worsening move
     # of delta≈0.1 → T ≈ 0.45.  Range [0.1, 0.5, 1.5] covers cold/warm/hot starts.
     #
-    # Cooling-cycle budget check (T_min=1e-3):
-    #   rate=0.993 → 984 steps;  984 × 50 = 49,200  ≈ TUNE_EVALS ✓
-    #   rate=0.995 → 1,379 steps; 1379 × 36 = 49,644  ≈ TUNE_EVALS ✓
-    #   rate=0.997 → 2,301 steps; 2301 × 21 = 48,321  ≈ TUNE_EVALS ✓
-    # At 150k (main run) there is room for 2-3 full cycles + reheats.
+    # Cooling-cycle budget check (T_min=1e-3): even the slowest schedule
+    # (rate=0.997, 100 iters/temp → 2,301 × 100 = 230k) completes most of a
+    # cycle at 150k; faster schedules fit multiple full cycles + reheats.
     "initial_temperature":        [0.1,  0.5,  1.5],
     "cooling_rate":               [0.993, 0.995, 0.997],
     "iterations_per_temperature": [20,   50,   100],

@@ -46,6 +46,7 @@ def evaluate_route(
     dist_array    = data.dist_array
     dist_index    = data.dist_index
     energy_array  = data.energy_array
+    dur_array     = data.dur_array
     node_types    = data.node_types
     station_price = data.station_price
     station_power = data.station_power
@@ -74,7 +75,10 @@ def evaluate_route(
 
         distance_km = dist_array[oi, di]
         energy_kwh  = energy_array[oi, di]
-        travel_h    = distance_km / speed
+        # Per-arc OSRM road duration; constant average speed only as fallback
+        # for arcs with unknown duration.
+        t_s         = dur_array[oi, di]
+        travel_h    = t_s / 3600.0 if t_s > 0.0 else distance_km / speed
 
         total_distance_km         += distance_km
         total_energy_consumed_kwh += energy_kwh
@@ -104,6 +108,9 @@ def evaluate_route(
                 total_charging_time_h   += charged_energy_kwh / power_kw
                 total_charging_cost_usd += charged_energy_kwh * price_per_kwh
                 battery_kwh = min(capacity, current_battery_nonnegative + charged_energy_kwh)
+
+    # Customers omitted from the route entirely would otherwise go unpenalized.
+    infeasible_visits += len(data.customer_ids.difference(route))
 
     objective_value = (
         weights.distance_weight        * total_distance_km

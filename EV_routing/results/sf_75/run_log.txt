@@ -2,81 +2,229 @@ Console log -> EV_routing/results/sf_75/run_log.txt
 Weights loaded from EV_routing/results/sf_75/weights.json
 
 ============================================================
+  Scalability Axis 1 — Customer-Count Scaling  (3 seeds, 30,000 evals/run)
+============================================================
+
+  ── n_customers=25  (EV_routing/instances/sf_25) ──
+    Simulated Annealing          time=  0.7s  F=1.8206  feasible=3/3
+    Genetic Algorithm            time=  3.1s  F=2.2721  feasible=3/3
+    Memetic Algorithm            time=  1.0s  F=2.2095  feasible=3/3
+    ACO                          time=  4.9s  F=2.1450  feasible=3/3
+
+  ── n_customers=50  (EV_routing/instances/sf_50) ──
+    Simulated Annealing          time=  1.2s  F=2.4133  feasible=3/3
+    Genetic Algorithm            time=  9.2s  F=4.0567  feasible=3/3
+    Memetic Algorithm            time=  1.9s  F=3.3699  feasible=3/3
+    ACO                          time=  8.5s  F=2.6981  feasible=3/3
+
+  ── n_customers=75  (EV_routing/instances/sf_75) ──
+    Simulated Annealing          time=  1.7s  F=2.8468  feasible=3/3
+    Genetic Algorithm            time= 22.2s  F=3.0485  feasible=3/3
+    Memetic Algorithm            time=  2.8s  F=2.9069  feasible=3/3
+    ACO                          time= 12.9s  F=2.7280  feasible=3/3
+
+  ── n_customers=100  (EV_routing/instances/sf_100) ──
+    Simulated Annealing          time=  2.2s  F=3.5732  feasible=3/3
+    Genetic Algorithm            time= 30.6s  F=8.6031  feasible=3/3
+    Memetic Algorithm            time=  4.6s  F=6.5116  feasible=3/3
+    ACO                          time= 14.6s  F=3.0692  feasible=3/3
+
+  ── n_customers=150  (EV_routing/instances/sf_150) ──
+    Simulated Annealing          time=  2.9s  F=4.7431  feasible=3/3
+    Genetic Algorithm            time= 50.4s  F=8.6370  feasible=3/3
+    Memetic Algorithm            time= 11.7s  F=4.6089  feasible=3/3
+    ACO                          time= 25.0s  F=3.5169  feasible=3/3
+
+  ── n_customers=200  (EV_routing/instances/sf_200) ──
+    Simulated Annealing          time=  4.0s  F=4.8440  feasible=3/3
+    Genetic Algorithm            time=142.9s  F=4.7781  feasible=3/3
+    Memetic Algorithm            time= 10.4s  F=4.4632  feasible=3/3
+    ACO                          time= 34.0s  F=3.9384  feasible=3/3
+
+  ── n_customers=300  (EV_routing/instances/sf_300) ──
+    Simulated Annealing          time=  5.9s  F=5.7183  feasible=3/3
+    Genetic Algorithm            time=352.9s  F=5.6848  feasible=3/3
+    Memetic Algorithm            time= 18.1s  F=5.1878  feasible=3/3
+    ACO                          time= 57.1s  F=4.6270  feasible=3/3
+
+  ── n_customers=400  (EV_routing/instances/sf_400) ──
+    Simulated Annealing          time=  7.9s  F=7.5129  feasible=3/3
+    Genetic Algorithm            time=557.4s  F=9.1076  feasible=3/3
+    Memetic Algorithm            time= 27.7s  F=5.7602  feasible=3/3
+    ACO                          time= 74.0s  F=5.1698  feasible=3/3
+
+  ── n_customers=500  (EV_routing/instances/sf_500) ──
+    Simulated Annealing          time=  9.6s  F=7.2945  feasible=3/3
+    Genetic Algorithm            time=796.2s  F=7.3411  feasible=3/3
+    Memetic Algorithm            time= 41.3s  F=6.7343  feasible=3/3
+    ACO                          time=112.5s  F=5.7935  feasible=3/3
+
+============================================================
+  Customer Scaling — Winner at Each Size
+============================================================
+  Scale point            Winner                        Avg F(X)  Avg time
+  ------------------------------------------------------------------------
+  n=25                   Simulated Annealing             1.8206     0.71s
+  n=50                   Simulated Annealing             2.4133     1.21s
+  n=75                   ACO                             2.7280    12.93s
+  n=100                  ACO                             3.0692    14.65s
+  n=150                  ACO                             3.5169    24.96s
+  n=200                  ACO                             3.9384    34.00s
+  n=300                  ACO                             4.6270    57.11s
+  n=400                  ACO                             5.1698    74.04s
+  n=500                  ACO                             5.7935   112.54s
+
+  ACO                          7/9 points  (78%)  ███████
+  Simulated Annealing          2/9 points  (22%)  ██
+
+
+============================================================
+  Scalability Axis 2 — Battery Constraint Tightness  (3 seeds, 30,000 evals/run)
+============================================================
+
+  ── battery_capacity=5 kWh ──
+    Simulated Annealing          time=  7.5s  F=2379.9847  feasible=0%
+    Genetic Algorithm            time= 62.2s  F=26915.3094  feasible=0%
+    Memetic Algorithm            time=  4.0s  F=10024.4822  feasible=0%
+    ACO                          time= 15.3s  F=28820.6861  feasible=0%
+
+  ── battery_capacity=8 kWh ──
+    Simulated Annealing          time=  3.2s  F=3.6943  feasible=100%
+    Genetic Algorithm            time= 84.1s  F=13068.2363  feasible=0%
+    Memetic Algorithm            time=  3.7s  F=2824.7404  feasible=0%
+    ACO                          time= 14.4s  F=15526.9557  feasible=0%
+
+  ── battery_capacity=10 kWh ──
+    Simulated Annealing          time=  2.1s  F=3.4457  feasible=100%
+    Genetic Algorithm            time= 97.0s  F=1439.6037  feasible=67%
+    Memetic Algorithm            time=  3.7s  F=3.5070  feasible=100%
+    ACO                          time= 16.5s  F=3.2169  feasible=100%
+
+  ── battery_capacity=12 kWh ──
+    Simulated Annealing          time=  1.9s  F=3.4233  feasible=100%
+    Genetic Algorithm            time= 61.6s  F=336.0765  feasible=67%
+    Memetic Algorithm            time=  3.5s  F=3.3163  feasible=100%
+    ACO                          time= 13.3s  F=3.1767  feasible=100%
+
+  ── battery_capacity=15 kWh ──
+    Simulated Annealing          time=  1.5s  F=3.0751  feasible=100%
+    Genetic Algorithm            time= 23.8s  F=4.8153  feasible=100%
+    Memetic Algorithm            time=  3.8s  F=3.2138  feasible=100%
+    ACO                          time= 12.3s  F=2.9599  feasible=100%
+
+  ── battery_capacity=18 kWh ──
+    Simulated Annealing          time=  1.5s  F=3.0407  feasible=100%
+    Genetic Algorithm            time= 18.6s  F=4.5770  feasible=100%
+    Memetic Algorithm            time=  5.1s  F=3.0675  feasible=100%
+    ACO                          time= 11.8s  F=2.9427  feasible=100%
+
+  ── battery_capacity=20 kWh ──
+    Simulated Annealing          time=  1.5s  F=2.8468  feasible=100%
+    Genetic Algorithm            time= 20.4s  F=3.0485  feasible=100%
+    Memetic Algorithm            time=  2.4s  F=2.9069  feasible=100%
+    ACO                          time= 11.1s  F=2.7280  feasible=100%
+
+============================================================
+  Battery Scaling — Winner at Each Capacity Level
+============================================================
+  Scale point            Winner                        Avg F(X)  Avg time
+  ------------------------------------------------------------------------
+  5 kWh                  Simulated Annealing          2379.9847     7.53s
+  8 kWh                  Simulated Annealing             3.6943     3.15s
+  10 kWh                 ACO                             3.2169    16.46s
+  12 kWh                 ACO                             3.1767    13.30s
+  15 kWh                 ACO                             2.9599    12.29s
+  18 kWh                 ACO                             2.9427    11.80s
+  20 kWh                 ACO                             2.7280    11.08s
+
+  ACO                          5/7 points  (71%)  █████
+  Simulated Annealing          2/7 points  (29%)  ██
+
+
+============================================================
+  Saving scalability output
+============================================================
+  Customer scaling CSV    -> EV_routing/results/sf_75/scalability_customer.csv
+  Battery scaling CSV     -> EV_routing/results/sf_75/scalability_battery.csv
+  Customer scalability plot   -> EV_routing/results/sf_75/figures/scalability_customer.png
+  Battery scalability plot    -> EV_routing/results/sf_75/figures/scalability_battery.png
+
+============================================================
   Single SA run — diagnostics
 ============================================================
   Feasible:            True
-  Objective:           2.6674
-  Distance (km):       292.67
-  Travel time (h):     5.85
-  Charging time (h):   0.33
-  Energy (kWh):        84.92
-  Charging cost ($):   9.92
+  Objective:           2.4888
+  Distance (km):       265.88
+  Travel time (h):     7.65
+  Charging time (h):   0.30
+  Energy (kWh):        78.72
+  Charging cost ($):   8.44
   Battery violation:   0.0000
   Infeasible visits:   0
   Evaluations:         150,000
-  Acceptance rate:     15.37%
-  Feasibility rate:    30.87%
-  Reheats:             23
-  Runtime:             6.09s
+  Acceptance rate:     14.51%
+  Feasibility rate:    32.90%
+  Reheats:             4
+  Runtime:             7.10s
 
 ============================================================
   Single GA run — diagnostics
 ============================================================
   Feasible:            True
-  Objective:           2.8720
-  Distance (km):       286.05
-  Travel time (h):     5.72
-  Charging time (h):   0.50
-  Energy (kWh):        90.10
-  Charging cost ($):   14.90
+  Objective:           3.0071
+  Distance (km):       296.59
+  Travel time (h):     8.25
+  Charging time (h):   0.29
+  Energy (kWh):        93.51
+  Charging cost ($):   15.43
   Battery violation:   0.0000
   Infeasible visits:   0
   Evaluations:         150,000
-  Generations:         761
-  Feasibility rate:    90.36%
-  Runtime:             29.47s
+  Generations:         1,515
+  Feasibility rate:    86.67%
+  Runtime:             36.66s
 
 ============================================================
   Single MA run — diagnostics
 ============================================================
   Feasible:            True
-  Objective:           2.5437
-  Distance (km):       273.23
-  Travel time (h):     5.46
-  Charging time (h):   0.50
-  Energy (kWh):        80.78
-  Charging cost ($):   9.76
+  Objective:           2.5499
+  Distance (km):       263.43
+  Travel time (h):     7.55
+  Charging time (h):   0.38
+  Energy (kWh):        79.48
+  Charging cost ($):   10.25
   Battery violation:   0.0000
   Infeasible visits:   0
   Evaluations:         150,000
-  Generations:         676
-  Feasibility rate:    100.00%
-  Runtime:             15.98s
+  Generations:         131
+  Feasibility rate:    64.52%
+  Runtime:             10.10s
 
 ============================================================
   Single ACO run — diagnostics
 ============================================================
   Feasible:            True
-  Objective:           2.6081
-  Distance (km):       273.32
-  Travel time (h):     5.47
-  Charging time (h):   0.53
-  Energy (kWh):        83.37
-  Charging cost ($):   10.86
+  Objective:           2.7276
+  Distance (km):       274.26
+  Travel time (h):     7.72
+  Charging time (h):   0.59
+  Energy (kWh):        86.76
+  Charging cost ($):   11.64
   Battery violation:   0.0000
   Infeasible visits:   0
   Evaluations:         150,000
-  Iterations:          7,500
-  Feasibility rate:    94.74%
-  Runtime:             53.67s
+  Iterations:          15,000
+  Feasibility rate:    100.00%
+  Runtime:             55.04s
 
 ============================================================
   Single Greedy run — baseline
 ============================================================
   Feasible:            True
-  Objective:           3.5789
+  Objective:           3.5969
   Distance (km):       309.22
-  Travel time (h):     6.18
+  Travel time (h):     8.42
   Charging time (h):   1.15
   Energy (kWh):        111.27
   Charging cost ($):   24.10
@@ -91,22 +239,22 @@ Weights loaded from EV_routing/results/sf_75/weights.json
 ----------------------------------------------------------------------------------------------
 Algorithm                     Best     Average       Worst     Std Dev    Feasible    Avg Time
 ----------------------------------------------------------------------------------------------
-Greedy                        3.58        3.58        3.58        0.00       10/10        0.0s
-Simulated Annealing           2.44        2.51        2.69        0.09       10/10        6.3s
-Genetic Algorithm             2.68        2.91        3.11        0.16       10/10       36.9s
-Memetic Algorithm             2.52        2.65        2.77        0.09       10/10       22.2s
-ACO                           2.62        2.63        2.67        0.02       10/10       54.3s
+Greedy                        3.60        3.60        3.60        0.00       10/10        0.0s
+Simulated Annealing           2.50        2.56        2.61        0.04       10/10        7.2s
+Genetic Algorithm             2.82        3.05        3.28        0.16       10/10       39.6s
+Memetic Algorithm             2.58        2.72        2.79        0.06       10/10       11.2s
+ACO                           2.67        2.71        2.75        0.03       10/10       54.2s
 ----------------------------------------------------------------------------------------------
 
 === Detailed Metrics ===
 ----------------------------------------------------------------------------------------------
 Algorithm                     Best      Mean       Std     CV%  Feasible   Avg evals  Avg time
 ----------------------------------------------------------------------------------------------
-Greedy                        3.58      3.58      0.00     0.0     10/10           1       0.0s
-Simulated Annealing           2.44      2.51      0.09     3.5     10/10      150000       6.3s
-Genetic Algorithm             2.68      2.91      0.16     5.5     10/10      150000      36.9s
-Memetic Algorithm             2.52      2.65      0.09     3.3     10/10      150000      22.2s
-ACO                           2.62      2.63      0.02     0.7     10/10      150000      54.3s
+Greedy                        3.60      3.60      0.00     0.0     10/10           1       0.0s
+Simulated Annealing           2.50      2.56      0.04     1.4     10/10      150000       7.2s
+Genetic Algorithm             2.82      3.05      0.16     5.2     10/10      150000      39.6s
+Memetic Algorithm             2.58      2.72      0.06     2.3     10/10      150000      11.2s
+ACO                           2.67      2.71      0.03     1.3     10/10      150000      54.2s
 ----------------------------------------------------------------------------------------------
 
 
@@ -114,11 +262,11 @@ ACO                           2.62      2.63      0.02     0.7     10/10      15
 ---------------------------------------------------------------------------------------------
 Algorithm                     Best            Mean ± Std    Median    CV%  Feasible  Avg time
 ---------------------------------------------------------------------------------------------
-Greedy                       3.579         3.579 ± 0.000     3.579    0.0      100%      0.0s
-Simulated Annealing          2.439         2.514 ± 0.089     2.467    3.5      100%      6.3s
-Genetic Algorithm            2.681         2.913 ± 0.160     2.946    5.5      100%     36.9s
-Memetic Algorithm            2.523         2.647 ± 0.087     2.658    3.3      100%     22.2s
-ACO                          2.615         2.633 ± 0.020     2.626    0.7      100%     54.3s
+Greedy                       3.597         3.597 ± 0.000     3.597    0.0      100%      0.0s
+Simulated Annealing          2.504         2.561 ± 0.036     2.561    1.4      100%      7.2s
+Genetic Algorithm            2.822         3.046 ± 0.159     3.070    5.2      100%     39.6s
+Memetic Algorithm            2.577         2.720 ± 0.062     2.749    2.3      100%     11.2s
+ACO                          2.667         2.710 ± 0.034     2.724    1.3      100%     54.2s
 ---------------------------------------------------------------------------------------------
 
 === Pairwise Wilcoxon Signed-Rank Tests (paired, two-sided, α=0.05) ===
@@ -129,11 +277,11 @@ ACO                          2.615         2.633 ± 0.020     2.626    0.7      
   Greedy vs Memetic Algorithm                    0.0     0.0020  Memetic Algorithm better *
   Greedy vs ACO                                  0.0     0.0020  ACO better *
   Simulated Annealing vs Genetic Algorithm       0.0     0.0020  Simulated Annealing better *
-  Simulated Annealing vs Memetic Algorithm       4.0     0.0137  Simulated Annealing better *
-  Simulated Annealing vs ACO                     3.0     0.0098  Simulated Annealing better *
-  Genetic Algorithm vs Memetic Algorithm         2.0     0.0059  Memetic Algorithm better *
+  Simulated Annealing vs Memetic Algorithm       1.0     0.0039  Simulated Annealing better *
+  Simulated Annealing vs ACO                     0.0     0.0020  Simulated Annealing better *
+  Genetic Algorithm vs Memetic Algorithm         0.0     0.0020  Memetic Algorithm better *
   Genetic Algorithm vs ACO                       0.0     0.0020  ACO better *
-  Memetic Algorithm vs ACO                      23.0     0.6953  no sig. difference
+  Memetic Algorithm vs ACO                      20.0     0.4922  no sig. difference
   (* p < 0.05)
 
 LaTeX table:
@@ -145,11 +293,11 @@ LaTeX table:
     \hline
     \textbf{Algorithm} & \textbf{Best} & \textbf{Mean $\pm$ Std} & \textbf{CV\%} & \textbf{Feasible\%} & \textbf{Avg time (s)} \\
     \hline
-  Greedy & 3.579 & $3.579 \pm 0.000$ & 0.0 & 100 & 0.0 \\
-  Simulated Annealing & 2.439 & $\textbf{2.514} \pm 0.089$ & 3.5 & 100 & 6.3 \\
-  Genetic Algorithm & 2.681 & $2.913 \pm 0.160$ & 5.5 & 100 & 36.9 \\
-  Memetic Algorithm & 2.523 & $2.647 \pm 0.087$ & 3.3 & 100 & 22.2 \\
-  ACO & 2.615 & $2.633 \pm 0.020$ & 0.7 & 100 & 54.3 \\
+  Greedy & 3.597 & $3.597 \pm 0.000$ & 0.0 & 100 & 0.0 \\
+  Simulated Annealing & 2.504 & $\textbf{2.561} \pm 0.036$ & 1.4 & 100 & 7.2 \\
+  Genetic Algorithm & 2.822 & $3.046 \pm 0.159$ & 5.2 & 100 & 39.6 \\
+  Memetic Algorithm & 2.577 & $2.720 \pm 0.062$ & 2.3 & 100 & 11.2 \\
+  ACO & 2.667 & $2.710 \pm 0.034$ & 1.3 & 100 & 54.2 \\
     \hline
   \end{tabular}
 \end{table}
@@ -164,30 +312,30 @@ LaTeX table:
   Metaheuristic ranking (lower objective = better):
   Rank  Algorithm                         Best        Avg   StdDev  Feasible  Avg time
   --------------------------------------------------------------------------------
-  1     Simulated Annealing             2.4391     2.5137   0.0886     10/10     6.27s  (winner)
-  2     ACO                             2.6154     2.6327   0.0197     10/10    54.27s  (+4.7%)
-  3     Memetic Algorithm               2.5225     2.6468   0.0869     10/10    22.16s  (+5.3%)
-  4     Genetic Algorithm               2.6813     2.9126   0.1596     10/10    36.93s  (+15.9%)
+  1     Simulated Annealing             2.5044     2.5611   0.0356     10/10     7.17s  (winner)
+  2     ACO                             2.6668     2.7105   0.0340     10/10    54.23s  (+5.8%)
+  3     Memetic Algorithm               2.5773     2.7201   0.0624     10/10    11.20s  (+6.2%)
+  4     Genetic Algorithm               2.8218     3.0464   0.1593     10/10    39.59s  (+19.0%)
 
   Cost component decomposition (best run per algorithm):
   Algorithm                     Dist(km)   Time(h)  Energy(kWh)   Cost($)  BattViol
   ----------------------------------------------------------------------------------
-  Simulated Annealing             263.0      5.74       78.41     8.98    0.0000
-  Genetic Algorithm               272.8      5.86       85.47    12.95    0.0000
-  Memetic Algorithm               265.2      5.87       82.47     9.77    0.0000
-  ACO                             274.4      6.02       83.46    10.87    0.0000
+  Simulated Annealing             258.5      7.95       77.70     9.73    0.0000
+  Genetic Algorithm               273.7      8.12       88.64    14.39    0.0000
+  Memetic Algorithm               265.3      8.17       80.36    10.01    0.0000
+  ACO                             273.4      8.24       83.57    10.91    0.0000
 
-  Improvement over Greedy baseline  (F_greedy avg = 3.5789):
-    Simulated Annealing           +29.8%  [better]
-    Genetic Algorithm             +18.6%  [better]
-    Memetic Algorithm             +26.0%  [better]
-    ACO                           +26.4%  [better]
+  Improvement over Greedy baseline  (F_greedy avg = 3.5969):
+    Simulated Annealing           +28.8%  [better]
+    Genetic Algorithm             +15.3%  [better]
+    Memetic Algorithm             +24.4%  [better]
+    ACO                           +24.6%  [better]
 
   Wall-clock speed (avg per single run, 150,000 evals):
-    Simulated Annealing          avg 6.27s  <- fastest
-    Genetic Algorithm            avg 36.93s
-    Memetic Algorithm            avg 22.16s
-    ACO                          avg 54.27s  <- slowest
+    Simulated Annealing          avg 7.17s  <- fastest
+    Genetic Algorithm            avg 39.59s
+    Memetic Algorithm            avg 11.20s
+    ACO                          avg 54.23s  <- slowest
 
   Automated checks:
   [OK] All metaheuristics beat Greedy — search adds genuine value over construction.
@@ -222,20 +370,20 @@ Saved: EV_routing/results/sf_75/figures/runtime_comparison.png
 ============================================================
   Optimality Gap Analysis
 ============================================================
-  BKS (Best-Known Solution) = 2.439099
+  BKS (Best-Known Solution) = 2.504404
   (minimum best cost across all 50 runs)
 
-  Greedy                       best=    3.5789  gap_best= 46.73%  avg=    3.5789  gap_avg=  46.73%  feasible=10/10
-  Simulated Annealing          best=    2.4391  gap_best=  0.00%  avg=    2.5137  gap_avg=   3.06%  feasible=10/10
-  Genetic Algorithm            best=    2.6813  gap_best=  9.93%  avg=    2.9126  gap_avg=  19.41%  feasible=10/10
-  Memetic Algorithm            best=    2.5225  gap_best=  3.42%  avg=    2.6468  gap_avg=   8.52%  feasible=10/10
-  ACO                          best=    2.6154  gap_best=  7.23%  avg=    2.6327  gap_avg=   7.94%  feasible=10/10
+  Greedy                       best=    3.5969  gap_best= 43.62%  avg=    3.5969  gap_avg=  43.62%  feasible=10/10
+  Simulated Annealing          best=    2.5044  gap_best=  0.00%  avg=    2.5611  gap_avg=   2.26%  feasible=10/10
+  Genetic Algorithm            best=    2.8218  gap_best= 12.67%  avg=    3.0464  gap_avg=  21.64%  feasible=10/10
+  Memetic Algorithm            best=    2.5773  gap_best=  2.91%  avg=    2.7201  gap_avg=   8.61%  feasible=10/10
+  ACO                          best=    2.6668  gap_best=  6.48%  avg=    2.7105  gap_avg=   8.23%  feasible=10/10
   Optimality gap CSV      -> EV_routing/results/sf_75/optimality_gap.csv
   Optimality gap plot     -> EV_routing/results/sf_75/figures/optimality_gap.png
 
 All figures saved to EV_routing/results/sf_75/figures/
 Greedy best:              ['DEPOT', 'C075', 'C045', 'C026', 'C016', 'C043', 'C041', 'C027', 'C073', 'C068', 'C057', 'C020', 'C061', 'C056', 'C024', 'C053', 'C044', 'C015', 'C013', 'C029', 'C035', 'C038', 'C069', 'C067', 'C047', 'C055', 'C010', 'C074', 'C028', 'C009', 'C033', 'C042', 'C034', 'C030', 'C014', 'C023', 'C065', 'C011', 'C006', 'C032', 'C040', 'EVS04889', 'C012', 'C037', 'C002', 'C004', 'C021', 'C072', 'C025', 'C039', 'C005', 'C001', 'C050', 'C051', 'C052', 'C064', 'C070', 'EVS00405', 'C060', 'C008', 'C063', 'C017', 'C018', 'C048', 'C036', 'C062', 'C058', 'EVS01245', 'C007', 'C046', 'EVS04734', 'C022', 'EVS02273', 'C049', 'EVS01245', 'C019', 'EVS04293', 'C066', 'EVS02443', 'C059', 'C071', 'C031', 'C054', 'EVS04298', 'C003', 'EVS04400', 'DEPOT']
-SA  best (seed 9):  ['DEPOT', 'C024', 'C056', 'C061', 'C043', 'C069', 'C067', 'C062', 'EVS04734', 'C046', 'C007', 'C022', 'C058', 'C036', 'C048', 'C049', 'C042', 'C028', 'C074', 'C034', 'C018', 'C023', 'C014', 'C065', 'C025', 'C021', 'C072', 'EVS01509', 'C039', 'C017', 'C063', 'C008', 'C060', 'C070', 'C064', 'C019', 'C051', 'C052', 'C050', 'C001', 'C005', 'EVS01509', 'C004', 'C002', 'C037', 'C012', 'C040', 'C032', 'C006', 'C011', 'C030', 'C033', 'C009', 'C010', 'C055', 'C047', 'C020', 'C057', 'C016', 'C075', 'C045', 'C053', 'C044', 'C015', 'C013', 'C066', 'C059', 'EVS02556', 'C054', 'C031', 'EVS02556', 'C071', 'EVS04400', 'C003', 'C035', 'C029', 'C038', 'C041', 'C027', 'C073', 'C068', 'C026', 'DEPOT']
-GA  best (seed 1):  ['DEPOT', 'C041', 'C073', 'C026', 'C045', 'C068', 'C057', 'C020', 'C061', 'C056', 'C024', 'C075', 'C053', 'C044', 'C015', 'C016', 'C043', 'C013', 'C029', 'C035', 'C038', 'C069', 'C067', 'C047', 'C055', 'C010', 'C074', 'C028', 'C009', 'C033', 'C042', 'C034', 'C030', 'C014', 'C023', 'C065', 'C011', 'C006', 'C032', 'C004', 'C002', 'C037', 'C012', 'C040', 'C021', 'C072', 'C025', 'C039', 'EVS01509', 'C005', 'C001', 'C050', 'C052', 'C051', 'C019', 'C064', 'C070', 'C060', 'C008', 'C063', 'C017', 'C018', 'C048', 'C036', 'C062', 'C058', 'C022', 'C007', 'C046', 'EVS04734', 'C049', 'EVS01245', 'C066', 'C059', 'C054', 'C031', 'C071', 'EVS02443', 'C003', 'EVS04400', 'C027', 'DEPOT']
-MA  best (seed 4):  ['DEPOT', 'C043', 'C069', 'C067', 'C047', 'C062', 'C022', 'EVS04734', 'C046', 'C007', 'C058', 'C036', 'C048', 'C049', 'C055', 'C010', 'C074', 'C028', 'C009', 'C033', 'C042', 'C034', 'C030', 'C014', 'C018', 'C023', 'C065', 'C011', 'C006', 'C032', 'C040', 'C012', 'C037', 'C002', 'C004', 'EVS01509', 'C072', 'C039', 'C025', 'C021', 'C005', 'C001', 'C050', 'C051', 'C052', 'C019', 'C064', 'C070', 'C060', 'C008', 'C063', 'C053', 'C015', 'C066', 'C059', 'C071', 'EVS02556', 'C031', 'C054', 'EVS04400', 'C003', 'C038', 'C027', 'C073', 'C016', 'C026', 'C075', 'C045', 'C044', 'C013', 'C035', 'C029', 'C041', 'C057', 'C020', 'C024', 'C017', 'C056', 'C061', 'C068', 'DEPOT']
-ACO best (seed 9): ['DEPOT', 'C026', 'C075', 'C053', 'C044', 'C015', 'C013', 'C041', 'C027', 'C073', 'C016', 'C043', 'C038', 'C069', 'C067', 'C055', 'C047', 'C010', 'C074', 'C028', 'C009', 'C033', 'C042', 'C034', 'C030', 'C018', 'C023', 'C014', 'C065', 'C011', 'C006', 'C032', 'C040', 'C012', 'C037', 'C002', 'C004', 'C021', 'C072', 'C025', 'C039', 'EVS01509', 'C005', 'C001', 'C050', 'C051', 'C052', 'C019', 'C064', 'C070', 'C060', 'C008', 'C063', 'C017', 'C024', 'C045', 'C068', 'C056', 'C057', 'C020', 'C061', 'C035', 'C029', 'C066', 'C059', 'EVS02556', 'C054', 'C031', 'C071', 'C003', 'EVS04400', 'EVS02443', 'C048', 'C036', 'C062', 'C058', 'EVS04734', 'C046', 'C007', 'C022', 'C049', 'DEPOT']
+SA  best (seed 0):  ['DEPOT', 'C026', 'C075', 'C045', 'C053', 'C015', 'C008', 'C060', 'C070', 'C064', 'C019', 'C044', 'C013', 'C041', 'C043', 'C061', 'C020', 'C057', 'C056', 'C024', 'C017', 'C063', 'C001', 'C050', 'C051', 'C052', 'C005', 'EVS01509', 'C004', 'C002', 'C037', 'C012', 'C040', 'C021', 'C072', 'C039', 'C025', 'C032', 'C006', 'C011', 'C065', 'C023', 'C014', 'C018', 'C030', 'C034', 'C033', 'C009', 'C074', 'C028', 'C010', 'C042', 'C062', 'C022', 'C007', 'C046', 'EVS04734', 'C058', 'C036', 'C048', 'C049', 'C055', 'C047', 'C067', 'C069', 'C038', 'C029', 'C071', 'EVS02556', 'C031', 'C054', 'EVS02556', 'C059', 'C066', 'EVS04400', 'C003', 'C035', 'C027', 'C073', 'C016', 'C068', 'DEPOT']
+GA  best (seed 6):  ['DEPOT', 'C075', 'C073', 'C043', 'C041', 'C027', 'C068', 'C016', 'C057', 'C061', 'C020', 'C056', 'C024', 'C045', 'C026', 'C053', 'C044', 'C015', 'C013', 'C029', 'C035', 'C038', 'C069', 'C067', 'C047', 'C055', 'C010', 'C028', 'C074', 'C009', 'C042', 'C034', 'C030', 'C014', 'C023', 'C065', 'C011', 'C006', 'C032', 'C040', 'C012', 'C037', 'C002', 'C004', 'EVS01509', 'C072', 'C021', 'C025', 'C039', 'C005', 'C001', 'C050', 'C051', 'C052', 'C019', 'EVS04293', 'C064', 'C070', 'C060', 'C008', 'C063', 'C017', 'C018', 'C033', 'C048', 'C036', 'C062', 'C058', 'C022', 'C007', 'C046', 'EVS04734', 'C049', 'EVS01245', 'C066', 'C059', 'C054', 'C031', 'C071', 'EVS02443', 'C003', 'EVS04400', 'DEPOT']
+MA  best (seed 6):  ['DEPOT', 'C075', 'C045', 'C026', 'C041', 'C027', 'C073', 'C068', 'C057', 'C020', 'C061', 'C056', 'C024', 'C022', 'EVS04734', 'C046', 'C007', 'C058', 'C062', 'C036', 'C048', 'C049', 'C018', 'C023', 'C017', 'C063', 'C008', 'C060', 'C070', 'C064', 'C019', 'C051', 'C052', 'C050', 'C001', 'C005', 'C039', 'C025', 'C021', 'C072', 'EVS01509', 'C012', 'C037', 'C002', 'C004', 'C040', 'C032', 'C006', 'C011', 'C065', 'C014', 'C030', 'C034', 'C042', 'C033', 'C009', 'C074', 'C028', 'C010', 'C055', 'C047', 'C067', 'C069', 'C038', 'C035', 'C029', 'C013', 'C053', 'C044', 'C015', 'C066', 'C059', 'EVS02556', 'C054', 'C031', 'C071', 'EVS04400', 'C003', 'C043', 'C016', 'DEPOT']
+ACO best (seed 1): ['DEPOT', 'C026', 'C075', 'C045', 'C053', 'C044', 'C015', 'C013', 'C027', 'C073', 'C016', 'C043', 'C041', 'C038', 'C069', 'C067', 'C047', 'C055', 'C010', 'C074', 'C028', 'C009', 'C033', 'C042', 'C034', 'C030', 'C018', 'C023', 'C014', 'C065', 'C011', 'C006', 'C032', 'C040', 'C012', 'C037', 'C002', 'C004', 'C021', 'C072', 'C025', 'C039', 'EVS01509', 'C005', 'C001', 'C050', 'C051', 'C052', 'C019', 'C064', 'C070', 'C060', 'C008', 'C063', 'C017', 'C024', 'C056', 'C068', 'C057', 'C020', 'C061', 'C035', 'C029', 'C066', 'C059', 'EVS02556', 'C054', 'C031', 'C071', 'C003', 'EVS04400', 'EVS02443', 'C048', 'C036', 'C062', 'C058', 'C007', 'C046', 'EVS04734', 'C022', 'C049', 'DEPOT']

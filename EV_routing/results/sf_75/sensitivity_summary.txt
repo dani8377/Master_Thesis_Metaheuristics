@@ -1,0 +1,34 @@
+Sensitivity Analysis — sf_75
+============================================================
+
+SA:
+  initial_temperature              13.3%  ██████
+  cooling_rate                      7.7%  ███
+  reheat_factor                     7.1%  ███
+  reheat_patience                   6.3%  ███
+  iterations_per_temperature        2.5%  █
+
+GA:
+  mutation_rate                     4.4%  ██
+  population_size                   2.5%  █
+  crossover_rate                    2.0%  █
+  elitism_count                     1.5%  
+  tournament_size                   0.1%  
+
+MA:
+  mutation_rate                     3.0%  █
+  elitism_count                     2.8%  █
+  tournament_size                   2.2%  █
+  crossover_rate                    1.4%  
+  local_search_iters                0.9%  
+  population_size                   0.6%  
+
+ACO:
+  alpha                             3.1%  █
+  battery_threshold_frac            1.9%  
+  q0                                1.6%  
+  beta                              1.3%  
+  local_search_iters                1.2%  
+  n_ants                            1.1%  
+  rho                               1.1%  
+  candidate_list_k                  0.5%  

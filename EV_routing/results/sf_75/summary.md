@@ -1,6 +1,6 @@
 # EV Routing — Experiment Summary
 
-_Generated: 2026-06-10 17:49_
+_Generated: 2026-06-12 15:24_
 
 ## Setup
 
@@ -17,21 +17,21 @@ Sorted by average objective — lower is better.  Budget: 150,000 evals, 10 seed
 
 | Algorithm | Best | Avg | Worst | Std | Feasible | Avg Time |
 |---|---|---|---|---|---|---|
-| Simulated Annealing | 2.4391 | 2.5137 | 2.6895 | 0.0886 | 10/10 | 6.27s |
-| ACO | 2.6154 | 2.6327 | 2.6733 | 0.0197 | 10/10 | 54.27s |
-| Memetic Algorithm | 2.5225 | 2.6468 | 2.7675 | 0.0869 | 10/10 | 22.16s |
-| Genetic Algorithm | 2.6813 | 2.9126 | 3.1057 | 0.1596 | 10/10 | 36.93s |
-| Greedy | 3.5789 | 3.5789 | 3.5789 | 0.0000 | 10/10 | 0.00s |
+| Simulated Annealing | 2.5044 | 2.5611 | 2.6132 | 0.0356 | 10/10 | 7.17s |
+| ACO | 2.6668 | 2.7105 | 2.7524 | 0.0340 | 10/10 | 54.23s |
+| Memetic Algorithm | 2.5773 | 2.7201 | 2.7870 | 0.0624 | 10/10 | 11.20s |
+| Genetic Algorithm | 2.8218 | 3.0464 | 3.2816 | 0.1593 | 10/10 | 39.59s |
+| Greedy | 3.5969 | 3.5969 | 3.5969 | 0.0000 | 10/10 | 0.00s |
 
 ## Winner and Baseline Comparison
 
-**Simulated Annealing** achieved the best average objective = **2.5137** (best seed: 2.4391).
+**Simulated Annealing** achieved the best average objective = **2.5611** (best seed: 2.5044).
 
 Improvement over Greedy baseline:
-- **Simulated Annealing**: +29.76% (avg 2.5137 vs Greedy 3.5789)
-- **Genetic Algorithm**: +18.62% (avg 2.9126 vs Greedy 3.5789)
-- **Memetic Algorithm**: +26.04% (avg 2.6468 vs Greedy 3.5789)
-- **ACO**: +26.44% (avg 2.6327 vs Greedy 3.5789)
+- **Simulated Annealing**: +28.80% (avg 2.5611 vs Greedy 3.5969)
+- **Genetic Algorithm**: +15.30% (avg 3.0464 vs Greedy 3.5969)
+- **Memetic Algorithm**: +24.38% (avg 2.7201 vs Greedy 3.5969)
+- **ACO**: +24.64% (avg 2.7105 vs Greedy 3.5969)
 
 ## Sensitivity Analysis
 

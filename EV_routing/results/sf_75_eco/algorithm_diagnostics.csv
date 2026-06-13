@@ -1,0 +1,6 @@
+algorithm,n_seeds,mean_total_evaluations,mean_sa_acceptance_rate,mean_sa_feasibility_rate,mean_sa_reheat_count,mean_ga_generations,mean_aco_iterations
+Greedy,10,1.000000,,1.000000,,,
+Simulated Annealing,10,150000.000000,0.147661,0.342199,4.600000,,
+Genetic Algorithm,10,150000.000000,,0.820000,,1515.000000,
+Memetic Algorithm,10,150000.000000,,0.703226,,131.000000,
+ACO,10,150000.000000,,0.944444,,,15000.000000

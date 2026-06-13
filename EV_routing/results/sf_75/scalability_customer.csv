@@ -1,37 +1,37 @@
 algorithm,n_customers,avg_runtime_s,avg_cost
-Simulated Annealing,25,0.5640,1.9251
-Simulated Annealing,50,0.9326,2.4045
-Simulated Annealing,75,1.2735,2.6797
-Simulated Annealing,100,1.6668,3.2868
-Simulated Annealing,150,2.3534,4.6382
-Simulated Annealing,200,3.0467,4.7039
-Simulated Annealing,300,4.5971,5.4279
-Simulated Annealing,400,6.1944,6.9518
-Simulated Annealing,500,7.6416,6.9543
-Genetic Algorithm,25,2.6848,2.3364
-Genetic Algorithm,50,7.3765,3.8783
-Genetic Algorithm,75,8.6955,3.0605
-Genetic Algorithm,100,22.3153,7.7381
-Genetic Algorithm,150,43.4665,8.2961
-Genetic Algorithm,200,37.6576,4.5546
-Genetic Algorithm,300,130.2931,5.2112
-Genetic Algorithm,400,188.9743,8.1454
-Genetic Algorithm,500,494.8170,6.8893
-Memetic Algorithm,25,1.1751,2.1824
-Memetic Algorithm,50,2.6170,3.5433
-Memetic Algorithm,75,4.1867,2.9037
-Memetic Algorithm,100,6.6487,6.8370
-Memetic Algorithm,150,24.7729,6.8699
-Memetic Algorithm,200,30.3875,4.2605
-Memetic Algorithm,300,55.6006,4.8055
-Memetic Algorithm,400,111.7656,5.3913
-Memetic Algorithm,500,156.5755,6.1449
-ACO,25,4.1742,2.1917
-ACO,50,7.4230,2.6686
-ACO,75,10.9981,2.6468
-ACO,100,14.3374,2.9825
-ACO,150,22.4965,3.3535
-ACO,200,30.9127,3.6795
-ACO,300,50.8128,4.2418
-ACO,400,76.7289,4.6876
-ACO,500,98.1316,5.2409
+Simulated Annealing,25,0.7093,1.8206
+Simulated Annealing,50,1.2127,2.4133
+Simulated Annealing,75,1.7182,2.8468
+Simulated Annealing,100,2.1767,3.5732
+Simulated Annealing,150,2.8551,4.7431
+Simulated Annealing,200,3.9628,4.8440
+Simulated Annealing,300,5.9244,5.7183
+Simulated Annealing,400,7.8940,7.5129
+Simulated Annealing,500,9.5647,7.2945
+Genetic Algorithm,25,3.1468,2.2721
+Genetic Algorithm,50,9.1508,4.0567
+Genetic Algorithm,75,22.2068,3.0485
+Genetic Algorithm,100,30.6230,8.6031
+Genetic Algorithm,150,50.3953,8.6370
+Genetic Algorithm,200,142.8763,4.7781
+Genetic Algorithm,300,352.8729,5.6848
+Genetic Algorithm,400,557.4349,9.1076
+Genetic Algorithm,500,796.2177,7.3411
+Memetic Algorithm,25,1.0328,2.2095
+Memetic Algorithm,50,1.8825,3.3699
+Memetic Algorithm,75,2.7570,2.9069
+Memetic Algorithm,100,4.5528,6.5116
+Memetic Algorithm,150,11.7446,4.6089
+Memetic Algorithm,200,10.4447,4.4632
+Memetic Algorithm,300,18.1103,5.1878
+Memetic Algorithm,400,27.6566,5.7602
+Memetic Algorithm,500,41.3348,6.7343
+ACO,25,4.8568,2.1450
+ACO,50,8.4528,2.6981
+ACO,75,12.9257,2.7280
+ACO,100,14.6489,3.0692
+ACO,150,24.9605,3.5169
+ACO,200,34.0022,3.9384
+ACO,300,57.1130,4.6270
+ACO,400,74.0370,5.1698
+ACO,500,112.5354,5.7935
