@@ -97,25 +97,25 @@ def make_tiny_instance() -> SchedulingProblemData:
 # ---------------------------------------------------------------------------
 
 @dataclass
-class TestResult:
+class CheckResult:
     name: str
     passed: bool
     message: str = ""
 
 
-_results: list[TestResult] = []
+_results: list[CheckResult] = []
 
 
 def check(name: str, condition: bool, *, expected=None, actual=None, tol: float = 1e-9) -> None:
     """Record a test result and print a one-line status."""
     if condition:
-        _results.append(TestResult(name, True))
+        _results.append(CheckResult(name, True))
         print(f"  [PASS] {name}")
     else:
         msg = ""
         if expected is not None or actual is not None:
             msg = f" expected={expected!r}, actual={actual!r}"
-        _results.append(TestResult(name, False, msg))
+        _results.append(CheckResult(name, False, msg))
         print(f"  [FAIL] {name}{msg}")
 
 
@@ -585,7 +585,7 @@ def run_all() -> int:
         try:
             fn()
         except Exception as exc:
-            _results.append(TestResult(group_name, False, str(exc)))
+            _results.append(CheckResult(group_name, False, str(exc)))
             print(f"  [ERROR] {group_name}: {exc}")
             traceback.print_exc()
 

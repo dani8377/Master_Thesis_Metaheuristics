@@ -109,8 +109,19 @@ def evaluate_route(
                 total_charging_cost_usd += charged_energy_kwh * price_per_kwh
                 battery_kwh = min(capacity, current_battery_nonnegative + charged_energy_kwh)
 
-    # Customers omitted from the route entirely would otherwise go unpenalized.
-    infeasible_visits += len(data.customer_ids.difference(route))
+    # Structural completeness: every customer must appear exactly once.
+    # Charged as infeasible visits (lambda_vis, Eq. 3.25) so the objective can
+    # never reward dropping or duplicating a customer.  All current callers
+    # only evaluate structurally valid routes, so this changes no results;
+    # it closes the latent gap for any future caller that skips validation.
+    visit_counts: dict[str, int] = {}
+    customer_ids = data.customer_ids
+    for node in route:
+        if node in customer_ids:
+            visit_counts[node] = visit_counts.get(node, 0) + 1
+    missing_customers    = len(customer_ids) - len(visit_counts)
+    duplicate_customers  = sum(c - 1 for c in visit_counts.values())
+    infeasible_visits   += missing_customers + duplicate_customers
 
     objective_value = (
         weights.distance_weight        * total_distance_km

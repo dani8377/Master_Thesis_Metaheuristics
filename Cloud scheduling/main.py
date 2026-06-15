@@ -1189,10 +1189,14 @@ def _print_winner_table(rows: list[dict], title: str) -> None:
 
 def _print_scalability_note(scale_data: dict) -> None:
     """
-    Detect and explain the common pattern where SA/UMDA show near-zero
+    Detect and explain the pattern where an algorithm shows near-zero
     improvement over Greedy at large n.  This is expected fixed-budget
     behaviour, not a code error — print a brief note so the user is not
     alarmed when they see +0.0% in the table.
+
+    In the recorded thesis runs only UMDA exhibits this collapse (from
+    n=200 onwards); SA holds a 10-15% margin and GA degrades gradually,
+    so the explanation below focuses on the model-based failure mode.
     """
     threshold_pct = 0.1   # below this, flag as "near-greedy"
     flagged: list[str] = []
@@ -1212,22 +1216,15 @@ def _print_scalability_note(scale_data: dict) -> None:
     for line in flagged:
         print(line)
     print()
-    print("  Reason: the evaluation budget (150 K calls) was calibrated")
-    print("  for n=50 tasks. At n≥200 the search space grows much faster")
-    print("  than the budget, so:")
-    print("    SA   — starts from the greedy solution and cannot escape it")
-    print("           within budget; the fixed cooling schedule leaves too")
-    print("           little exploration time at large n.")
-    print("    UMDA — the probability model has n×m parameters; with only")
-    print("           pop_size/2 training samples per generation the model")
-    print("           cannot learn reliable task-server affinities.")
-    print("    GA   — maintains advantage because crossover between 49")
-    print("           diverse random solutions creates useful offspring")
-    print("           without relying on a learned model or a single")
-    print("           greedy initialisation.")
-    print("  This is a valid thesis finding: at fixed budget, population-")
-    print("  diversity (GA) outperforms single-trajectory (SA) and model-")
-    print("  based (UMDA) methods as problem size grows.")
+    print("  This is expected fixed-budget behaviour, not a code error.")
+    print("  The evaluation budget (150 K calls) was calibrated for n=50;")
+    print("  at larger n the search space grows much faster than the budget.")
+    print("  UMDA is the typical case: its univariate model has n×m")
+    print("  parameters estimated from only pop_size/2 selected individuals")
+    print("  per generation, so at large n the signal-to-noise ratio is too")
+    print("  low to learn task-server affinities and the model collapses")
+    print("  onto its perturbed-greedy initial population, returning the")
+    print("  greedy elite unchanged (thesis Section 9.1.3).")
     print("  To restore improvement at larger n, scale the budget")
     print("  proportionally (e.g. max_temp_steps ∝ n/50 in config.yaml).")
     print("  ─────────────────────────────────────────────────────────")

@@ -223,7 +223,6 @@ def plot_box_comparison(
 
     bp = ax.boxplot(
         data_to_plot,
-        labels=labels,
         patch_artist=True,
         medianprops={"color": "#222222", "linewidth": 2.2},
         whiskerprops={"linewidth": 1.3, "linestyle": "--", "color": "#555555"},
@@ -231,6 +230,10 @@ def plot_box_comparison(
         flierprops={"marker": "o", "markersize": 4, "alpha": 0.5, "markeredgewidth": 0},
         widths=0.45,
     )
+    # Tick labels set explicitly: boxplot(labels=...) was removed in
+    # matplotlib >= 3.11 (renamed tick_labels=); this form works on every version.
+    ax.set_xticks(range(1, len(labels) + 1))
+    ax.set_xticklabels(labels)
     for patch, color in zip(bp["boxes"], colors):
         patch.set_facecolor(color)
         patch.set_alpha(0.55)
@@ -779,13 +782,15 @@ def plot_tuning_results(
 
         bp = ax.boxplot(
             grouped,
-            labels=lbs,
             patch_artist=True,
             medianprops={"color": "#222222", "linewidth": 1.6},
             whiskerprops={"linewidth": 1.0},
             capprops={"linewidth": 1.0},
             flierprops={"markersize": 3},
         )
+        # boxplot(labels=...) removed in matplotlib >= 3.11; set ticks explicitly
+        ax.set_xticks(range(1, len(lbs) + 1))
+        ax.set_xticklabels(lbs)
         for patch in bp["boxes"]:
             patch.set_facecolor(_algo_color(p_idx))
             patch.set_alpha(0.55)

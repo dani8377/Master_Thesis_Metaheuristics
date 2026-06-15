@@ -1,3 +1,11 @@
 **/data/
-**/instances/
-results/tuning
+**/__pycache__/
+**/.pytest_cache/
+
+# NOTE (audit 2026-06-12): two ignore rules were removed on purpose —
+#   **/instances/      the frozen EV instances are experimental evidence and
+#                      must be committed (OSRM/SRTM rebuilds are not
+#                      reproducible); run build_instance.py once, then commit.
+#   results/tuning     tuning outputs (tuning_<algo>.csv, tuning_summary.md)
+#                      are the evidence behind thesis Table 8.1 and must be
+#                      committed after running `run.py cloud --tune`.

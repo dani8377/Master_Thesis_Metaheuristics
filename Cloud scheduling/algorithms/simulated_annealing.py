@@ -254,10 +254,13 @@ def simulated_annealing(
     _window_accepts  = 0
 
     # ---- Main loop ----
+    # min_temperature is a FLOOR, not a stopping criterion: the schedule never
+    # drops below it, but the search always runs all max_temp_steps so SA
+    # consumes its full evaluation budget (iterations_per_temperature x
+    # max_temp_steps), matching GA/UMDA and the EV module's SA.  Near the
+    # floor, acceptance of worsening moves is effectively zero, so the tail
+    # behaves as hill-climbing until a reheat fires.
     for step_num in range(max_temp_steps):
-        if temperature < min_temperature:
-            break
-
         step_improved = False
 
         for _ in range(iterations_per_temperature):
@@ -296,8 +299,8 @@ def simulated_annealing(
                 best_cost     = current_cost
                 step_improved = True
 
-        # ---- Cooling ----
-        temperature *= cooling_rate
+        # ---- Cooling (floored at min_temperature) ----
+        temperature = max(temperature * cooling_rate, min_temperature)
         stats.best_cost_history.append(best_cost)
         stats.current_cost_history.append(current_cost)
         stats.temperature_history.append(temperature)
