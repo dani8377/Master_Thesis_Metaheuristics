@@ -1,0 +1,11 @@
+{
+  "name": "sf_100",
+  "description": "EV routing \u2014 San Francisco, 100 customers",
+  "n_customers": 100,
+  "n_stations": 30,
+  "n_nodes_total": 131,
+  "random_state": 42,
+  "road_data": "OSRM (project-osrm.org)",
+  "elevation_data": "SRTM 30m (NASA)",
+  "created": "2026-05-18"
+}
