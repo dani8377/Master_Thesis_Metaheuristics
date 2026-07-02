@@ -213,6 +213,7 @@ def simulated_annealing(
     reheat_patience: int = 300,
     reheat_factor: float = 0.4,
     verbose: bool = False,
+    snapshot_callback=None,   # optional observer hook — see below
 ) -> tuple[list[int], ScheduleEvaluation, SAStatistics]:
     """
     Run Simulated Annealing for cloud resource allocation.
@@ -220,6 +221,14 @@ def simulated_annealing(
     When initial_temperature is None (or 0), it is estimated automatically
     so that ~80% of random worsening moves are accepted at step 0.  This
     keeps the annealing schedule correctly calibrated after objective normalisation.
+
+    snapshot_callback, when provided, is invoked as
+        snapshot_callback(step_num, best_assignment_copy, best_eval, temperature)
+    once before the main loop (step -1, greedy start) and at the end of every
+    temperature step in which a new global best was found.  It is a pure
+    observer used by the allocation visualiser (visualize.py) to record the
+    search trajectory; it never influences the search itself and adds zero
+    cost when left at None (the default used by all experiments).
 
     Returns (best_assignment, best_evaluation, diagnostics).
     """
@@ -248,6 +257,10 @@ def simulated_annealing(
 
     temperature               = initial_temperature
     steps_without_improvement = 0
+
+    if snapshot_callback is not None:
+        # Record the greedy starting point before any search happens
+        snapshot_callback(-1, best_solution[:], best_eval, temperature)
 
     verbose_interval = max(1, max_temp_steps // 10)
     _window_evals    = 0
@@ -304,6 +317,10 @@ def simulated_annealing(
         stats.best_cost_history.append(best_cost)
         stats.current_cost_history.append(current_cost)
         stats.temperature_history.append(temperature)
+
+        # ---- Observer hook: record improved best-so-far assignments ----
+        if snapshot_callback is not None and step_improved:
+            snapshot_callback(step_num, best_solution[:], best_eval, temperature)
 
         # ---- Reheat if stuck ----
         if step_improved:

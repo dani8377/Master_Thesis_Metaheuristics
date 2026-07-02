@@ -2,8 +2,9 @@
 Genetic Algorithm (GA) for the cloud task scheduling problem.
 
 Generational GA with tournament selection, uniform crossover, per-gene mutation,
-and elitism.  Population is seeded with one greedy FFD solution plus P-1 random
-assignments.  Evaluation budget is calibrated to match SA and UMDA (~150 000 calls).
+and elitism.  Population is seeded with one greedy BFD (Best-Fit Decreasing)
+solution plus P-1 random assignments.  Evaluation budget is calibrated to match
+SA and UMDA (~150 000 calls).
 """
 from __future__ import annotations
 
@@ -102,7 +103,7 @@ def genetic_algorithm(
 
     # ------------------------------------------------------------------ #
     # Initialise population                                                #
-    # One greedy-FFD solution gives the population a strong head start.   #
+    # One greedy-BFD solution gives the population a strong head start.   #
     # The rest are random to ensure initial diversity.                     #
     # ------------------------------------------------------------------ #
     population: list[list[int]] = [build_greedy_assignment(data)]

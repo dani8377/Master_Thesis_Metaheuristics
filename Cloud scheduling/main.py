@@ -408,14 +408,20 @@ def _print_interpretation(
         )
 
     # ---- Energy / latency decomposition ---- #
+    # Contributions must be computed on the NORMALISED terms (divide by the
+    # calibration refs), exactly as they enter F(X).  Raw w_e*E (Watts) vs
+    # w_l*L (ms) would misstate the shares because the units differ by orders
+    # of magnitude — this matches the summary.md and plot.py computation.
     print(f"\n  Energy vs latency decomposition of F(X) - best run per algorithm:")
     print(f"  {'Algorithm':<27} {'Energy':>10} {'Latency':>12} {'Servers':>8}"
           f" {'E-contrib%':>11} {'L-contrib%':>11}")
     print("  " + "-" * 82)
+    e_ref = weights.energy_ref or 1.0
+    l_ref = weights.latency_ref or 1.0
     for r in meta_results:
         ev = r.best_eval
-        e_c = weights.energy_weight  * ev.total_energy
-        l_c = weights.latency_weight * ev.total_latency
+        e_c = weights.energy_weight  * ev.total_energy  / e_ref
+        l_c = weights.latency_weight * ev.total_latency / l_ref
         total_c = e_c + l_c
         e_pct = e_c / total_c * 100 if total_c > 0 else 0
         l_pct = l_c / total_c * 100 if total_c > 0 else 0
@@ -427,7 +433,7 @@ def _print_interpretation(
             f" {e_pct:>10.1f}%"
             f" {l_pct:>10.1f}%"
         )
-    print("  (E-contrib = w_e × E(X),  L-contrib = w_l × L(X),  excluding capacity penalties)")
+    print("  (E-contrib = w_e × E(X)/E_ref,  L-contrib = w_l × L(X)/L_ref,  excluding capacity penalties)")
 
     # ---- Baseline comparison ---- #
     # Compare averages, not best seeds: a metaheuristic that beats Greedy
@@ -465,7 +471,7 @@ def _print_interpretation(
 
   GA (Genetic Algorithm):
     Population-based, combines solutions via uniform crossover. Diverse
-    initial population (1 greedy + 49 random) maps the landscape broadly.
+    initial population (1 greedy BFD + pop_size-1 random) maps the landscape broadly.
     However, crossing two good integer-vector assignments often produces
     offspring that are worse than either parent - a known issue in discrete
     EAs - so GA can converge slower than SA per unit of budget. Elitism
