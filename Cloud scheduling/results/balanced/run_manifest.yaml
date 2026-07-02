@@ -1,9 +1,9 @@
-generated_at: '2026-06-12 23:11:17'
+generated_at: '2026-07-02 10:59:18'
 cli:
   algorithms:
   - all
   focus: balanced
-  seeds: 20
+  seeds: null
   sensitivity: true
   scalability: true
   tune: false

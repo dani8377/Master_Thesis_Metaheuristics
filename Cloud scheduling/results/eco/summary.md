@@ -1,6 +1,6 @@
 # Cloud Scheduling — Experiment Summary
 
-_Generated: 2026-05-24 23:25_
+_Generated: 2026-07-02 14:01_
 
 ## Setup
 
@@ -39,10 +39,10 @@ Sorted by average F(X) — lower is better.  All runs: n=50 real tasks, 20 seeds
 
 | Algorithm | Best F | Avg F | Worst F | Std Dev | Feasible | Avg Time |
 |---|---|---|---|---|---|---|
-| Simulated Annealing | 1.1075 | 1.1083 | 1.1103 | 0.0009 | 20/20 | 5.80s |
-| UMDA (EDA) | 1.1085 | 1.1099 | 1.1140 | 0.0013 | 20/20 | 4.75s |
-| Genetic Algorithm | 1.1086 | 1.1165 | 1.1347 | 0.0086 | 20/20 | 5.32s |
-| Branch & Bound | 1.1362 | 1.1362 | 1.1362 | 0.0000 | 1/1 | 60.67s |
+| Simulated Annealing | 1.1075 | 1.1083 | 1.1103 | 0.0009 | 20/20 | 6.01s |
+| UMDA (EDA) | 1.1085 | 1.1099 | 1.1140 | 0.0013 | 20/20 | 10.36s |
+| Genetic Algorithm | 1.1086 | 1.1165 | 1.1347 | 0.0086 | 20/20 | 6.94s |
+| Branch & Bound | 1.1362 | 1.1362 | 1.1362 | 0.0000 | 1/1 | 60.93s |
 | Greedy BFD (baseline) | 1.1557 | 1.1557 | 1.1557 | 0.0000 | 20/20 | 0.00s |
 | Round-Robin (baseline) | 9.2911 | 9.2911 | 9.2911 | 0.0000 | 0/1 | 0.00s |
 | Random (baseline) | 3.2487 | 16.9628 | 32.7172 | 10.2209 | 0/20 | 0.00s |

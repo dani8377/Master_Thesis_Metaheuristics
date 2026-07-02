@@ -28,33 +28,33 @@
   Single SA Diagnostic Run
 ============================================================
   Feasible:              True
-  Objective value F(X):  0.9590
-  Total energy (W):      13274.20
-  Total latency (ms):    26749.82
+  Objective value F(X):  0.9538
+  Total energy (W):      13063.92
+  Total latency (ms):    26683.91
   CPU violation (%):     0.0000
   Memory violation (MB): 0.00
   Active servers:        10/10
-  Runtime:               5.88s
+  Runtime:               6.09s
 
   SA search statistics:
     Candidates evaluated:    150000  (+ 401 T_0 probe evals  -> total budget 150401)
-    Improving accepted:      25336
-    Worsening accepted:      28310
+    Improving accepted:      24338
+    Worsening accepted:      27728
     Structural rejections:   0
-    Acceptance rate:         35.76%
-    Feasibility rate:        74.56%
+    Acceptance rate:         34.71%
+    Feasibility rate:        78.82%
     Reheat count:            6
-    Final temperature:       0.001410
+    Final temperature:       0.001120
 
   Per-server task distribution (# = 1 task):
-    Server  0:   5 tasks  #####
-    Server  1:  12 tasks  ############
-    Server  2:   2 tasks  ##
-    Server  3:   5 tasks  #####
-    Server  4:  11 tasks  ###########
+    Server  0:   4 tasks  ####
+    Server  1:   8 tasks  ########
+    Server  2:   3 tasks  ###
+    Server  3:   4 tasks  ####
+    Server  4:  15 tasks  ###############
     Server  5:   3 tasks  ###
     Server  6:   2 tasks  ##
-    Server  7:   5 tasks  #####
+    Server  7:   6 tasks  ######
     Server  8:   3 tasks  ###
     Server  9:   2 tasks  ##
 
@@ -63,74 +63,74 @@
 ============================================================
 
   Running Simulated Annealing (20 seeds) ...
-  Run  1/20  seed=0  cost=0.96  time=5.7s  [feasible]
-  Run  2/20  seed=1  cost=0.96  time=5.6s  [feasible]
-  Run  3/20  seed=2  cost=0.96  time=5.6s  [feasible]
-  Run  4/20  seed=3  cost=0.96  time=5.8s  [feasible]
-  Run  5/20  seed=4  cost=0.96  time=5.9s  [feasible]
-  Run  6/20  seed=5  cost=0.96  time=5.7s  [feasible]
-  Run  7/20  seed=6  cost=0.96  time=2.9s  [feasible]
-  Run  8/20  seed=7  cost=0.96  time=5.6s  [feasible]
-  Run  9/20  seed=8  cost=0.96  time=5.7s  [feasible]
-  Run 10/20  seed=9  cost=0.96  time=5.9s  [feasible]
-  Run 11/20  seed=10  cost=0.96  time=3.2s  [feasible]
-  Run 12/20  seed=11  cost=0.96  time=6.2s  [feasible]
-  Run 13/20  seed=12  cost=0.96  time=5.7s  [feasible]
-  Run 14/20  seed=13  cost=0.96  time=5.7s  [feasible]
-  Run 15/20  seed=14  cost=0.95  time=6.1s  [feasible]
-  Run 16/20  seed=15  cost=0.95  time=5.7s  [feasible]
-  Run 17/20  seed=16  cost=0.96  time=5.7s  [feasible]
-  Run 18/20  seed=17  cost=0.96  time=5.6s  [feasible]
-  Run 19/20  seed=18  cost=0.96  time=5.7s  [feasible]
-  Run 20/20  seed=19  cost=0.95  time=5.8s  [feasible]
+  Run  1/20  seed=0  cost=0.96  time=9.8s  [feasible]
+  Run  2/20  seed=1  cost=0.96  time=12.7s  [feasible]
+  Run  3/20  seed=2  cost=0.96  time=12.6s  [feasible]
+  Run  4/20  seed=3  cost=0.96  time=13.4s  [feasible]
+  Run  5/20  seed=4  cost=0.96  time=12.7s  [feasible]
+  Run  6/20  seed=5  cost=0.96  time=14.2s  [feasible]
+  Run  7/20  seed=6  cost=0.96  time=13.1s  [feasible]
+  Run  8/20  seed=7  cost=0.96  time=13.0s  [feasible]
+  Run  9/20  seed=8  cost=0.96  time=11.8s  [feasible]
+  Run 10/20  seed=9  cost=0.96  time=11.6s  [feasible]
+  Run 11/20  seed=10  cost=0.96  time=13.3s  [feasible]
+  Run 12/20  seed=11  cost=0.96  time=12.1s  [feasible]
+  Run 13/20  seed=12  cost=0.96  time=12.1s  [feasible]
+  Run 14/20  seed=13  cost=0.96  time=12.1s  [feasible]
+  Run 15/20  seed=14  cost=0.95  time=13.2s  [feasible]
+  Run 16/20  seed=15  cost=0.95  time=12.4s  [feasible]
+  Run 17/20  seed=16  cost=0.96  time=12.6s  [feasible]
+  Run 18/20  seed=17  cost=0.96  time=11.7s  [feasible]
+  Run 19/20  seed=18  cost=0.96  time=11.9s  [feasible]
+  Run 20/20  seed=19  cost=0.95  time=12.1s  [feasible]
 
   Running Genetic Algorithm (20 seeds) ...
-  Run  1/20  seed=0  cost=0.96  time=5.2s  [feasible]
-  Run  2/20  seed=1  cost=0.96  time=5.0s  [feasible]
-  Run  3/20  seed=2  cost=0.96  time=5.1s  [feasible]
-  Run  4/20  seed=3  cost=0.96  time=5.1s  [feasible]
-  Run  5/20  seed=4  cost=0.96  time=5.0s  [feasible]
-  Run  6/20  seed=5  cost=0.96  time=5.1s  [feasible]
-  Run  7/20  seed=6  cost=0.96  time=5.4s  [feasible]
-  Run  8/20  seed=7  cost=0.96  time=5.3s  [feasible]
-  Run  9/20  seed=8  cost=0.96  time=6.9s  [feasible]
-  Run 10/20  seed=9  cost=0.97  time=9.5s  [feasible]
-  Run 11/20  seed=10  cost=0.96  time=8.0s  [feasible]
-  Run 12/20  seed=11  cost=0.96  time=9.1s  [feasible]
-  Run 13/20  seed=12  cost=0.96  time=8.9s  [feasible]
-  Run 14/20  seed=13  cost=0.96  time=9.2s  [feasible]
-  Run 15/20  seed=14  cost=0.96  time=9.3s  [feasible]
-  Run 16/20  seed=15  cost=0.96  time=9.1s  [feasible]
-  Run 17/20  seed=16  cost=0.97  time=9.1s  [feasible]
-  Run 18/20  seed=17  cost=0.96  time=9.1s  [feasible]
-  Run 19/20  seed=18  cost=0.96  time=9.2s  [feasible]
-  Run 20/20  seed=19  cost=0.96  time=9.0s  [feasible]
+  Run  1/20  seed=0  cost=0.96  time=11.2s  [feasible]
+  Run  2/20  seed=1  cost=0.96  time=11.5s  [feasible]
+  Run  3/20  seed=2  cost=0.96  time=7.4s  [feasible]
+  Run  4/20  seed=3  cost=0.96  time=10.5s  [feasible]
+  Run  5/20  seed=4  cost=0.96  time=10.3s  [feasible]
+  Run  6/20  seed=5  cost=0.96  time=8.2s  [feasible]
+  Run  7/20  seed=6  cost=0.96  time=6.2s  [feasible]
+  Run  8/20  seed=7  cost=0.96  time=6.2s  [feasible]
+  Run  9/20  seed=8  cost=0.96  time=5.4s  [feasible]
+  Run 10/20  seed=9  cost=0.97  time=5.4s  [feasible]
+  Run 11/20  seed=10  cost=0.96  time=5.5s  [feasible]
+  Run 12/20  seed=11  cost=0.96  time=5.4s  [feasible]
+  Run 13/20  seed=12  cost=0.96  time=5.8s  [feasible]
+  Run 14/20  seed=13  cost=0.96  time=5.5s  [feasible]
+  Run 15/20  seed=14  cost=0.96  time=5.9s  [feasible]
+  Run 16/20  seed=15  cost=0.96  time=5.7s  [feasible]
+  Run 17/20  seed=16  cost=0.97  time=5.3s  [feasible]
+  Run 18/20  seed=17  cost=0.96  time=5.3s  [feasible]
+  Run 19/20  seed=18  cost=0.96  time=6.0s  [feasible]
+  Run 20/20  seed=19  cost=0.96  time=5.6s  [feasible]
 
   Running UMDA (EDA) (20 seeds) ...
-  Run  1/20  seed=0  cost=0.97  time=8.7s  [feasible]
-  Run  2/20  seed=1  cost=0.97  time=8.7s  [feasible]
-  Run  3/20  seed=2  cost=0.96  time=8.7s  [feasible]
-  Run  4/20  seed=3  cost=0.96  time=6.8s  [feasible]
-  Run  5/20  seed=4  cost=0.97  time=6.1s  [feasible]
-  Run  6/20  seed=5  cost=0.97  time=6.2s  [feasible]
-  Run  7/20  seed=6  cost=0.96  time=6.3s  [feasible]
-  Run  8/20  seed=7  cost=0.96  time=6.7s  [feasible]
-  Run  9/20  seed=8  cost=0.96  time=6.4s  [feasible]
-  Run 10/20  seed=9  cost=0.96  time=7.6s  [feasible]
-  Run 11/20  seed=10  cost=0.96  time=7.0s  [feasible]
-  Run 12/20  seed=11  cost=0.97  time=8.6s  [feasible]
-  Run 13/20  seed=12  cost=0.97  time=6.1s  [feasible]
-  Run 14/20  seed=13  cost=0.97  time=6.4s  [feasible]
-  Run 15/20  seed=14  cost=0.97  time=6.0s  [feasible]
-  Run 16/20  seed=15  cost=0.96  time=6.4s  [feasible]
-  Run 17/20  seed=16  cost=0.96  time=5.9s  [feasible]
-  Run 18/20  seed=17  cost=0.96  time=7.2s  [feasible]
-  Run 19/20  seed=18  cost=0.96  time=6.0s  [feasible]
-  Run 20/20  seed=19  cost=0.97  time=5.8s  [feasible]
+  Run  1/20  seed=0  cost=0.97  time=5.0s  [feasible]
+  Run  2/20  seed=1  cost=0.97  time=5.2s  [feasible]
+  Run  3/20  seed=2  cost=0.96  time=5.2s  [feasible]
+  Run  4/20  seed=3  cost=0.96  time=6.9s  [feasible]
+  Run  5/20  seed=4  cost=0.97  time=11.2s  [feasible]
+  Run  6/20  seed=5  cost=0.97  time=9.8s  [feasible]
+  Run  7/20  seed=6  cost=0.96  time=8.8s  [feasible]
+  Run  8/20  seed=7  cost=0.96  time=10.2s  [feasible]
+  Run  9/20  seed=8  cost=0.96  time=10.3s  [feasible]
+  Run 10/20  seed=9  cost=0.96  time=10.6s  [feasible]
+  Run 11/20  seed=10  cost=0.96  time=10.9s  [feasible]
+  Run 12/20  seed=11  cost=0.97  time=10.1s  [feasible]
+  Run 13/20  seed=12  cost=0.97  time=9.8s  [feasible]
+  Run 14/20  seed=13  cost=0.97  time=8.9s  [feasible]
+  Run 15/20  seed=14  cost=0.97  time=8.5s  [feasible]
+  Run 16/20  seed=15  cost=0.96  time=9.6s  [feasible]
+  Run 17/20  seed=16  cost=0.96  time=9.6s  [feasible]
+  Run 18/20  seed=17  cost=0.96  time=8.5s  [feasible]
+  Run 19/20  seed=18  cost=0.96  time=10.9s  [feasible]
+  Run 20/20  seed=19  cost=0.97  time=12.4s  [feasible]
 
   Running Branch and Bound (time limit=60s) ...
   Run  1/1  seed=0  cost=1.23  time=60.6s  [feasible]
-  B&B: nodes=58,322  root_lb=0.6136  best=1.2277  gap=100.1%  proven_optimal=False
+  B&B: nodes=43,188  root_lb=0.6136  best=1.2277  gap=100.1%  proven_optimal=False
 
   Running Greedy BFD baseline ...
   Running Round-Robin baseline (deterministic — 1 run) ...
@@ -141,10 +141,10 @@
 ============================================================
 Algorithm                                Best      Average        Worst    Std Dev   Feasible   Avg Time
 --------------------------------------------------------------------------------------------------------
-Simulated Annealing                      0.95         0.96         0.96       0.00      20/20      5.49s
-Genetic Algorithm                        0.96         0.96         0.97       0.00      20/20      7.38s
-UMDA (EDA)                               0.96         0.96         0.97       0.00      20/20      6.88s
-Branch & Bound                           1.23         1.23         1.23       0.00       1/1     60.58s
+Simulated Annealing                      0.95         0.96         0.96       0.00      20/20     12.42s
+Genetic Algorithm                        0.96         0.96         0.97       0.00      20/20      6.92s
+UMDA (EDA)                               0.96         0.96         0.97       0.00      20/20      9.12s
+Branch & Bound                           1.23         1.23         1.23       0.00       1/1     60.65s
 Greedy BFD (baseline)                    1.26         1.26         1.26       0.00      20/20      0.00s
 Round-Robin (baseline)                   9.02         9.02         9.02       0.00       0/1      0.00s
 Random (baseline)                        2.97        16.85        32.78      10.32       0/20      0.00s
@@ -176,17 +176,17 @@ Random (baseline)                        2.97        16.85        32.78      10.
   Metaheuristic ranking (lower F(X) = better):
   Rank  Algorithm                       Best F      Avg F   StdDev  Feasible  Avg time
   --------------------------------------------------------------------------------
-  1     Simulated Annealing               0.95       0.96     0.00     20/20     5.49s  (winner)
-  2     Genetic Algorithm                 0.96       0.96     0.00     20/20     7.38s  (+0.4%)
-  3     UMDA (EDA)                        0.96       0.96     0.00     20/20     6.88s  (+0.7%)
+  1     Simulated Annealing               0.95       0.96     0.00     20/20    12.42s  (winner)
+  2     Genetic Algorithm                 0.96       0.96     0.00     20/20     6.92s  (+0.4%)
+  3     UMDA (EDA)                        0.96       0.96     0.00     20/20     9.12s  (+0.7%)
 
   Energy vs latency decomposition of F(X) - best run per algorithm:
   Algorithm                       Energy      Latency  Servers  E-contrib%  L-contrib%
   ----------------------------------------------------------------------------------
-  Simulated Annealing             13058W       26689ms    10/10        8.9%       91.1%
-  Genetic Algorithm               13240W       26714ms    10/10        9.0%       91.0%
-  UMDA (EDA)                      13185W       26782ms    10/10        9.0%       91.0%
-  (E-contrib = w_e × E(X),  L-contrib = w_l × L(X),  excluding capacity penalties)
+  Simulated Annealing             13058W       26689ms    10/10       21.8%       78.2%
+  Genetic Algorithm               13240W       26714ms    10/10       22.0%       78.0%
+  UMDA (EDA)                      13185W       26782ms    10/10       21.9%       78.1%
+  (E-contrib = w_e × E(X)/E_ref,  L-contrib = w_l × L(X)/L_ref,  excluding capacity penalties)
 
   Improvement over Greedy BFD baseline (F_greedy = 1.26):
     Simulated Annealing           +24.1%  [better]
@@ -194,9 +194,9 @@ Random (baseline)                        2.97        16.85        32.78      10.
     UMDA (EDA)                    +23.5%  [better]
 
   Wall-clock speed (per single run, ~150 000 evaluations each):
-    Simulated Annealing          avg 5.49s <- fastest
-    Genetic Algorithm            avg 7.38s <- slowest
-    UMDA (EDA)                   avg 6.88s
+    Simulated Annealing          avg 12.42s <- slowest
+    Genetic Algorithm            avg 6.92s <- fastest
+    UMDA (EDA)                   avg 9.12s
 
   Expected behaviour and sanity check:
   -------------------------------------------------------------------------
@@ -210,7 +210,7 @@ Random (baseline)                        2.97        16.85        32.78      10.
 
   GA (Genetic Algorithm):
     Population-based, combines solutions via uniform crossover. Diverse
-    initial population (1 greedy + 49 random) maps the landscape broadly.
+    initial population (1 greedy BFD + pop_size-1 random) maps the landscape broadly.
     However, crossing two good integer-vector assignments often produces
     offspring that are worse than either parent - a known issue in discrete
     EAs - so GA can converge slower than SA per unit of budget. Elitism
@@ -325,14 +325,14 @@ Random (baseline)                        2.97        16.85        32.78      10.
   Synthetic tasks  |  3 seeds  |  server ratio 1:5  |  sizes: [20, 50, 100, 200, 500]
 
   ── n_tasks=   20  n_servers=   4 ──
-    Simulated Annealing          time=  6.11s  F=0.9804  vs_greedy=+23.7%  feasible=3/3
-    Genetic Algorithm            time=  7.33s  F=0.9841  vs_greedy=+23.5%  feasible=3/3
-    UMDA (EDA)                   time=  5.40s  F=0.9990  vs_greedy=+22.3%  feasible=3/3
+    Simulated Annealing          time=  6.59s  F=0.9804  vs_greedy=+23.7%  feasible=3/3
+    Genetic Algorithm            time=  6.23s  F=0.9841  vs_greedy=+23.5%  feasible=3/3
+    UMDA (EDA)                   time=  5.44s  F=0.9990  vs_greedy=+22.3%  feasible=3/3
 
   ── n_tasks=   50  n_servers=  10 ──
-    Simulated Annealing          time=  9.27s  F=0.9774  vs_greedy=+24.3%  feasible=3/3
-    Genetic Algorithm            time=  7.35s  F=0.9822  vs_greedy=+23.9%  feasible=3/3
-    UMDA (EDA)                   time=  8.95s  F=0.9858  vs_greedy=+23.6%  feasible=3/3
+    Simulated Annealing          time=  7.46s  F=0.9774  vs_greedy=+24.3%  feasible=3/3
+    Genetic Algorithm            time=  7.11s  F=0.9822  vs_greedy=+23.9%  feasible=3/3
+    UMDA (EDA)                   time=  5.92s  F=0.9858  vs_greedy=+23.6%  feasible=3/3
 
   ── n_tasks=  100  n_servers=  20 ──
 
@@ -343,9 +343,9 @@ Random (baseline)                        2.97        16.85        32.78      10.
     Reverted to worst-case normalisation; mode preference ratios
     no longer reflect equal expected contribution on this instance.
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    Simulated Annealing          time=  5.53s  F=0.1743  vs_greedy=+13.5%  feasible=3/3
-    Genetic Algorithm            time= 11.99s  F=0.1757  vs_greedy=+12.8%  feasible=3/3
-    UMDA (EDA)                   time= 10.04s  F=0.1859  vs_greedy=+7.8%  feasible=3/3
+    Simulated Annealing          time=  8.79s  F=0.1742  vs_greedy=+13.6%  feasible=3/3
+    Genetic Algorithm            time=  7.87s  F=0.1757  vs_greedy=+12.8%  feasible=3/3
+    UMDA (EDA)                   time=  7.07s  F=0.1859  vs_greedy=+7.8%  feasible=3/3
 
   ── n_tasks=  200  n_servers=  40 ──
 
@@ -356,9 +356,9 @@ Random (baseline)                        2.97        16.85        32.78      10.
     Reverted to worst-case normalisation; mode preference ratios
     no longer reflect equal expected contribution on this instance.
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    Simulated Annealing          time=  6.04s  F=0.1471  vs_greedy=+13.0%  feasible=3/3
-    Genetic Algorithm            time= 14.57s  F=0.1516  vs_greedy=+10.4%  feasible=3/3
-    UMDA (EDA)                   time= 13.83s  F=0.1674  vs_greedy=+1.1%  feasible=3/3
+    Simulated Annealing          time= 13.29s  F=0.1468  vs_greedy=+13.3%  feasible=3/3
+    Genetic Algorithm            time=  9.63s  F=0.1516  vs_greedy=+10.4%  feasible=3/3
+    UMDA (EDA)                   time=  8.73s  F=0.1674  vs_greedy=+1.1%  feasible=3/3
 
   ── n_tasks=  500  n_servers= 100 ──
 
@@ -369,9 +369,9 @@ Random (baseline)                        2.97        16.85        32.78      10.
     Reverted to worst-case normalisation; mode preference ratios
     no longer reflect equal expected contribution on this instance.
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    Simulated Annealing          time= 10.19s  F=0.1294  vs_greedy=+12.5%  feasible=2/3
-    Genetic Algorithm            time= 24.11s  F=0.1392  vs_greedy=+5.8%  feasible=3/3
-    UMDA (EDA)                   time= 29.34s  F=0.1478  vs_greedy=+0.0%  feasible=3/3
+    Simulated Annealing          time= 16.20s  F=0.1288  vs_greedy=+12.9%  feasible=3/3
+    Genetic Algorithm            time= 15.17s  F=0.1392  vs_greedy=+5.8%  feasible=3/3
+    UMDA (EDA)                   time= 20.88s  F=0.1478  vs_greedy=+0.0%  feasible=3/3
 
   Note — Fixed-Budget Behaviour at Scale:
   ─────────────────────────────────────────────────────────
@@ -379,22 +379,15 @@ Random (baseline)                        2.97        16.85        32.78      10.
   improvement over Greedy BFD (< 0.1%):
   UMDA (EDA) at n=500
 
-  Reason: the evaluation budget (150 K calls) was calibrated
-  for n=50 tasks. At n≥200 the search space grows much faster
-  than the budget, so:
-    SA   — starts from the greedy solution and cannot escape it
-           within budget; the fixed cooling schedule leaves too
-           little exploration time at large n.
-    UMDA — the probability model has n×m parameters; with only
-           pop_size/2 training samples per generation the model
-           cannot learn reliable task-server affinities.
-    GA   — maintains advantage because crossover between 49
-           diverse random solutions creates useful offspring
-           without relying on a learned model or a single
-           greedy initialisation.
-  This is a valid thesis finding: at fixed budget, population-
-  diversity (GA) outperforms single-trajectory (SA) and model-
-  based (UMDA) methods as problem size grows.
+  This is expected fixed-budget behaviour, not a code error.
+  The evaluation budget (150 K calls) was calibrated for n=50;
+  at larger n the search space grows much faster than the budget.
+  UMDA is the typical case: its univariate model has n×m
+  parameters estimated from only pop_size/2 selected individuals
+  per generation, so at large n the signal-to-noise ratio is too
+  low to learn task-server affinities and the model collapses
+  onto its perturbed-greedy initial population, returning the
+  greedy elite unchanged (thesis Section 9.1.3).
   To restore improvement at larger n, scale the budget
   proportionally (e.g. max_temp_steps ∝ n/50 in config.yaml).
   ─────────────────────────────────────────────────────────
@@ -404,11 +397,11 @@ Random (baseline)                        2.97        16.85        32.78      10.
 ============================================================
   Scale Point              Winner                        Avg F(X)  vs Greedy  Avg Time
   ------------------------------------------------------------------------------------
-  n=20, m=4                Simulated Annealing             0.9804     +23.7%     6.11s
-  n=50, m=10               Simulated Annealing             0.9774     +24.3%     9.27s
-  n=100, m=20              Simulated Annealing             0.1743     +13.5%     5.53s
-  n=200, m=40              Simulated Annealing             0.1471     +13.0%     6.04s
-  n=500, m=100             Simulated Annealing             0.1294     +12.5%    10.19s
+  n=20, m=4                Simulated Annealing             0.9804     +23.7%     6.59s
+  n=50, m=10               Simulated Annealing             0.9774     +24.3%     7.46s
+  n=100, m=20              Simulated Annealing             0.1742     +13.6%     8.79s
+  n=200, m=40              Simulated Annealing             0.1468     +13.3%    13.29s
+  n=500, m=100             Simulated Annealing             0.1288     +12.9%    16.20s
 
   Simulated Annealing          5/5 scale points  (100%)  █████
 
@@ -421,24 +414,24 @@ Random (baseline)                        2.97        16.85        32.78      10.
   Fixed 50 real tasks  |  3 seeds  |  server counts: [20, 15, 10, 8, 6]
 
   ── n_servers= 20  CPU utilisation≈26% ──
-    Simulated Annealing          time= 9.71s  F=0.8569  vs_greedy=+36.2%  feasible=3/3 (100%)
-    Genetic Algorithm            time=10.28s  F=0.8642  vs_greedy=+35.6%  feasible=3/3 (100%)
-    UMDA (EDA)                   time= 9.27s  F=0.8658  vs_greedy=+35.5%  feasible=3/3 (100%)
+    Simulated Annealing          time= 7.85s  F=0.8569  vs_greedy=+36.2%  feasible=3/3 (100%)
+    Genetic Algorithm            time= 6.88s  F=0.8642  vs_greedy=+35.6%  feasible=3/3 (100%)
+    UMDA (EDA)                   time= 6.39s  F=0.8658  vs_greedy=+35.5%  feasible=3/3 (100%)
 
   ── n_servers= 15  CPU utilisation≈34% ──
-    Simulated Annealing          time=11.57s  F=0.8822  vs_greedy=+33.3%  feasible=3/3 (100%)
-    Genetic Algorithm            time= 9.96s  F=0.8883  vs_greedy=+32.9%  feasible=3/3 (100%)
-    UMDA (EDA)                   time= 8.91s  F=0.8879  vs_greedy=+32.9%  feasible=3/3 (100%)
+    Simulated Annealing          time= 7.59s  F=0.8822  vs_greedy=+33.3%  feasible=3/3 (100%)
+    Genetic Algorithm            time= 6.70s  F=0.8883  vs_greedy=+32.9%  feasible=3/3 (100%)
+    UMDA (EDA)                   time= 6.10s  F=0.8879  vs_greedy=+32.9%  feasible=3/3 (100%)
 
   ── n_servers= 10  CPU utilisation≈53% ──
-    Simulated Annealing          time=11.15s  F=0.9620  vs_greedy=+24.3%  feasible=3/3 (100%)
-    Genetic Algorithm            time= 9.92s  F=0.9633  vs_greedy=+24.2%  feasible=3/3 (100%)
-    UMDA (EDA)                   time= 8.68s  F=0.9663  vs_greedy=+23.9%  feasible=3/3 (100%)
+    Simulated Annealing          time= 7.68s  F=0.9620  vs_greedy=+24.3%  feasible=3/3 (100%)
+    Genetic Algorithm            time= 6.61s  F=0.9633  vs_greedy=+24.2%  feasible=3/3 (100%)
+    UMDA (EDA)                   time= 6.28s  F=0.9663  vs_greedy=+23.9%  feasible=3/3 (100%)
 
   ── n_servers=  8  CPU utilisation≈63% ──
-    Simulated Annealing          time=10.81s  F=0.9896  vs_greedy=+20.0%  feasible=3/3 (100%)
-    Genetic Algorithm            time= 9.82s  F=0.9930  vs_greedy=+19.7%  feasible=3/3 (100%)
-    UMDA (EDA)                   time= 9.14s  F=1.0016  vs_greedy=+19.0%  feasible=3/3 (100%)
+    Simulated Annealing          time= 7.29s  F=0.9896  vs_greedy=+20.0%  feasible=3/3 (100%)
+    Genetic Algorithm            time= 6.96s  F=0.9930  vs_greedy=+19.7%  feasible=3/3 (100%)
+    UMDA (EDA)                   time= 7.08s  F=1.0016  vs_greedy=+19.0%  feasible=3/3 (100%)
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   [calibration] FALLBACK TRIGGERED on this scalability instance:
@@ -449,20 +442,20 @@ Random (baseline)                        2.97        16.85        32.78      10.
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   ── n_servers=  6  CPU utilisation≈81% ──
-    Simulated Annealing          time=12.27s  F=0.2422  vs_greedy=+6.6%  feasible=3/3 (100%)
-    Genetic Algorithm            time=11.58s  F=0.2453  vs_greedy=+5.4%  feasible=3/3 (100%)
-    UMDA (EDA)                   time=10.14s  F=0.2470  vs_greedy=+4.8%  feasible=3/3 (100%)
+    Simulated Annealing          time= 8.20s  F=0.2422  vs_greedy=+6.6%  feasible=3/3 (100%)
+    Genetic Algorithm            time= 6.57s  F=0.2453  vs_greedy=+5.4%  feasible=3/3 (100%)
+    UMDA (EDA)                   time= 7.36s  F=0.2470  vs_greedy=+4.8%  feasible=3/3 (100%)
 
 ============================================================
   Vertical Scaling — Winner at Each Tightness Level
 ============================================================
   Scale Point              Winner                        Avg F(X)  vs Greedy  Avg Time
   ------------------------------------------------------------------------------------
-  m=20 (26% util)          Simulated Annealing             0.8569     +36.2%     9.71s
-  m=15 (34% util)          Simulated Annealing             0.8822     +33.3%    11.57s
-  m=10 (53% util)          Simulated Annealing             0.9620     +24.3%    11.15s
-  m=8 (63% util)           Simulated Annealing             0.9896     +20.0%    10.81s
-  m=6 (81% util)           Simulated Annealing             0.2422      +6.6%    12.27s
+  m=20 (26% util)          Simulated Annealing             0.8569     +36.2%     7.85s
+  m=15 (34% util)          Simulated Annealing             0.8822     +33.3%     7.59s
+  m=10 (53% util)          Simulated Annealing             0.9620     +24.3%     7.68s
+  m=8 (63% util)           Simulated Annealing             0.9896     +20.0%     7.29s
+  m=6 (81% util)           Simulated Annealing             0.2422      +6.6%     8.20s
 
   Simulated Annealing          5/5 scale points  (100%)  █████
 
@@ -476,31 +469,31 @@ Random (baseline)                        2.97        16.85        32.78      10.
   Seeds: 5  |  B&B always included for exact reference
 
   Running Branch & Bound (time_limit=60s) ...
-  Run  1/1  seed=0  cost=1.11  time=60.6s  [feasible]
-  B&B: nodes=152,672  root_lb=0.6302  best=1.1128  gap=76.6%  proven_optimal=False
+  Run  1/1  seed=0  cost=1.11  time=60.8s  [feasible]
+  B&B: nodes=135,165  root_lb=0.6302  best=1.1128  gap=76.6%  proven_optimal=False
 
   Running Simulated Annealing (5 seeds) ...
-  Run  1/5  seed=0  cost=0.99  time=9.4s  [feasible]
-  Run  2/5  seed=1  cost=0.99  time=9.2s  [feasible]
-  Run  3/5  seed=2  cost=0.99  time=9.4s  [feasible]
-  Run  4/5  seed=3  cost=0.99  time=9.3s  [feasible]
-  Run  5/5  seed=4  cost=0.99  time=9.7s  [feasible]
+  Run  1/5  seed=0  cost=0.99  time=7.9s  [feasible]
+  Run  2/5  seed=1  cost=0.99  time=10.6s  [feasible]
+  Run  3/5  seed=2  cost=0.99  time=7.9s  [feasible]
+  Run  4/5  seed=3  cost=0.99  time=7.7s  [feasible]
+  Run  5/5  seed=4  cost=0.99  time=10.3s  [feasible]
     Best=0.9932  B&B=1.1128  optimality_gap=+-10.8%  feasible=5/5
 
   Running Genetic Algorithm (5 seeds) ...
-  Run  1/5  seed=0  cost=0.99  time=8.3s  [feasible]
-  Run  2/5  seed=1  cost=1.00  time=8.3s  [feasible]
-  Run  3/5  seed=2  cost=0.99  time=8.1s  [feasible]
-  Run  4/5  seed=3  cost=1.00  time=8.7s  [feasible]
-  Run  5/5  seed=4  cost=1.00  time=8.2s  [feasible]
+  Run  1/5  seed=0  cost=0.99  time=6.4s  [feasible]
+  Run  2/5  seed=1  cost=1.00  time=6.0s  [feasible]
+  Run  3/5  seed=2  cost=0.99  time=6.4s  [feasible]
+  Run  4/5  seed=3  cost=1.00  time=6.3s  [feasible]
+  Run  5/5  seed=4  cost=1.00  time=6.5s  [feasible]
     Best=0.9925  B&B=1.1128  optimality_gap=+-10.8%  feasible=5/5
 
   Running UMDA (EDA) (5 seeds) ...
-  Run  1/5  seed=0  cost=1.00  time=8.7s  [feasible]
-  Run  2/5  seed=1  cost=1.01  time=7.0s  [feasible]
-  Run  3/5  seed=2  cost=0.99  time=8.7s  [feasible]
-  Run  4/5  seed=3  cost=1.00  time=8.0s  [feasible]
-  Run  5/5  seed=4  cost=1.01  time=8.3s  [feasible]
+  Run  1/5  seed=0  cost=1.00  time=5.8s  [feasible]
+  Run  2/5  seed=1  cost=1.01  time=5.7s  [feasible]
+  Run  3/5  seed=2  cost=0.99  time=5.5s  [feasible]
+  Run  4/5  seed=3  cost=1.00  time=5.4s  [feasible]
+  Run  5/5  seed=4  cost=1.01  time=5.4s  [feasible]
     Best=0.9944  B&B=1.1128  optimality_gap=+-10.6%  feasible=5/5
 
 ============================================================
@@ -510,9 +503,9 @@ Random (baseline)                        2.97        16.85        32.78      10.
 
   Algorithm                    Best F(X)   Gap vs B&B  Avg Time  Feasible
   ------------------------------------------------------------------------
-  Simulated Annealing             0.9932       -10.8%     9.42s      5/5
-  Genetic Algorithm               0.9925       -10.8%     8.32s      5/5
-  UMDA (EDA)                      0.9944       -10.6%     8.14s      5/5
+  Simulated Annealing             0.9932       -10.8%     8.87s      5/5
+  Genetic Algorithm               0.9925       -10.8%     6.33s      5/5
+  UMDA (EDA)                      0.9944       -10.6%     5.57s      5/5
   Greedy BFD (baseline)           1.2856       +15.5%   (deterministic)
 
   Optimality-gap plot          -> C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Christian\University\DTU - Computer Science and Engineering\Masters Thesis\Master_Thesis_Metaheuristics\Cloud scheduling\figures\performance\optimality_gap.png

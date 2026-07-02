@@ -1,6 +1,6 @@
 algorithm,best_cost,avg_cost,gap_vs_bb_pct,avg_runtime_s,feasible_runs,n_runs
-Simulated Annealing,0.9932,0.9939,-10.75,9.4192,5,5
-Genetic Algorithm,0.9925,0.9956,-10.81,8.3207,5,5
-UMDA (EDA),0.9944,1.0042,-10.64,8.1403,5,5
-Greedy BFD (baseline),1.2856,1.2856,15.53,0.0002,1,1
-Branch & Bound,1.1128,1.1128,76.58,60.6064,1,1
+Simulated Annealing,0.9932,0.9939,-10.75,8.8659,5,5
+Genetic Algorithm,0.9925,0.9956,-10.81,6.3260,5,5
+UMDA (EDA),0.9944,1.0042,-10.64,5.5720,5,5
+Greedy BFD (baseline),1.2856,1.2856,15.53,0.0003,1,1
+Branch & Bound,1.1128,1.1128,76.58,60.7742,1,1
