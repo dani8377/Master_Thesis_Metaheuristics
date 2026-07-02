@@ -1,0 +1,168 @@
+  [log] capturing console output to C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Christian\University\DTU - Computer Science and Engineering\Masters Thesis\Master_Thesis_Metaheuristics\Cloud scheduling\results\balanced\run_log.txt
+
+============================================================
+  Problem Instance
+============================================================
+  Tasks:               50
+  Servers:             10
+  Total CPU demand:    2256.7 %
+  Total memory demand: 435.8 GB
+  Total CPU capacity:  4300 %
+  Total mem capacity:  880 GB
+
+  Sample-based calibration (Deb 2001/2000): 25/150 feasible samples
+    E_ref(mean E) = 12572.20W   L_ref(mean L) = 29266.64ms
+    F_max(feasible) = 2.0647   lambda_cpu = lambda_mem = 206.47   (= 100x F_max)
+
+============================================================
+  Objective Focus Mode
+============================================================
+
+  Focus mode: BALANCED -- Equal energy/latency trade-off (thesis default)
+  The optimiser balances task consolidation (saves idle power)
+  against load spreading (reduces congestion latency).
+  Weights: w_energy=1.0  w_latency=1.0  gamma=1.0
+  Penalty coefficients: lambda_cpu=206  lambda_mem=206.5
+
+============================================================
+  Single SA Diagnostic Run
+============================================================
+  Feasible:              True
+  Objective value F(X):  1.8165
+  Total energy (W):      12585.07
+  Total latency (ms):    23865.04
+  CPU violation (%):     0.0000
+  Memory violation (MB): 0.00
+  Active servers:        10/10
+  Runtime:               29.23s
+
+  SA search statistics:
+    Candidates evaluated:    150000  (+ 401 T_0 probe evals  -> total budget 150401)
+    Improving accepted:      16246
+    Worsening accepted:      20991
+    Structural rejections:   0
+    Acceptance rate:         24.82%
+    Feasibility rate:        88.37%
+    Reheat count:            5
+    Final temperature:       0.004175
+
+  Per-server task distribution (# = 1 task):
+    Server  0:   3 tasks  ###
+    Server  1:   8 tasks  ########
+    Server  2:   2 tasks  ##
+    Server  3:   4 tasks  ####
+    Server  4:  18 tasks  ##################
+    Server  5:   2 tasks  ##
+    Server  6:   1 tasks  #
+    Server  7:   6 tasks  ######
+    Server  8:   4 tasks  ####
+    Server  9:   2 tasks  ##
+
+============================================================
+  Multi-Seed Experiments  (20 runs per algorithm)
+============================================================
+
+  Running Simulated Annealing (20 seeds) ...
+  Run  1/20  seed=0  cost=1.81  time=33.7s  [feasible]
+  Run  2/20  seed=1  cost=1.81  time=37.9s  [feasible]
+  Run  3/20  seed=2  cost=1.81  time=34.0s  [feasible]
+  Run  4/20  seed=3  cost=1.81  time=34.2s  [feasible]
+  Run  5/20  seed=4  cost=1.81  time=33.6s  [feasible]
+  Run  6/20  seed=5  cost=1.82  time=34.8s  [feasible]
+  Run  7/20  seed=6  cost=1.81  time=31.9s  [feasible]
+  Run  8/20  seed=7  cost=1.81  time=32.0s  [feasible]
+  Run  9/20  seed=8  cost=1.81  time=31.7s  [feasible]
+  Run 10/20  seed=9  cost=1.82  time=35.3s  [feasible]
+  Run 11/20  seed=10  cost=1.81  time=35.3s  [feasible]
+  Run 12/20  seed=11  cost=1.82  time=34.5s  [feasible]
+  Run 13/20  seed=12  cost=1.81  time=31.2s  [feasible]
+  Run 14/20  seed=13  cost=1.81  time=33.4s  [feasible]
+  Run 15/20  seed=14  cost=1.81  time=36.1s  [feasible]
+  Run 16/20  seed=15  cost=1.82  time=36.0s  [feasible]
+  Run 17/20  seed=16  cost=1.81  time=38.4s  [feasible]
+  Run 18/20  seed=17  cost=1.81  time=33.4s  [feasible]
+  Run 19/20  seed=18  cost=1.82  time=19.8s  [feasible]
+  Run 20/20  seed=19  cost=1.81  time=14.4s  [feasible]
+
+  Running Genetic Algorithm (20 seeds) ...
+  Run  1/20  seed=0  cost=1.82  time=15.7s  [feasible]
+  Run  2/20  seed=1  cost=1.81  time=12.2s  [feasible]
+  Run  3/20  seed=2  cost=1.81  time=11.5s  [feasible]
+  Run  4/20  seed=3  cost=1.82  time=11.4s  [feasible]
+  Run  5/20  seed=4  cost=1.81  time=12.3s  [feasible]
+  Run  6/20  seed=5  cost=1.82  time=11.7s  [feasible]
+  Run  7/20  seed=6  cost=1.82  time=11.4s  [feasible]
+  Run  8/20  seed=7  cost=1.81  time=11.5s  [feasible]
+  Run  9/20  seed=8  cost=1.81  time=11.8s  [feasible]
+  Run 10/20  seed=9  cost=1.82  time=12.5s  [feasible]
+  Run 11/20  seed=10  cost=1.81  time=11.6s  [feasible]
+  Run 12/20  seed=11  cost=1.82  time=11.1s  [feasible]
+  Run 13/20  seed=12  cost=1.82  time=12.0s  [feasible]
+  Run 14/20  seed=13  cost=1.81  time=15.3s  [feasible]
+  Run 15/20  seed=14  cost=1.82  time=19.0s  [feasible]
+  Run 16/20  seed=15  cost=1.82  time=33.4s  [feasible]
+  Run 17/20  seed=16  cost=1.82  time=24.9s  [feasible]
+  Run 18/20  seed=17  cost=1.81  time=22.4s  [feasible]
+  Run 19/20  seed=18  cost=1.82  time=28.5s  [feasible]
+  Run 20/20  seed=19  cost=1.82  time=28.2s  [feasible]
+
+  Running UMDA (EDA) (20 seeds) ...
+  Run  1/20  seed=0  cost=1.82  time=23.4s  [feasible]
+  Run  2/20  seed=1  cost=1.82  time=26.0s  [feasible]
+  Run  3/20  seed=2  cost=1.81  time=20.0s  [feasible]
+  Run  4/20  seed=3  cost=1.81  time=24.5s  [feasible]
+  Run  5/20  seed=4  cost=1.82  time=23.8s  [feasible]
+  Run  6/20  seed=5  cost=1.82  time=23.9s  [feasible]
+  Run  7/20  seed=6  cost=1.82  time=23.3s  [feasible]
+  Run  8/20  seed=7  cost=1.82  time=23.8s  [feasible]
+  Run  9/20  seed=8  cost=1.81  time=24.1s  [feasible]
+  Run 10/20  seed=9  cost=1.82  time=21.9s  [feasible]
+  Run 11/20  seed=10  cost=1.82  time=20.6s  [feasible]
+  Run 12/20  seed=11  cost=1.82  time=23.0s  [feasible]
+  Run 13/20  seed=12  cost=1.82  time=22.2s  [feasible]
+  Run 14/20  seed=13  cost=1.81  time=21.6s  [feasible]
+  Run 15/20  seed=14  cost=1.82  time=23.4s  [feasible]
+  Run 16/20  seed=15  cost=1.82  time=21.7s  [feasible]
+  Run 17/20  seed=16  cost=1.82  time=21.5s  [feasible]
+  Run 18/20  seed=17  cost=1.82  time=21.6s  [feasible]
+  Run 19/20  seed=18  cost=1.82  time=21.1s  [feasible]
+  Run 20/20  seed=19  cost=1.82  time=21.8s  [feasible]
+
+  Running Branch and Bound (time limit=60s) ...
+  Run  1/1  seed=0  cost=2.00  time=60.5s  [feasible]
+  B&B: nodes=19,276  root_lb=1.3505  best=1.9994  gap=48.1%  proven_optimal=False
+
+  Running Greedy BFD baseline ...
+  Running Round-Robin baseline (deterministic — 1 run) ...
+  Running Random baseline ...
+
+============================================================
+  Results Summary Table  [focus=balanced]
+============================================================
+Algorithm                                Best      Average        Worst    Std Dev   Feasible   Avg Time
+--------------------------------------------------------------------------------------------------------
+Simulated Annealing                      1.81         1.81         1.82       0.00      20/20     32.58s
+Genetic Algorithm                        1.81         1.82         1.82       0.00      20/20     16.42s
+UMDA (EDA)                               1.81         1.82         1.82       0.00      20/20     22.65s
+Branch & Bound                           2.00         2.00         2.00       0.00       1/1     60.52s
+Greedy BFD (baseline)                    2.01         2.01         2.01       0.00      20/20      0.00s
+Round-Robin (baseline)                  14.90        14.90        14.90       0.00       0/1      0.00s
+Random (baseline)                        5.11        27.44        53.09      16.63       0/20      0.00s
+
+  Pairwise Wilcoxon signed-rank test  (two-sided, per-seed costs)
+  *** p<0.001   ** p<0.01   * p<0.05   ns = not significant
+
+                       Simulated Ann  Genetic Algor     UMDA (EDA)
+  ----------------------------------------------------------------
+  Simulated Annealing            ---       0.006 **      0.000 ***
+  Genetic Algorithm         0.006 **            ---        0.021 *
+  UMDA (EDA)               0.000 ***        0.021 *            ---
+
+
+  Simulated Annealing best run (seed 0):  energy=12566.0W  latency=23678.0ms  active=10/10  feasible=True
+
+  Genetic Algorithm best run (seed 7):  energy=12616.5W  latency=23685.7ms  active=10/10  feasible=True
+
+  UMDA (EDA) best run (seed 3):  energy=12558.5W  latency=23858.0ms  active=10/10  feasible=True
+
+============================================================
