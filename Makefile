@@ -1,4 +1,4 @@
-UV      := uv run --with numpy --with pandas --with matplotlib python
+UV      := uv run --with numpy --with pandas --with matplotlib --with pyyaml --with scipy python
 EV_DIR  := EV_routing
 CS_DIR  := Cloud scheduling
 
@@ -7,7 +7,7 @@ CS_DIR  := Cloud scheduling
 all: ev cloud
 
 ev:
-	cd "$(EV_DIR)" && $(UV) main.py
+	PYTHONPATH=$(EV_DIR) $(UV) $(EV_DIR)/main.py
 
 cloud:
 	cd "$(CS_DIR)" && $(UV) main.py

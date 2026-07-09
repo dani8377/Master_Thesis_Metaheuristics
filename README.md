@@ -246,8 +246,8 @@ Each item points to the precise function and lines to inspect.
 | `algorithms.sa.iterations_per_temperature` | 50 | Inner-loop evaluations per level |
 | `algorithms.sa.reheat_patience` | 300 | Steps without improvement before reheat |
 | `algorithms.sa.reheat_factor` | 0.4 | Fraction of T₀ for reheated temperature |
-| `algorithms.ga.population_size` | 50 | |
-| `algorithms.ga.n_generations` | 3,000 | |
+| `algorithms.ga.population_size` | 100 | |
+| `algorithms.ga.n_generations` | 1,500 | |
 | `algorithms.ga.tournament_size` | 3 | Tournament selection k |
 | `algorithms.ga.crossover_prob` | 0.8 | Applied per pair with this probability |
 | `algorithms.ga.elitism_count` | 2 | Best individuals copied unchanged |
@@ -295,8 +295,8 @@ local optima.
 
 #### Genetic Algorithm (GA)
 
-Population-based evolutionary metaheuristic. Maintains a population of P = 50 candidate
-assignment vectors evolved over 3,000 generations.
+Population-based evolutionary metaheuristic. Maintains a population of P = 100 candidate
+assignment vectors evolved over 1,500 generations.
 
 **Initialisation:** 1 Greedy BFD solution + P−1 uniformly random assignments. This
 ensures initial diversity while anchoring the population with one strong starting point.
@@ -315,7 +315,7 @@ of mutations per offspring: 1.
 **Elitism:** the 2 best individuals from the current generation are copied unchanged
 into the next generation, guaranteeing that the best solution found so far is never lost.
 
-**Evaluation budget:** `population_size × n_generations = 50 × 3,000 = 150,000`.
+**Evaluation budget:** `population_size × n_generations = 100 × 1,500 = 150,000`.
 
 #### UMDA — Univariate Marginal Distribution Algorithm (EDA)
 
@@ -360,7 +360,7 @@ m = 4 servers) to validate that metaheuristics find near-optimal solutions on tr
 
 | Baseline | Description | Notes |
 |---|---|---|
-| **Greedy BFD** | First-Fit Decreasing: sort tasks by CPU demand (largest first), assign each to the most-loaded server with remaining capacity. Deterministic. | Starting point for SA and GA. |
+| **Greedy BFD** | Best-Fit Decreasing: sort tasks by CPU demand (largest first), assign each to the most-loaded server with remaining capacity. Deterministic. | Starting point for SA and GA. |
 | **Round-Robin** | Assign task i to server `i % m` cyclically. Ignores resource demands. Deterministic. | Runs once (1 seed) — additional seeds produce identical results. |
 | **Random** | Assign each task to a uniformly random server. Provides a worst-case reference. Varies per seed. | Always infeasible at n=50, m=10 due to capacity violations. |
 
@@ -374,8 +374,8 @@ and read at runtime. Key values (balanced focus mode):
 | Parameter | SA | GA | UMDA |
 |---|---|---|---|
 | Evaluation budget | 150,000 | 150,000 | ≈ 150,100 |
-| Population / parallel solutions | — | 50 | 100 |
-| Generations / temperature steps | 3,000 | 3,000 | 1,500 |
+| Population / parallel solutions | — | 100 | 100 |
+| Generations / temperature steps | 3,000 | 1,500 | 1,500 |
 | Inner iterations per step | 50 | — | — |
 | Selection operator | — | Tournament k=3 | Truncation top 50% |
 | Crossover operator | — | Uniform, p=0.8 | — (model-based) |
@@ -715,17 +715,37 @@ be inserted into the route when needed.
 **What the optimiser decides:** the order in which customers are visited and where to
 insert charging stops.
 
-**Objective:** minimise a weighted combination of total distance, travel time, charging
-time, energy consumed, and charging cost. Battery depletion is handled as a soft
-penalty (10,000×) so the search can temporarily enter infeasible regions and recover.
+**Objective:** minimise a weighted combination of total distance, travel time + charging
+time, energy consumed, and charging cost. The four real-cost weights are calibrated by
+sample-based normalisation (Deb 2001) over 150 greedy-feasible routes (each perturbed
+3× — 450 evaluations), so each component contributes ≈ 1.0 on a typical feasible route;
+see `results/sf_75/weights.json`. Battery depletion and structural violations are soft
+penalties, λ = 100 × 4.0 = 400 per the parameter-less penalty rule (Deb 2000), so the
+search can temporarily enter infeasible regions and recover.
 
-**Dataset:** synthetic San Francisco instance — 75 customers, 30 charging stations,
-pre-computed Haversine distance and energy matrices.
+**Main instance (`sf_75`):** 1 depot + 75 customers + 30 public charging stations =
+106 nodes on the real San Francisco road network. Distances and per-arc travel times
+come from **OSRM road-network queries** (not straight-line Haversine); node elevations
+from SRTM feed the grade-dependent energy model. Nested scalability instances
+`sf_25` … `sf_500` (each a prefix of the next, seed 42) live in `instances/`.
 
-**Algorithm:** Simulated Annealing with 8 neighbourhood operators (customer swap,
-relocate, 2-opt, insert/remove/replace/move charging station, battery repair).
+**Algorithms:** Greedy nearest-neighbour baseline (proactive charging insertion at 50%
+battery), **Simulated Annealing**, **Genetic Algorithm** (OX crossover on the customer
+permutation + greedy station repair), **Memetic Algorithm** (GA + first-improvement
+local search), and **ACO** (Max–Min Ant System with battery-aware construction). SA,
+GA, and MA share 8 neighbourhood operators (customer swap / relocate / 2-opt,
+insert / remove / replace / move charging station, battery repair).
 
-**Battery parameters:** 20 kWh capacity, 0.50 kWh/km consumption, 50 km/h speed.
+**Protocol:** every metaheuristic gets the same 150,000-evaluation budget over 10 seeds;
+hyperparameters come from random-search tuning (30 trials × 2 seeds × 50k evals,
+`scripts/tune.py`) stored in `results/sf_75/params.json`. Three focus modes —
+`balanced`, `eco` (70% weight on energy), `time` (70% on time) — reuse the same tuned
+configuration. Outputs (CSVs, `summary.md`, figures) are written per instance and mode
+to `results/<instance>[_<mode>]/` with figures under `results/<instance>/figures/`.
+
+**Battery parameters:** 20 kWh capacity (recharge-to-full at stations),
+0.50 kWh/km baseline consumption, grade factor 3.0, speed exponent 2.0 (v² drag),
+50 km/h fallback speed for arcs without an OSRM duration.
 
 ---
 
@@ -761,22 +781,38 @@ Master_Thesis_Metaheuristics/
 │       ├── experiment.py               ← multi-seed experiment harness
 │       └── plot.py                     ← convergence / bar / box / CSV export
 │
-└── EV_routing/                         ← Problem 2 (thesis Chapter 4)
-    ├── main.py
-    ├── datasets/
-    ├── figures/
+└── EV_routing/                         ← Problem 2 (thesis Chapter 3.2)
+    ├── main.py                         ← entry point; main experiment + all sweeps
+    ├── datasets/                       ← raw charging-station CSV
+    ├── instances/                      ← frozen sf_25 … sf_500 instances (matrices, maps)
+    ├── results/                        ← per-instance outputs, incl. figures/ and params.json
+    │   └── sf_75/
+    │       ├── params.json             ← tuned hyperparameters (thesis Table 8.3)
+    │       ├── weights.json            ← calibrated objective weights (thesis Table 7.1)
+    │       └── figures/                ← convergence / box / sensitivity / scalability plots
+    ├── scripts/
+    │   ├── build_instance.py           ← OSRM + SRTM instance construction
+    │   ├── calibrate_weights.py        ← Deb sample-based weight calibration
+    │   ├── tune.py                     ← random-search hyperparameter tuning
+    │   ├── sensitivity_analysis.py
+    │   └── scalability_analysis.py
     ├── algorithms/
-    │   └── simmulated_annealing.py
+    │   ├── greedy.py                   ← nearest-neighbour baseline
+    │   ├── simmulated_annealing.py     ← SA with reheating
+    │   ├── genetic_algorithm.py        ← GA and MA (local_search_iters > 0)
+    │   └── ant_colony.py               ← Max–Min Ant System
     └── tools/
         ├── data_loader.py
-        ├── objective.py
+        ├── battery.py                  ← EVParameters
+        ├── objective.py                ← evaluate_route()
         ├── feasibility.py
-        ├── initial_solution.py
-        ├── neighborhoods.py
-        ├── experiment.py
+        ├── initial_solution.py         ← EV-feasible construction + repair
+        ├── neighborhoods.py            ← 8 move operators
+        ├── experiment.py               ← multi-seed harness
+        ├── statistics.py               ← Wilcoxon signed-rank tests
+        ├── tuning.py
+        ├── compare.py
         ├── plot.py
-        ├── energy.py
-        ├── energy_model.py
         ├── distance.py
         └── node_utils.py
 ```

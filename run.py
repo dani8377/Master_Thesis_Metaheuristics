@@ -16,6 +16,7 @@ For all cloud CLI options:
     uv run run.py cloud --help
 """
 
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -26,12 +27,20 @@ UV   = [r"C:\Users\chris\.local\bin\uv.exe",
         "--with", "pyyaml", "--with", "scipy", "python"]
 
 
-def run(name: str, directory: str, extra_args: list[str] | None = None) -> None:
+def run(name: str, directory: str, extra_args: list[str] | None = None,
+        from_root: bool = False) -> None:
     print(f"\n{'='*60}")
     print(f"  Running: {name}")
     print(f"{'='*60}\n")
-    cmd = UV + ["main.py"] + (extra_args or [])
-    subprocess.run(cmd, cwd=ROOT / directory, check=True)
+    if from_root:
+        # EV_routing/main.py resolves data paths relative to the project root
+        # and imports its own tools/ package via PYTHONPATH.
+        env = {**os.environ, "PYTHONPATH": str(ROOT / directory)}
+        cmd = UV + [f"{directory}/main.py"] + (extra_args or [])
+        subprocess.run(cmd, cwd=ROOT, env=env, check=True)
+    else:
+        cmd = UV + ["main.py"] + (extra_args or [])
+        subprocess.run(cmd, cwd=ROOT / directory, check=True)
 
 
 # Separate problem targets (ev / cloud) from extra flags (--algorithms, etc.)
@@ -45,7 +54,7 @@ if not targets:
 
 for target in targets:
     if target == "ev":
-        run("EV Routing", "EV_routing")          # EV has no extra CLI options
+        run("EV Routing", "EV_routing", from_root=True)  # EV flags: run EV_routing/main.py directly
     elif target == "cloud":
         run("Cloud Scheduling", "Cloud scheduling", extras)
     else:
