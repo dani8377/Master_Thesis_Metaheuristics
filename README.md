@@ -737,14 +737,17 @@ Master_Thesis_Metaheuristics/
 ├── run.py                              ← top-level launcher
 ├── Makefile                            ← make-based shortcuts
 │
-├── Cloud scheduling/                   ← Problem 1 (thesis Chapter 3)
+├── Cloud scheduling/                   ← Problem 1 (thesis §3.1)
 │   ├── main.py                         ← entry point; orchestrates all experiments
 │   ├── config.yaml                     ← all hyperparameters and experiment settings
 │   ├── BEGINNERS_GUIDE.md              ← reading-order guide for new readers
 │   ├── datasets/
-│   │   └── cloud_resource_allocation_dataset.csv
-│   ├── figures/                        ← plots saved here
-│   ├── results/                        ← CSV and summary.md saved here
+│   │   ├── cloud_resource_allocation_dataset.csv
+│   │   └── raw/                        ← original dataset download (.xlsx)
+│   ├── figures/                        ← plots saved here (per focus mode)
+│   ├── results/                        ← CSVs, run_manifest.yaml, summary.md (per focus mode)
+│   ├── dev/                            ← one-off diagnostic scripts (not part of the pipeline)
+│   ├── tests/                          ← unit tests (objective, algorithms, correctness)
 │   ├── algorithms/
 │   │   ├── simulated_annealing.py      ← SA with auto-T₀, geometric cooling, reheating
 │   │   ├── genetic_algorithm.py        ← GA with tournament, uniform crossover, elitism
@@ -761,24 +764,36 @@ Master_Thesis_Metaheuristics/
 │       ├── experiment.py               ← multi-seed experiment harness
 │       └── plot.py                     ← convergence / bar / box / CSV export
 │
-└── EV_routing/                         ← Problem 2 (thesis Chapter 4)
-    ├── main.py
-    ├── datasets/
-    ├── figures/
+└── EV_routing/                         ← Problem 2 (thesis §3.2)
+    ├── main.py                         ← entry point; main experiment + analyses
+    ├── instances/                      ← frozen instances (sf_25 … sf_500): matrices, elevations, nodes
+    ├── datasets/                       ← raw charging-station dataset
+    ├── results/                        ← per-instance results incl. params.json, weights.json, figures/
+    ├── scripts/
+    │   ├── build_instance.py           ← builds the frozen instances (OSRM + SRTM)
+    │   ├── tune.py                     ← random-search hyperparameter tuning
+    │   ├── sensitivity_analysis.py     ← per-parameter sensitivity from tuning data
+    │   ├── scalability_analysis.py     ← customer-count and battery sweeps
+    │   └── calibrate_weights.py        ← sample-based objective-weight calibration
     ├── algorithms/
-    │   └── simmulated_annealing.py
+    │   ├── simulated_annealing.py      ← SA with reheating (thesis §7.4.3)
+    │   ├── genetic_algorithm.py        ← GA; also the Memetic Algorithm via local_search_iters
+    │   ├── ant_colony.py               ← MAX-MIN Ant System with battery-aware construction
+    │   └── greedy.py                   ← nearest-neighbour baseline with proactive charging
     └── tools/
-        ├── data_loader.py
-        ├── objective.py
-        ├── feasibility.py
-        ├── initial_solution.py
-        ├── neighborhoods.py
-        ├── experiment.py
-        ├── plot.py
-        ├── energy.py
-        ├── energy_model.py
-        ├── distance.py
-        └── node_utils.py
+        ├── data_loader.py              ← loads frozen instance + energy matrix
+        ├── objective.py                ← evaluate_route(), ObjectiveWeights, focus modes
+        ├── battery.py                  ← EVParameters, battery simulation
+        ├── feasibility.py              ← route validity + energy feasibility
+        ├── initial_solution.py         ← build_ev_feasible_solution()
+        ├── neighborhoods.py            ← 8 move operators (ordering + charging)
+        ├── distance.py                 ← distance/duration matrix helpers
+        ├── node_utils.py               ← node-ID helpers
+        ├── tuning.py                   ← grid/random search harness
+        ├── statistics.py               ← Wilcoxon signed-rank tests
+        ├── compare.py                  ← cross-algorithm comparison tables
+        ├── experiment.py               ← multi-seed experiment harness
+        └── plot.py                     ← convergence / box / scalability figures
 ```
 
 ---

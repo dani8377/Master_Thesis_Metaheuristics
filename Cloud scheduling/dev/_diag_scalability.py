@@ -6,7 +6,7 @@ import sys
 import time
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from tools.data_loader import (
     load_synthetic_problem_data,
@@ -18,7 +18,7 @@ from algorithms.simulated_annealing import simulated_annealing, estimate_initial
 from algorithms.baselines import greedy_ffd_baseline
 
 
-dataset_dir = Path(__file__).parent / "datasets"
+dataset_dir = Path(__file__).parent.parent / "datasets"
 
 w_base = ObjectiveWeights(
     energy_weight=1.0, latency_weight=1.0,

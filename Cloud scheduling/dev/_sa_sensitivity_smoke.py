@@ -5,7 +5,7 @@ import random
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from tools.data_loader import load_problem_data, generate_server_pool
 from tools.objective import ObjectiveWeights, compute_sample_normalization
@@ -14,7 +14,7 @@ from algorithms.simulated_annealing import simulated_annealing, estimate_initial
 
 
 random.seed(0)
-dataset_dir = Path(__file__).parent / "datasets"
+dataset_dir = Path(__file__).parent.parent / "datasets"
 servers = generate_server_pool(10, seed=42)
 data = load_problem_data(dataset_dir, n_tasks=50, servers=servers)
 
