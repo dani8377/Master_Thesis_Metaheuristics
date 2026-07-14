@@ -1,5 +1,17 @@
 # EV Routing — Master's Thesis
 
+## Thesis report
+
+The written thesis (LaTeX) lives in `report/`, a git submodule tracking the Overleaf project via Overleaf's git bridge (`.gitmodules`). Main file: `report/Thesis.tex`, with content split across `report/chapters/`, `report/appendices/`, `report/frontmatter/`, `report/bibliography/`. Read directly from `report/` when asked about the thesis text, structure, or to cross-check the report against the code.
+
+If `report/` is empty after a fresh clone, run `git submodule update --init`.
+
+To sync the latest Overleaf edits into this repo:
+```bash
+cd report && git pull && cd .. && git add report && git commit -m "Update thesis report reference"
+```
+Editing `report/` files locally and pushing back to Overleaf works the same way in reverse (`git push` from inside `report/`), but Overleaf's git bridge can be finicky with concurrent edits made in the web editor — pull before you push.
+
 ## Running the project
 
 Always run from the project root with `EV_routing` on the path:
