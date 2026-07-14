@@ -32,7 +32,7 @@ independent in their problem formulations and solution representations.
 
 ## 1. Cloud Resource Scheduling
 
-**Directory:** `Cloud scheduling/`
+**Directory:** `Cloud_scheduling/`
 
 ### Problem Statement
 
@@ -126,7 +126,7 @@ A solution is **feasible** when both CPU and memory penalties are exactly zero.
 #### Normalisation and Penalty Calibration
 
 Two normalisation methods are supported (set in
-`Cloud scheduling/config.yaml` &rarr; `experiment.normalize_method`):
+`Cloud_scheduling/config.yaml` &rarr; `experiment.normalize_method`):
 
 ##### `sample` (default, recommended) — Deb (2001) sample-based normalisation
 
@@ -142,7 +142,7 @@ This is the methodology your weights live inside — the values `wₑ = 1.0`,
 `wₗ = 0.2` are not free constants, they are **preference ratios applied on
 top of statistically calibrated normalisation constants**. The procedure
 (implemented in
-[`tools/objective.py:compute_sample_normalization`](Cloud%20scheduling/tools/objective.py)):
+[`tools/objective.py:compute_sample_normalization`](Cloud_scheduling/tools/objective.py)):
 
 1. **Generate the calibration pool.** Draw `n_calibration_samples = 150`
    candidate assignments — *not* by repeated random initialisation alone, but
@@ -157,7 +157,7 @@ top of statistically calibrated normalisation constants**. The procedure
    This mix anchors the pool around the greedy solution but spreads out enough
    that the resulting feasible subset spans a meaningful slice of the feasible
    region rather than being a deterministic point. See
-   [`tools/objective.py:_sample_calibration_pool`](Cloud%20scheduling/tools/objective.py).
+   [`tools/objective.py:_sample_calibration_pool`](Cloud_scheduling/tools/objective.py).
 2. **Filter to feasibles.** Each candidate is evaluated; only those with zero
    CPU and memory capacity violations are kept. The number of feasibles found
    is recorded in `run_manifest.yaml → calibration_diagnostics.n_feasible`.
@@ -186,7 +186,7 @@ top of statistically calibrated normalisation constants**. The procedure
    warning to the console and to `run_manifest.yaml`.
 
 The exact constants used for every run are persisted to
-`Cloud scheduling/results/run_manifest.yaml` (`objective.energy_ref`,
+`Cloud_scheduling/results/run_manifest.yaml` (`objective.energy_ref`,
 `objective.latency_ref`, `objective.cpu_penalty`, `objective.mem_penalty`,
 plus the full `calibration_diagnostics` block), so each result is traceable
 back to the calibration that produced it.
@@ -206,11 +206,11 @@ equal expected contribution. Penalty weights `λ_cpu` and `λ_mem` are taken
 from `config.yaml`. Provided for backwards compatibility and ablation only.
 
 **Implementation note:** the normalisation is implemented in
-[`Cloud scheduling/tools/objective.py`](Cloud%20scheduling/tools/objective.py)
+[`Cloud_scheduling/tools/objective.py`](Cloud_scheduling/tools/objective.py)
 using fully vectorised numpy operations, making it fast enough to be called
 ~150,000 times per experiment run without bottleneck. The actual calibration
 constants used for every run are persisted to
-`Cloud scheduling/results/run_manifest.yaml` (`objective` + `calibration_diagnostics`).
+`Cloud_scheduling/results/run_manifest.yaml` (`objective` + `calibration_diagnostics`).
 
 ---
 
@@ -368,7 +368,7 @@ m = 4 servers) to validate that metaheuristics find near-optimal solutions on tr
 
 ### Algorithm Parameters
 
-All hyperparameters are stored in [`Cloud scheduling/config.yaml`](Cloud%20scheduling/config.yaml)
+All hyperparameters are stored in [`Cloud_scheduling/config.yaml`](Cloud_scheduling/config.yaml)
 and read at runtime. Key values (balanced focus mode):
 
 | Parameter | SA | GA | UMDA |
@@ -757,7 +757,7 @@ Master_Thesis_Metaheuristics/
 ├── run.py                              ← top-level launcher
 ├── Makefile                            ← make-based shortcuts
 │
-├── Cloud scheduling/                   ← Problem 1 (thesis Chapter 3)
+├── Cloud_scheduling/                   ← Problem 1 (thesis Chapter 3)
 │   ├── main.py                         ← entry point; orchestrates all experiments
 │   ├── config.yaml                     ← all hyperparameters and experiment settings
 │   ├── BEGINNERS_GUIDE.md              ← reading-order guide for new readers
@@ -883,7 +883,7 @@ than defend against it.
 ### Data limitations
 
 - **Synthetic server pool.** The 10-server pool in
-  [`tools/data_loader.py:DEFAULT_SERVER_POOL`](Cloud%20scheduling/tools/data_loader.py)
+  [`tools/data_loader.py:DEFAULT_SERVER_POOL`](Cloud_scheduling/tools/data_loader.py)
   is hand-specified — capacities, idle powers, and efficiencies are stated
   as instance parameters of the experiment, not measured from real hardware.
   The CSV dataset only describes tasks. This is a modelling choice; the

@@ -34,7 +34,7 @@ paper     — print-oriented: drawn at final print size (5.8 in wide) with
             \includegraphics[width=\textwidth]{...} and it will not be
             downscaled below its design size.
 
-USAGE  (run from the "Cloud scheduling" directory)
+USAGE  (run from the "Cloud_scheduling" directory)
 --------------------------------------------------
     uv run python visualize.py                      # both styles, balanced focus
     uv run python visualize.py --style paper        # print figures only

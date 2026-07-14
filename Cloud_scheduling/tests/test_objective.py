@@ -6,7 +6,7 @@ F(X), and verifies that evaluate_schedule() returns the same number.  This
 gives empirical proof that the formula implementation matches the thesis
 specification, line by line.
 
-Run from the Cloud scheduling directory:
+Run from the Cloud_scheduling directory:
     uv run python tests/test_objective.py
 """
 from __future__ import annotations

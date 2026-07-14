@@ -10,7 +10,7 @@ This test demonstrates that the algorithms work correctly under good
 conditions and isolates the n>=200 "0% improvement" phenomenon as a
 budget/scale issue rather than a code bug.
 
-Run from the Cloud scheduling directory:
+Run from the Cloud_scheduling directory:
     uv run --with numpy --with pandas --with pyyaml python tests/test_algorithms.py
 """
 from __future__ import annotations

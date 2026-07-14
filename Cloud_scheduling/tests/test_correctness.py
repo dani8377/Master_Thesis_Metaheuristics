@@ -18,12 +18,12 @@ during a thesis defence:
 
 HOW TO RUN
 ----------
-    cd "Cloud scheduling"
+    cd "Cloud_scheduling"
     uv run python -m tests.test_correctness
 
 or
 
-    uv run python "Cloud scheduling/tests/test_correctness.py"
+    uv run python "Cloud_scheduling/tests/test_correctness.py"
 
 All tests print a PASS/FAIL line. A final summary line reports the total.
 """
@@ -39,7 +39,7 @@ from dataclasses import dataclass
 import numpy as np
 import pandas as pd
 
-# Allow running this file directly from the Cloud scheduling/ folder
+# Allow running this file directly from the Cloud_scheduling/ folder
 _HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.dirname(_HERE))
 

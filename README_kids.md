@@ -30,7 +30,7 @@ tricks called **metaheuristics** to find a very good answer in a reasonable amou
 
 ## Puzzle 1: The Cloud Computer Scheduling Problem
 
-**Where is the code?** [Cloud scheduling/](Cloud%20scheduling/)
+**Where is the code?** [Cloud_scheduling/](Cloud_scheduling/)
 
 ### The Setup
 
@@ -281,23 +281,23 @@ This problem uses Simulated Annealing only (one algorithm, not three).
 
 | File | What it does |
 |---|---|
-| [Cloud scheduling/main.py](Cloud%20scheduling/main.py) | Entry point. Runs all algorithms, prints tables, saves plots and CSVs. |
-| [Cloud scheduling/config.yaml](Cloud%20scheduling/config.yaml) | **The one file you edit to change algorithm settings.** Population sizes, cooling rates, number of seeds — all here. |
-| [Cloud scheduling/BEGINNERS_GUIDE.md](Cloud%20scheduling/BEGINNERS_GUIDE.md) | A step-by-step guide explaining which files to read first and in what order, to understand the code. |
-| [Cloud scheduling/algorithms/simulated_annealing.py](Cloud%20scheduling/algorithms/simulated_annealing.py) | Simulated Annealing loop for scheduling. |
-| [Cloud scheduling/algorithms/genetic_algorithm.py](Cloud%20scheduling/algorithms/genetic_algorithm.py) | Genetic Algorithm with tournament selection, uniform crossover, and per-gene mutation. |
-| [Cloud scheduling/algorithms/umda.py](Cloud%20scheduling/algorithms/umda.py) | UMDA (EDA): learns a probability model of good solutions and samples from it. |
-| [Cloud scheduling/algorithms/baselines.py](Cloud%20scheduling/algorithms/baselines.py) | Greedy FFD, Round-Robin, and Random one-shot baselines. |
-| [Cloud scheduling/algorithms/branch_and_bound.py](Cloud%20scheduling/algorithms/branch_and_bound.py) | The exact solver (B&B). Used on small instances to measure optimality gaps. |
-| [Cloud scheduling/algorithms/branch_and_bound.py](Cloud%20scheduling/algorithms/branch_and_bound.py) | Exact B&B solver (time-limited; gives optimality gap when stopped early). |
-| [Cloud scheduling/tools/config_loader.py](Cloud%20scheduling/tools/config_loader.py) | Reads config.yaml into typed Python dataclasses. |
-| [Cloud scheduling/tools/data_loader.py](Cloud%20scheduling/tools/data_loader.py) | Reads the task spreadsheet and creates the 10 servers. |
-| [Cloud scheduling/tools/objective.py](Cloud%20scheduling/tools/objective.py) | Calculates electricity + slowness + overload penalties. The core formula. |
-| [Cloud scheduling/tools/feasibility.py](Cloud%20scheduling/tools/feasibility.py) | Checks every job is assigned to a real server. |
-| [Cloud scheduling/tools/initial_solution.py](Cloud%20scheduling/tools/initial_solution.py) | Greedy FFD, round-robin, and random constructors for initial assignments. |
-| [Cloud scheduling/tools/neighborhoods.py](Cloud%20scheduling/tools/neighborhoods.py) | The 5 ways to tweak a job assignment (used by SA). |
-| [Cloud scheduling/tools/experiment.py](Cloud%20scheduling/tools/experiment.py) | Generic harness: runs any algorithm N times and collects results. |
-| [Cloud scheduling/tools/plot.py](Cloud%20scheduling/tools/plot.py) | Convergence graph, bar comparison chart, box plots, comparison table, CSV export. |
+| [Cloud_scheduling/main.py](Cloud_scheduling/main.py) | Entry point. Runs all algorithms, prints tables, saves plots and CSVs. |
+| [Cloud_scheduling/config.yaml](Cloud_scheduling/config.yaml) | **The one file you edit to change algorithm settings.** Population sizes, cooling rates, number of seeds — all here. |
+| [Cloud_scheduling/BEGINNERS_GUIDE.md](Cloud_scheduling/BEGINNERS_GUIDE.md) | A step-by-step guide explaining which files to read first and in what order, to understand the code. |
+| [Cloud_scheduling/algorithms/simulated_annealing.py](Cloud_scheduling/algorithms/simulated_annealing.py) | Simulated Annealing loop for scheduling. |
+| [Cloud_scheduling/algorithms/genetic_algorithm.py](Cloud_scheduling/algorithms/genetic_algorithm.py) | Genetic Algorithm with tournament selection, uniform crossover, and per-gene mutation. |
+| [Cloud_scheduling/algorithms/umda.py](Cloud_scheduling/algorithms/umda.py) | UMDA (EDA): learns a probability model of good solutions and samples from it. |
+| [Cloud_scheduling/algorithms/baselines.py](Cloud_scheduling/algorithms/baselines.py) | Greedy FFD, Round-Robin, and Random one-shot baselines. |
+| [Cloud_scheduling/algorithms/branch_and_bound.py](Cloud_scheduling/algorithms/branch_and_bound.py) | The exact solver (B&B). Used on small instances to measure optimality gaps. |
+| [Cloud_scheduling/algorithms/branch_and_bound.py](Cloud_scheduling/algorithms/branch_and_bound.py) | Exact B&B solver (time-limited; gives optimality gap when stopped early). |
+| [Cloud_scheduling/tools/config_loader.py](Cloud_scheduling/tools/config_loader.py) | Reads config.yaml into typed Python dataclasses. |
+| [Cloud_scheduling/tools/data_loader.py](Cloud_scheduling/tools/data_loader.py) | Reads the task spreadsheet and creates the 10 servers. |
+| [Cloud_scheduling/tools/objective.py](Cloud_scheduling/tools/objective.py) | Calculates electricity + slowness + overload penalties. The core formula. |
+| [Cloud_scheduling/tools/feasibility.py](Cloud_scheduling/tools/feasibility.py) | Checks every job is assigned to a real server. |
+| [Cloud_scheduling/tools/initial_solution.py](Cloud_scheduling/tools/initial_solution.py) | Greedy FFD, round-robin, and random constructors for initial assignments. |
+| [Cloud_scheduling/tools/neighborhoods.py](Cloud_scheduling/tools/neighborhoods.py) | The 5 ways to tweak a job assignment (used by SA). |
+| [Cloud_scheduling/tools/experiment.py](Cloud_scheduling/tools/experiment.py) | Generic harness: runs any algorithm N times and collects results. |
+| [Cloud_scheduling/tools/plot.py](Cloud_scheduling/tools/plot.py) | Convergence graph, bar comparison chart, box plots, comparison table, CSV export. |
 
 ### EV Routing Files
 

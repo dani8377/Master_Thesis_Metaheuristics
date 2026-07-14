@@ -53,7 +53,7 @@ We want F(X) to be as small as possible.
 Here is every file, in the order you should read them:
 
 ```
-Cloud scheduling/
+Cloud_scheduling/
 │
 ├── config.yaml                     ← START HERE: all tunable numbers in one place
 ├── main.py                         ← the entry point; run this to reproduce results
@@ -867,7 +867,7 @@ percentage is what the thesis claims hinge on.
 ## 11. Code Correctness — Sanity Test Suite
 
 A test suite in [`tests/`](tests/) empirically verifies the implementation.
-Run from the `Cloud scheduling/` directory:
+Run from the `Cloud_scheduling/` directory:
 
 ```bash
 uv run --with numpy --with pandas --with pyyaml python tests/test_objective.py

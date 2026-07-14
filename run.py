@@ -6,7 +6,7 @@ Usage (from the project root):
     uv run run.py ev                    # EV routing only
     uv run run.py cloud                 # cloud scheduling, all algorithms, balanced
 
-Cloud scheduling options (passed after 'cloud'):
+Cloud_scheduling options (passed after 'cloud'):
     uv run run.py cloud --algorithms SA GA UMDA   # metaheuristics only
     uv run run.py cloud --focus eco --verbose     # eco mode with verbose output
     uv run run.py cloud --algorithms SA --seeds 3 # quick single-algorithm test
@@ -56,7 +56,7 @@ for target in targets:
     if target == "ev":
         run("EV Routing", "EV_routing", from_root=True)  # EV flags: run EV_routing/main.py directly
     elif target == "cloud":
-        run("Cloud Scheduling", "Cloud scheduling", extras)
+        run("Cloud Scheduling", "Cloud_scheduling", extras)
     else:
         print(f"Unknown target '{target}'. Use: ev  cloud")
         sys.exit(1)

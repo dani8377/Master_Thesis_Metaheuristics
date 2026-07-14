@@ -1,6 +1,6 @@
 UV      := uv run --with numpy --with pandas --with matplotlib --with pyyaml --with scipy python
 EV_DIR  := EV_routing
-CS_DIR  := Cloud scheduling
+CS_DIR  := Cloud_scheduling
 
 .PHONY: all ev cloud
 

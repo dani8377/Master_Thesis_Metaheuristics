@@ -2049,8 +2049,8 @@ def main() -> None:
     #                                                                      #
     # Outputs are partitioned by focus mode so successive runs with        #
     # --focus balanced / eco / performance do not overwrite each other.    #
-    #   Cloud scheduling/results/<focus>/*.csv  *.md  run_log.txt          #
-    #   Cloud scheduling/figures/<focus>/*.png                             #
+    #   Cloud_scheduling/results/<focus>/*.csv  *.md  run_log.txt          #
+    #   Cloud_scheduling/figures/<focus>/*.png                             #
     # ------------------------------------------------------------------ #
     base_dir    = Path(__file__).parent
     dataset_dir = base_dir / "datasets"
