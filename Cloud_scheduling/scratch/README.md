@@ -5,10 +5,10 @@ One-off diagnostic and smoke-test scripts used while debugging the cloud module
 They are **not** part of the experimental pipeline and are not needed to
 reproduce any thesis result.
 
-Run them from the `Cloud scheduling/` directory so the `tools/` and
+Run them from the `Cloud_scheduling/` directory so the `tools/` and
 `algorithms/` packages resolve, e.g.:
 
 ```bash
 cd Cloud_scheduling
-uv run --with numpy --with pandas --with pyyaml python dev/_diag_t0_distribution.py
+uv run --with numpy --with pandas --with pyyaml python scratch/_diag_t0_distribution.py
 ```

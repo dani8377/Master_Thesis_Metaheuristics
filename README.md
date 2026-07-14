@@ -757,7 +757,7 @@ Master_Thesis_Metaheuristics/
 ├── run.py                              ← top-level launcher
 ├── Makefile                            ← make-based shortcuts
 │
-├── Cloud_scheduling/                   ← Problem 1 (thesis §3.1)
+├── Cloud_scheduling/                   ← Problem 1 (thesis Chapter 3)
 │   ├── main.py                         ← entry point; orchestrates all experiments
 │   ├── config.yaml                     ← all hyperparameters and experiment settings
 │   ├── BEGINNERS_GUIDE.md              ← reading-order guide for new readers
@@ -766,7 +766,7 @@ Master_Thesis_Metaheuristics/
 │   │   └── raw/                        ← original dataset download (.xlsx)
 │   ├── figures/                        ← plots saved here (per focus mode)
 │   ├── results/                        ← CSVs, run_manifest.yaml, summary.md (per focus mode)
-│   ├── dev/                            ← one-off diagnostic scripts (not part of the pipeline)
+│   ├── scratch/                        ← one-off diagnostic scripts (not part of the pipeline)
 │   ├── tests/                          ← unit tests (objective, algorithms, correctness)
 │   ├── algorithms/
 │   │   ├── simulated_annealing.py      ← SA with auto-T₀, geometric cooling, reheating
@@ -784,7 +784,7 @@ Master_Thesis_Metaheuristics/
 │       ├── experiment.py               ← multi-seed experiment harness
 │       └── plot.py                     ← convergence / bar / box / CSV export
 │
-└── EV_routing/                         ← Problem 2 (thesis §3.2)
+└── EV_routing/                         ← Problem 2 (thesis Chapter 3.2)
     ├── main.py                         ← entry point; main experiment + all sweeps
     ├── datasets/                       ← raw charging-station CSV
     ├── instances/                      ← frozen sf_25 … sf_500 instances (matrices, maps)
@@ -797,27 +797,27 @@ Master_Thesis_Metaheuristics/
     │   ├── build_instance.py           ← OSRM + SRTM instance construction
     │   ├── calibrate_weights.py        ← Deb sample-based weight calibration
     │   ├── tune.py                     ← random-search hyperparameter tuning
-    │   ├── sensitivity_analysis.py     ← per-parameter sensitivity from tuning data
-    │   └── scalability_analysis.py     ← customer-count and battery sweeps
+    │   ├── sensitivity_analysis.py
+    │   └── scalability_analysis.py
     ├── algorithms/
-    │   ├── greedy.py                   ← nearest-neighbour baseline with proactive charging
+    │   ├── greedy.py                   ← nearest-neighbour baseline
     │   ├── simulated_annealing.py      ← SA with reheating
     │   ├── genetic_algorithm.py        ← GA and MA (local_search_iters > 0)
-    │   └── ant_colony.py               ← Max–Min Ant System with battery-aware construction
+    │   └── ant_colony.py               ← Max–Min Ant System
     └── tools/
-        ├── data_loader.py              ← loads frozen instance + energy matrix
+        ├── data_loader.py
         ├── battery.py                  ← EVParameters
         ├── objective.py                ← evaluate_route()
-        ├── feasibility.py              ← route validity + energy feasibility
+        ├── feasibility.py
         ├── initial_solution.py         ← EV-feasible construction + repair
-        ├── neighborhoods.py            ← 8 move operators (ordering + charging)
+        ├── neighborhoods.py            ← 8 move operators
         ├── experiment.py               ← multi-seed harness
         ├── statistics.py               ← Wilcoxon signed-rank tests
-        ├── tuning.py                   ← grid/random search harness
-        ├── compare.py                  ← cross-algorithm comparison tables
-        ├── plot.py                     ← convergence / box / scalability figures
-        ├── distance.py                 ← distance/duration matrix helpers
-        └── node_utils.py               ← node-ID helpers
+        ├── tuning.py
+        ├── compare.py
+        ├── plot.py
+        ├── distance.py
+        └── node_utils.py
 ```
 
 ---
