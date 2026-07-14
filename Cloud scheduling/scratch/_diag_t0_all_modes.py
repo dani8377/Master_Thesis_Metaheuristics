@@ -4,7 +4,7 @@ import random
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from tools.data_loader import load_problem_data, generate_server_pool
 from tools.objective import ObjectiveWeights, compute_sample_normalization
