@@ -11,10 +11,10 @@ What it does
 2. For each algorithm listed in ALGORITHMS, runs grid or random search
    (controlled per-algorithm via SEARCH below).
 3. Prints a ranked top-10 table of configurations.
-4. Saves all trial results to  EV_routing/tuning_results/<algo>_results.csv
-5. Saves a two-panel analysis figure to EV_routing/figures/tuning/<algo>_tuning.png
-6. Writes the best parameters for ALL algorithms to
-   EV_routing/results/<instance>/params.json so main.py picks them up automatically.
+4. Saves all trial results to  EV_routing/results/<instance>/tuning/<algo>_results.csv
+5. Saves a two-panel analysis figure to EV_routing/results/<instance>/figures/tuning/<algo>_tuning.png
+6. Writes the best parameters for ALL algorithms to EV_routing/results/<instance>/params.json
+   so main.py picks them up automatically.
 
 Adjusting the search
 --------------------

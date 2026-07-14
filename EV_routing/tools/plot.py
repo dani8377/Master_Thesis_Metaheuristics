@@ -629,7 +629,7 @@ def plot_scalability(
     show: bool = True,
 ) -> None:
     """
-    Two separate 2-panel scalability figures, matching the Cloud scheduling structure.
+    Two separate 2-panel scalability figures, matching the Cloud_scheduling structure.
 
     scalability_customer.png
       Left:  avg runtime vs number of customers  (log x-axis)

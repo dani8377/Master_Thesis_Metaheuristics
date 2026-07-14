@@ -1,8 +1,0 @@
-algorithm,n_seeds,mean_total_evaluations,mean_n_generations_completed,mean_sa_reheat_count,mean_sa_final_temperature,mean_sa_acceptance_rate,mean_sa_feasibility_rate,mean_umda_final_model_entropy,bb_proven_optimal,bb_root_lower_bound,bb_optimality_gap_pct,bb_nodes_explored
-Simulated Annealing,20,143161.000000,,5.750000,0.007503,0.321307,0.784473,,,,,
-Genetic Algorithm,20,147100.000000,1500.000000,,,,,,,,,
-UMDA (EDA),20,148600.000000,1500.000000,,,,,0.368867,,,,
-Branch & Bound,1,,,,,,,,False,0.613612,100.0725,58322
-Greedy BFD (baseline),20,1.000000,,,,,,,,,,
-Round-Robin (baseline),1,1.000000,,,,,,,,,,
-Random (baseline),20,1.000000,,,,,,,,,,

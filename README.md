@@ -32,7 +32,7 @@ independent in their problem formulations and solution representations.
 
 ## 1. Cloud Resource Scheduling
 
-**Directory:** `Cloud scheduling/`
+**Directory:** `Cloud_scheduling/`
 
 ### Problem Statement
 
@@ -126,7 +126,7 @@ A solution is **feasible** when both CPU and memory penalties are exactly zero.
 #### Normalisation and Penalty Calibration
 
 Two normalisation methods are supported (set in
-`Cloud scheduling/config.yaml` &rarr; `experiment.normalize_method`):
+`Cloud_scheduling/config.yaml` &rarr; `experiment.normalize_method`):
 
 ##### `sample` (default, recommended) — Deb (2001) sample-based normalisation
 
@@ -142,7 +142,7 @@ This is the methodology your weights live inside — the values `wₑ = 1.0`,
 `wₗ = 0.2` are not free constants, they are **preference ratios applied on
 top of statistically calibrated normalisation constants**. The procedure
 (implemented in
-[`tools/objective.py:compute_sample_normalization`](Cloud%20scheduling/tools/objective.py)):
+[`tools/objective.py:compute_sample_normalization`](Cloud_scheduling/tools/objective.py)):
 
 1. **Generate the calibration pool.** Draw `n_calibration_samples = 150`
    candidate assignments — *not* by repeated random initialisation alone, but
@@ -157,7 +157,7 @@ top of statistically calibrated normalisation constants**. The procedure
    This mix anchors the pool around the greedy solution but spreads out enough
    that the resulting feasible subset spans a meaningful slice of the feasible
    region rather than being a deterministic point. See
-   [`tools/objective.py:_sample_calibration_pool`](Cloud%20scheduling/tools/objective.py).
+   [`tools/objective.py:_sample_calibration_pool`](Cloud_scheduling/tools/objective.py).
 2. **Filter to feasibles.** Each candidate is evaluated; only those with zero
    CPU and memory capacity violations are kept. The number of feasibles found
    is recorded in `run_manifest.yaml → calibration_diagnostics.n_feasible`.
@@ -186,7 +186,7 @@ top of statistically calibrated normalisation constants**. The procedure
    warning to the console and to `run_manifest.yaml`.
 
 The exact constants used for every run are persisted to
-`Cloud scheduling/results/run_manifest.yaml` (`objective.energy_ref`,
+`Cloud_scheduling/results/run_manifest.yaml` (`objective.energy_ref`,
 `objective.latency_ref`, `objective.cpu_penalty`, `objective.mem_penalty`,
 plus the full `calibration_diagnostics` block), so each result is traceable
 back to the calibration that produced it.
@@ -206,11 +206,11 @@ equal expected contribution. Penalty weights `λ_cpu` and `λ_mem` are taken
 from `config.yaml`. Provided for backwards compatibility and ablation only.
 
 **Implementation note:** the normalisation is implemented in
-[`Cloud scheduling/tools/objective.py`](Cloud%20scheduling/tools/objective.py)
+[`Cloud_scheduling/tools/objective.py`](Cloud_scheduling/tools/objective.py)
 using fully vectorised numpy operations, making it fast enough to be called
 ~150,000 times per experiment run without bottleneck. The actual calibration
 constants used for every run are persisted to
-`Cloud scheduling/results/run_manifest.yaml` (`objective` + `calibration_diagnostics`).
+`Cloud_scheduling/results/run_manifest.yaml` (`objective` + `calibration_diagnostics`).
 
 ---
 
@@ -246,8 +246,8 @@ Each item points to the precise function and lines to inspect.
 | `algorithms.sa.iterations_per_temperature` | 50 | Inner-loop evaluations per level |
 | `algorithms.sa.reheat_patience` | 300 | Steps without improvement before reheat |
 | `algorithms.sa.reheat_factor` | 0.4 | Fraction of T₀ for reheated temperature |
-| `algorithms.ga.population_size` | 50 | |
-| `algorithms.ga.n_generations` | 3,000 | |
+| `algorithms.ga.population_size` | 100 | |
+| `algorithms.ga.n_generations` | 1,500 | |
 | `algorithms.ga.tournament_size` | 3 | Tournament selection k |
 | `algorithms.ga.crossover_prob` | 0.8 | Applied per pair with this probability |
 | `algorithms.ga.elitism_count` | 2 | Best individuals copied unchanged |
@@ -295,8 +295,8 @@ local optima.
 
 #### Genetic Algorithm (GA)
 
-Population-based evolutionary metaheuristic. Maintains a population of P = 50 candidate
-assignment vectors evolved over 3,000 generations.
+Population-based evolutionary metaheuristic. Maintains a population of P = 100 candidate
+assignment vectors evolved over 1,500 generations.
 
 **Initialisation:** 1 Greedy BFD solution + P−1 uniformly random assignments. This
 ensures initial diversity while anchoring the population with one strong starting point.
@@ -315,7 +315,7 @@ of mutations per offspring: 1.
 **Elitism:** the 2 best individuals from the current generation are copied unchanged
 into the next generation, guaranteeing that the best solution found so far is never lost.
 
-**Evaluation budget:** `population_size × n_generations = 50 × 3,000 = 150,000`.
+**Evaluation budget:** `population_size × n_generations = 100 × 1,500 = 150,000`.
 
 #### UMDA — Univariate Marginal Distribution Algorithm (EDA)
 
@@ -360,7 +360,7 @@ m = 4 servers) to validate that metaheuristics find near-optimal solutions on tr
 
 | Baseline | Description | Notes |
 |---|---|---|
-| **Greedy BFD** | First-Fit Decreasing: sort tasks by CPU demand (largest first), assign each to the most-loaded server with remaining capacity. Deterministic. | Starting point for SA and GA. |
+| **Greedy BFD** | Best-Fit Decreasing: sort tasks by CPU demand (largest first), assign each to the most-loaded server with remaining capacity. Deterministic. | Starting point for SA and GA. |
 | **Round-Robin** | Assign task i to server `i % m` cyclically. Ignores resource demands. Deterministic. | Runs once (1 seed) — additional seeds produce identical results. |
 | **Random** | Assign each task to a uniformly random server. Provides a worst-case reference. Varies per seed. | Always infeasible at n=50, m=10 due to capacity violations. |
 
@@ -368,14 +368,14 @@ m = 4 servers) to validate that metaheuristics find near-optimal solutions on tr
 
 ### Algorithm Parameters
 
-All hyperparameters are stored in [`Cloud scheduling/config.yaml`](Cloud%20scheduling/config.yaml)
+All hyperparameters are stored in [`Cloud_scheduling/config.yaml`](Cloud_scheduling/config.yaml)
 and read at runtime. Key values (balanced focus mode):
 
 | Parameter | SA | GA | UMDA |
 |---|---|---|---|
 | Evaluation budget | 150,000 | 150,000 | ≈ 150,100 |
-| Population / parallel solutions | — | 50 | 100 |
-| Generations / temperature steps | 3,000 | 3,000 | 1,500 |
+| Population / parallel solutions | — | 100 | 100 |
+| Generations / temperature steps | 3,000 | 1,500 | 1,500 |
 | Inner iterations per step | 50 | — | — |
 | Selection operator | — | Tournament k=3 | Truncation top 50% |
 | Crossover operator | — | Uniform, p=0.8 | — (model-based) |
@@ -715,17 +715,37 @@ be inserted into the route when needed.
 **What the optimiser decides:** the order in which customers are visited and where to
 insert charging stops.
 
-**Objective:** minimise a weighted combination of total distance, travel time, charging
-time, energy consumed, and charging cost. Battery depletion is handled as a soft
-penalty (10,000×) so the search can temporarily enter infeasible regions and recover.
+**Objective:** minimise a weighted combination of total distance, travel time + charging
+time, energy consumed, and charging cost. The four real-cost weights are calibrated by
+sample-based normalisation (Deb 2001) over 150 greedy-feasible routes (each perturbed
+3× — 450 evaluations), so each component contributes ≈ 1.0 on a typical feasible route;
+see `results/sf_75/weights.json`. Battery depletion and structural violations are soft
+penalties, λ = 100 × 4.0 = 400 per the parameter-less penalty rule (Deb 2000), so the
+search can temporarily enter infeasible regions and recover.
 
-**Dataset:** synthetic San Francisco instance — 75 customers, 30 charging stations,
-pre-computed Haversine distance and energy matrices.
+**Main instance (`sf_75`):** 1 depot + 75 customers + 30 public charging stations =
+106 nodes on the real San Francisco road network. Distances and per-arc travel times
+come from **OSRM road-network queries** (not straight-line Haversine); node elevations
+from SRTM feed the grade-dependent energy model. Nested scalability instances
+`sf_25` … `sf_500` (each a prefix of the next, seed 42) live in `instances/`.
 
-**Algorithm:** Simulated Annealing with 8 neighbourhood operators (customer swap,
-relocate, 2-opt, insert/remove/replace/move charging station, battery repair).
+**Algorithms:** Greedy nearest-neighbour baseline (proactive charging insertion at 50%
+battery), **Simulated Annealing**, **Genetic Algorithm** (OX crossover on the customer
+permutation + greedy station repair), **Memetic Algorithm** (GA + first-improvement
+local search), and **ACO** (Max–Min Ant System with battery-aware construction). SA,
+GA, and MA share 8 neighbourhood operators (customer swap / relocate / 2-opt,
+insert / remove / replace / move charging station, battery repair).
 
-**Battery parameters:** 20 kWh capacity, 0.50 kWh/km consumption, 50 km/h speed.
+**Protocol:** every metaheuristic gets the same 150,000-evaluation budget over 10 seeds;
+hyperparameters come from random-search tuning (30 trials × 2 seeds × 50k evals,
+`scripts/tune.py`) stored in `results/sf_75/params.json`. Three focus modes —
+`balanced`, `eco` (70% weight on energy), `time` (70% on time) — reuse the same tuned
+configuration. Outputs (CSVs, `summary.md`, figures) are written per instance and mode
+to `results/<instance>[_<mode>]/` with figures under `results/<instance>/figures/`.
+
+**Battery parameters:** 20 kWh capacity (recharge-to-full at stations),
+0.50 kWh/km baseline consumption, grade factor 3.0, speed exponent 2.0 (v² drag),
+50 km/h fallback speed for arcs without an OSRM duration.
 
 ---
 
@@ -737,7 +757,7 @@ Master_Thesis_Metaheuristics/
 ├── run.py                              ← top-level launcher
 ├── Makefile                            ← make-based shortcuts
 │
-├── Cloud scheduling/                   ← Problem 1 (thesis §3.1)
+├── Cloud_scheduling/                   ← Problem 1 (thesis §3.1)
 │   ├── main.py                         ← entry point; orchestrates all experiments
 │   ├── config.yaml                     ← all hyperparameters and experiment settings
 │   ├── BEGINNERS_GUIDE.md              ← reading-order guide for new readers
@@ -765,35 +785,39 @@ Master_Thesis_Metaheuristics/
 │       └── plot.py                     ← convergence / bar / box / CSV export
 │
 └── EV_routing/                         ← Problem 2 (thesis §3.2)
-    ├── main.py                         ← entry point; main experiment + analyses
-    ├── instances/                      ← frozen instances (sf_25 … sf_500): matrices, elevations, nodes
-    ├── datasets/                       ← raw charging-station dataset
-    ├── results/                        ← per-instance results incl. params.json, weights.json, figures/
+    ├── main.py                         ← entry point; main experiment + all sweeps
+    ├── datasets/                       ← raw charging-station CSV
+    ├── instances/                      ← frozen sf_25 … sf_500 instances (matrices, maps)
+    ├── results/                        ← per-instance outputs, incl. figures/ and params.json
+    │   └── sf_75/
+    │       ├── params.json             ← tuned hyperparameters (thesis Table 8.3)
+    │       ├── weights.json            ← calibrated objective weights (thesis Table 7.1)
+    │       └── figures/                ← convergence / box / sensitivity / scalability plots
     ├── scripts/
-    │   ├── build_instance.py           ← builds the frozen instances (OSRM + SRTM)
+    │   ├── build_instance.py           ← OSRM + SRTM instance construction
+    │   ├── calibrate_weights.py        ← Deb sample-based weight calibration
     │   ├── tune.py                     ← random-search hyperparameter tuning
     │   ├── sensitivity_analysis.py     ← per-parameter sensitivity from tuning data
-    │   ├── scalability_analysis.py     ← customer-count and battery sweeps
-    │   └── calibrate_weights.py        ← sample-based objective-weight calibration
+    │   └── scalability_analysis.py     ← customer-count and battery sweeps
     ├── algorithms/
-    │   ├── simulated_annealing.py      ← SA with reheating (thesis §7.4.3)
-    │   ├── genetic_algorithm.py        ← GA; also the Memetic Algorithm via local_search_iters
-    │   ├── ant_colony.py               ← MAX-MIN Ant System with battery-aware construction
-    │   └── greedy.py                   ← nearest-neighbour baseline with proactive charging
+    │   ├── greedy.py                   ← nearest-neighbour baseline with proactive charging
+    │   ├── simulated_annealing.py      ← SA with reheating
+    │   ├── genetic_algorithm.py        ← GA and MA (local_search_iters > 0)
+    │   └── ant_colony.py               ← Max–Min Ant System with battery-aware construction
     └── tools/
         ├── data_loader.py              ← loads frozen instance + energy matrix
-        ├── objective.py                ← evaluate_route(), ObjectiveWeights, focus modes
-        ├── battery.py                  ← EVParameters, battery simulation
+        ├── battery.py                  ← EVParameters
+        ├── objective.py                ← evaluate_route()
         ├── feasibility.py              ← route validity + energy feasibility
-        ├── initial_solution.py         ← build_ev_feasible_solution()
+        ├── initial_solution.py         ← EV-feasible construction + repair
         ├── neighborhoods.py            ← 8 move operators (ordering + charging)
-        ├── distance.py                 ← distance/duration matrix helpers
-        ├── node_utils.py               ← node-ID helpers
-        ├── tuning.py                   ← grid/random search harness
+        ├── experiment.py               ← multi-seed harness
         ├── statistics.py               ← Wilcoxon signed-rank tests
+        ├── tuning.py                   ← grid/random search harness
         ├── compare.py                  ← cross-algorithm comparison tables
-        ├── experiment.py               ← multi-seed experiment harness
-        └── plot.py                     ← convergence / box / scalability figures
+        ├── plot.py                     ← convergence / box / scalability figures
+        ├── distance.py                 ← distance/duration matrix helpers
+        └── node_utils.py               ← node-ID helpers
 ```
 
 ---
@@ -862,7 +886,7 @@ than defend against it.
 ### Data limitations
 
 - **Synthetic server pool.** The 10-server pool in
-  [`tools/data_loader.py:DEFAULT_SERVER_POOL`](Cloud%20scheduling/tools/data_loader.py)
+  [`tools/data_loader.py:DEFAULT_SERVER_POOL`](Cloud_scheduling/tools/data_loader.py)
   is hand-specified — capacities, idle powers, and efficiencies are stated
   as instance parameters of the experiment, not measured from real hardware.
   The CSV dataset only describes tasks. This is a modelling choice; the
