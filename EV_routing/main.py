@@ -23,7 +23,7 @@ from tools.data_loader import load_problem_data
 from tools.battery import EVParameters
 from tools.objective import ObjectiveWeights
 from tools.experiment import ExperimentResults, run_experiments
-from algorithms.simmulated_annealing import simulated_annealing
+from algorithms.simulated_annealing import simulated_annealing
 from algorithms.genetic_algorithm import genetic_algorithm
 from algorithms.ant_colony import ant_colony_optimization
 from algorithms.greedy import greedy_nearest_neighbor

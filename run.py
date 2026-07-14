@@ -17,12 +17,17 @@ For all cloud CLI options:
 """
 
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).parent
-UV   = [r"C:\Users\chris\.local\bin\uv.exe",
+_UV_BIN = shutil.which("uv")
+if _UV_BIN is None:
+    sys.exit("uv not found on PATH. Install it from https://docs.astral.sh/uv/ "
+             "or run main.py directly with a Python that has the dependencies installed.")
+UV   = [_UV_BIN,
         "run", "--with", "numpy", "--with", "pandas", "--with", "matplotlib",
         "--with", "pyyaml", "--with", "scipy", "python"]
 

@@ -13,7 +13,7 @@ from algorithms.simulated_annealing import simulated_annealing
 from algorithms.baselines import greedy_ffd_baseline
 
 
-dataset_dir = Path(__file__).parent / "datasets"
+dataset_dir = Path(__file__).parent.parent / "datasets"
 
 w_base = ObjectiveWeights(
     energy_weight=1.0, latency_weight=1.0,

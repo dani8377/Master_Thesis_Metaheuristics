@@ -762,9 +762,12 @@ Master_Thesis_Metaheuristics/
 │   ├── config.yaml                     ← all hyperparameters and experiment settings
 │   ├── BEGINNERS_GUIDE.md              ← reading-order guide for new readers
 │   ├── datasets/
-│   │   └── cloud_resource_allocation_dataset.csv
-│   ├── figures/                        ← plots saved here
-│   ├── results/                        ← CSV and summary.md saved here
+│   │   ├── cloud_resource_allocation_dataset.csv
+│   │   └── raw/                        ← original dataset download (.xlsx)
+│   ├── figures/                        ← plots saved here (per focus mode)
+│   ├── results/                        ← CSVs, run_manifest.yaml, summary.md (per focus mode)
+│   ├── scratch/                        ← one-off diagnostic scripts (not part of the pipeline)
+│   ├── tests/                          ← unit tests (objective, algorithms, correctness)
 │   ├── algorithms/
 │   │   ├── simulated_annealing.py      ← SA with auto-T₀, geometric cooling, reheating
 │   │   ├── genetic_algorithm.py        ← GA with tournament, uniform crossover, elitism
@@ -798,7 +801,7 @@ Master_Thesis_Metaheuristics/
     │   └── scalability_analysis.py
     ├── algorithms/
     │   ├── greedy.py                   ← nearest-neighbour baseline
-    │   ├── simmulated_annealing.py     ← SA with reheating
+    │   ├── simulated_annealing.py      ← SA with reheating
     │   ├── genetic_algorithm.py        ← GA and MA (local_search_iters > 0)
     │   └── ant_colony.py               ← Max–Min Ant System
     └── tools/

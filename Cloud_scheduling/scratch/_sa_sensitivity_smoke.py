@@ -14,7 +14,7 @@ from algorithms.simulated_annealing import simulated_annealing, estimate_initial
 
 
 random.seed(0)
-dataset_dir = Path(__file__).parent / "datasets"
+dataset_dir = Path(__file__).parent.parent / "datasets"
 servers = generate_server_pool(10, seed=42)
 data = load_problem_data(dataset_dir, n_tasks=50, servers=servers)
 

@@ -47,7 +47,7 @@ from tools.battery import EVParameters
 from tools.objective import ObjectiveWeights
 from tools.tuning import grid_search, random_search, save_results
 from tools.plot import plot_tuning_results
-from algorithms.simmulated_annealing import simulated_annealing
+from algorithms.simulated_annealing import simulated_annealing
 from algorithms.genetic_algorithm import genetic_algorithm
 from algorithms.ant_colony import ant_colony_optimization
 

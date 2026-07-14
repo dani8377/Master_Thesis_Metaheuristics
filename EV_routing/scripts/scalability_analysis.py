@@ -53,7 +53,7 @@ from tools.neighborhoods import generate_neighbor
 from tools.feasibility import is_valid_basic_route
 from tools.compare import run_controlled_comparison
 from tools.tuning import random_search, grid_search
-from algorithms.simmulated_annealing import simulated_annealing
+from algorithms.simulated_annealing import simulated_annealing
 from algorithms.genetic_algorithm import genetic_algorithm
 from algorithms.ant_colony import ant_colony_optimization
 from algorithms.greedy import greedy_nearest_neighbor

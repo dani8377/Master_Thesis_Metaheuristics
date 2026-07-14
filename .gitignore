@@ -9,3 +9,5 @@
 #   results/tuning     tuning outputs (tuning_<algo>.csv, tuning_summary.md)
 #                      are the evidence behind thesis Table 8.1 and must be
 #                      committed after running `run.py cloud --tune`.
+*.pyc
+.DS_Store

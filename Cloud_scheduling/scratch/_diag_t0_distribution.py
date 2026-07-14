@@ -16,7 +16,7 @@ from tools.initial_solution import build_greedy_assignment
 from tools.feasibility import is_valid_assignment
 
 
-dataset_dir = Path(__file__).parent / "datasets"
+dataset_dir = Path(__file__).parent.parent / "datasets"
 servers = generate_server_pool(10, seed=42)
 data = load_problem_data(dataset_dir, n_tasks=50, servers=servers)
 

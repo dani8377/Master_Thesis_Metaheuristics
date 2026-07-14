@@ -15,7 +15,7 @@ from algorithms.branch_and_bound import branch_and_bound
 
 def run(n_tasks: int, n_servers: int, time_limit: float):
     random.seed(0)
-    dataset_dir = Path(__file__).parent / "datasets"
+    dataset_dir = Path(__file__).parent.parent / "datasets"
     servers = generate_server_pool(n_servers, seed=42)
     data = load_problem_data(dataset_dir, n_tasks=n_tasks, servers=servers)
 
