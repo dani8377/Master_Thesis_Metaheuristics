@@ -1370,7 +1370,7 @@ def run_vertical_scaling_analysis(
     harder — a dimension orthogonal to raw problem size.
     """
     _print_section("Scalability Axis 2 — Vertical: Constraint Tightness")
-    print(f"  Fixed {cfg.n_tasks} real tasks  |  {cfg.n_seeds} seeds  |  "
+    print(f"  Fixed {cfg.n_tasks} dataset tasks  |  {cfg.n_seeds} seeds  |  "
           f"server counts: {cfg.server_counts}")
 
     algos_to_run = _build_algos_list(run_flags, sa_kwargs, ga_kwargs, umda_kwargs)
@@ -1889,7 +1889,7 @@ def _save_summary_md(
 
     # ---- Main results table ----
     h("Main Results — Multi-Seed Comparison")
-    p(f"Sorted by average F(X) — lower is better.  All runs: n={data.n_tasks} real tasks, {n_seeds} seeds.")
+    p(f"Sorted by average F(X) — lower is better.  All runs: n={data.n_tasks} dataset tasks, {n_seeds} seeds.")
     p()
     p("| Algorithm | Best F | Avg F | Worst F | Std Dev | Feasible | Avg Time |")
     p("|---|---|---|---|---|---|---|")

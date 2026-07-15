@@ -822,7 +822,7 @@ def plot_vertical_scaling(vert_data: dict, figures_dir) -> None:
     axes[1].set_ylim(-5, 110)
 
     plt.suptitle(
-        "Vertical Scalability — 50 real tasks, server count varied from loose to tight",
+        "Vertical Scalability — 50 dataset tasks, server count varied from loose to tight",
         fontsize=12, fontweight="bold",
     )
     plt.tight_layout()
