@@ -7,6 +7,14 @@ metaheuristics and baseline heuristics. The two problems share the same algorith
 infrastructure (experiment harness, plotting utilities, data loaders) but are completely
 independent in their problem formulations and solution representations.
 
+> **New here, or preparing to understand the whole thesis (theory + code) in depth?**
+> Start with **[DEFENSE_STUDY_GUIDE.pdf](DEFENSE_STUDY_GUIDE.pdf)** — a phased,
+> step-by-step reading plan covering the report chapters, the code, the
+> experimental methodology, and a defense question bank, with time estimates.
+> (Markdown source: [DEFENSE_STUDY_GUIDE.md](DEFENSE_STUDY_GUIDE.md).)
+> For a file-by-file tour of the cloud implementation, see
+> [Cloud_scheduling/BEGINNERS_GUIDE.md](Cloud_scheduling/BEGINNERS_GUIDE.md).
+
 ---
 
 ## Table of Contents
