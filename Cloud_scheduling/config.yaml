@@ -107,7 +107,7 @@ algorithms:
     elitism_count: 2
 
   umda:
-    population_size: 100     # tuned: balanced & eco winner
+    population_size: 100     # tuned: balanced & performance winner (eco winner was 200; top-2 there)
     n_generations: 1500
     selection_ratio: 0.5    # tuned: balanced & eco winner — truncation, keep best 50% (Muhlenbein & Paarmann 1996)
     smoothing: 0.1          # Laplace smoothing: prevents model collapse
