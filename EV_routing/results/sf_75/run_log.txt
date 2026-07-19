@@ -1,144 +1,145 @@
 Console log -> EV_routing/results/sf_75/run_log.txt
 Weights loaded from EV_routing/results/sf_75/weights.json
+Focus mode 'balanced': multipliers {'distance': 1.0, 'time': 1.0, 'energy': 1.0, 'charging_cost': 1.0}
 
 ============================================================
-  Scalability Axis 1 — Customer-Count Scaling  (3 seeds, 30,000 evals/run)
+  Scalability Axis 1 — Customer-Count Scaling  (5 seeds, 30,000 evals/run)
 ============================================================
 
   ── n_customers=25  (EV_routing/instances/sf_25) ──
-    Simulated Annealing          time=  0.7s  F=1.8206  feasible=3/3
-    Genetic Algorithm            time=  3.1s  F=2.2721  feasible=3/3
-    Memetic Algorithm            time=  1.0s  F=2.2095  feasible=3/3
-    ACO                          time=  4.9s  F=2.1450  feasible=3/3
+    Simulated Annealing          time=  0.7s  F=1.8493  feasible=5/5
+    Genetic Algorithm            time=  2.7s  F=2.2733  feasible=5/5
+    Memetic Algorithm            time=  0.9s  F=2.2363  feasible=5/5
+    ACO                          time=  4.2s  F=2.1454  feasible=5/5
 
   ── n_customers=50  (EV_routing/instances/sf_50) ──
-    Simulated Annealing          time=  1.2s  F=2.4133  feasible=3/3
-    Genetic Algorithm            time=  9.2s  F=4.0567  feasible=3/3
-    Memetic Algorithm            time=  1.9s  F=3.3699  feasible=3/3
-    ACO                          time=  8.5s  F=2.6981  feasible=3/3
+    Simulated Annealing          time=  1.2s  F=2.4298  feasible=5/5
+    Genetic Algorithm            time=  8.6s  F=3.8259  feasible=5/5
+    Memetic Algorithm            time=  1.8s  F=3.2166  feasible=5/5
+    ACO                          time=  7.5s  F=2.6804  feasible=5/5
 
   ── n_customers=75  (EV_routing/instances/sf_75) ──
-    Simulated Annealing          time=  1.7s  F=2.8468  feasible=3/3
-    Genetic Algorithm            time= 22.2s  F=3.0485  feasible=3/3
-    Memetic Algorithm            time=  2.8s  F=2.9069  feasible=3/3
-    ACO                          time= 12.9s  F=2.7280  feasible=3/3
+    Simulated Annealing          time=  1.6s  F=2.8765  feasible=5/5
+    Genetic Algorithm            time= 20.8s  F=3.1951  feasible=5/5
+    Memetic Algorithm            time=  2.7s  F=2.9318  feasible=5/5
+    ACO                          time= 11.3s  F=2.7327  feasible=5/5
 
   ── n_customers=100  (EV_routing/instances/sf_100) ──
-    Simulated Annealing          time=  2.2s  F=3.5732  feasible=3/3
-    Genetic Algorithm            time= 30.6s  F=8.6031  feasible=3/3
-    Memetic Algorithm            time=  4.6s  F=6.5116  feasible=3/3
-    ACO                          time= 14.6s  F=3.0692  feasible=3/3
+    Simulated Annealing          time=  2.2s  F=3.5490  feasible=5/5
+    Genetic Algorithm            time= 29.2s  F=9.0284  feasible=5/5
+    Memetic Algorithm            time=  4.7s  F=6.6908  feasible=5/5
+    ACO                          time= 14.3s  F=3.0707  feasible=5/5
 
   ── n_customers=150  (EV_routing/instances/sf_150) ──
-    Simulated Annealing          time=  2.9s  F=4.7431  feasible=3/3
-    Genetic Algorithm            time= 50.4s  F=8.6370  feasible=3/3
-    Memetic Algorithm            time= 11.7s  F=4.6089  feasible=3/3
-    ACO                          time= 25.0s  F=3.5169  feasible=3/3
+    Simulated Annealing          time=  3.0s  F=4.8706  feasible=5/5
+    Genetic Algorithm            time= 52.7s  F=10.6138  feasible=5/5
+    Memetic Algorithm            time= 11.3s  F=4.3536  feasible=5/5
+    ACO                          time= 22.8s  F=3.5165  feasible=5/5
 
   ── n_customers=200  (EV_routing/instances/sf_200) ──
-    Simulated Annealing          time=  4.0s  F=4.8440  feasible=3/3
-    Genetic Algorithm            time=142.9s  F=4.7781  feasible=3/3
-    Memetic Algorithm            time= 10.4s  F=4.4632  feasible=3/3
-    ACO                          time= 34.0s  F=3.9384  feasible=3/3
+    Simulated Annealing          time=  4.0s  F=4.8749  feasible=5/5
+    Genetic Algorithm            time=150.4s  F=4.7882  feasible=5/5
+    Memetic Algorithm            time= 10.0s  F=4.4278  feasible=5/5
+    ACO                          time= 30.9s  F=3.9356  feasible=5/5
 
   ── n_customers=300  (EV_routing/instances/sf_300) ──
-    Simulated Annealing          time=  5.9s  F=5.7183  feasible=3/3
-    Genetic Algorithm            time=352.9s  F=5.6848  feasible=3/3
-    Memetic Algorithm            time= 18.1s  F=5.1878  feasible=3/3
-    ACO                          time= 57.1s  F=4.6270  feasible=3/3
+    Simulated Annealing          time=  6.0s  F=5.7221  feasible=5/5
+    Genetic Algorithm            time=454.0s  F=5.6790  feasible=5/5
+    Memetic Algorithm            time= 17.9s  F=5.1784  feasible=5/5
+    ACO                          time= 50.5s  F=4.6961  feasible=5/5
 
   ── n_customers=400  (EV_routing/instances/sf_400) ──
-    Simulated Annealing          time=  7.9s  F=7.5129  feasible=3/3
-    Genetic Algorithm            time=557.4s  F=9.1076  feasible=3/3
-    Memetic Algorithm            time= 27.7s  F=5.7602  feasible=3/3
-    ACO                          time= 74.0s  F=5.1698  feasible=3/3
+    Simulated Annealing          time=  8.2s  F=8.0278  feasible=5/5
+    Genetic Algorithm            time=348.7s  F=12.7068  feasible=5/5
+    Memetic Algorithm            time= 26.5s  F=5.8894  feasible=5/5
+    ACO                          time= 68.6s  F=5.1555  feasible=5/5
 
   ── n_customers=500  (EV_routing/instances/sf_500) ──
-    Simulated Annealing          time=  9.6s  F=7.2945  feasible=3/3
-    Genetic Algorithm            time=796.2s  F=7.3411  feasible=3/3
-    Memetic Algorithm            time= 41.3s  F=6.7343  feasible=3/3
-    ACO                          time=112.5s  F=5.7935  feasible=3/3
+    Simulated Annealing          time=  9.9s  F=7.3298  feasible=5/5
+    Genetic Algorithm            time=841.4s  F=7.3246  feasible=5/5
+    Memetic Algorithm            time= 38.3s  F=6.6957  feasible=5/5
+    ACO                          time= 92.8s  F=5.7177  feasible=5/5
 
 ============================================================
   Customer Scaling — Winner at Each Size
 ============================================================
   Scale point            Winner                        Avg F(X)  Avg time
   ------------------------------------------------------------------------
-  n=25                   Simulated Annealing             1.8206     0.71s
-  n=50                   Simulated Annealing             2.4133     1.21s
-  n=75                   ACO                             2.7280    12.93s
-  n=100                  ACO                             3.0692    14.65s
-  n=150                  ACO                             3.5169    24.96s
-  n=200                  ACO                             3.9384    34.00s
-  n=300                  ACO                             4.6270    57.11s
-  n=400                  ACO                             5.1698    74.04s
-  n=500                  ACO                             5.7935   112.54s
+  n=25                   Simulated Annealing             1.8493     0.68s
+  n=50                   Simulated Annealing             2.4298     1.17s
+  n=75                   ACO                             2.7327    11.28s
+  n=100                  ACO                             3.0707    14.34s
+  n=150                  ACO                             3.5165    22.81s
+  n=200                  ACO                             3.9356    30.90s
+  n=300                  ACO                             4.6961    50.51s
+  n=400                  ACO                             5.1555    68.59s
+  n=500                  ACO                             5.7177    92.78s
 
   ACO                          7/9 points  (78%)  ███████
   Simulated Annealing          2/9 points  (22%)  ██
 
 
 ============================================================
-  Scalability Axis 2 — Battery Constraint Tightness  (3 seeds, 30,000 evals/run)
+  Scalability Axis 2 — Battery Constraint Tightness  (5 seeds, 30,000 evals/run)
 ============================================================
 
   ── battery_capacity=5 kWh ──
-    Simulated Annealing          time=  7.5s  F=2379.9847  feasible=0%
-    Genetic Algorithm            time= 62.2s  F=26915.3094  feasible=0%
-    Memetic Algorithm            time=  4.0s  F=10024.4822  feasible=0%
-    ACO                          time= 15.3s  F=28820.6861  feasible=0%
+    Simulated Annealing          time=  7.2s  F=2716.6603  feasible=0%
+    Genetic Algorithm            time= 57.8s  F=26882.6083  feasible=0%
+    Memetic Algorithm            time=  3.5s  F=9336.9308  feasible=0%
+    ACO                          time= 16.4s  F=28820.6861  feasible=0%
 
   ── battery_capacity=8 kWh ──
-    Simulated Annealing          time=  3.2s  F=3.6943  feasible=100%
-    Genetic Algorithm            time= 84.1s  F=13068.2363  feasible=0%
-    Memetic Algorithm            time=  3.7s  F=2824.7404  feasible=0%
-    ACO                          time= 14.4s  F=15526.9557  feasible=0%
+    Simulated Annealing          time=  5.4s  F=131.8503  feasible=80%
+    Genetic Algorithm            time= 71.9s  F=13548.6801  feasible=0%
+    Memetic Algorithm            time=  3.6s  F=2769.2271  feasible=0%
+    ACO                          time= 12.6s  F=15526.9557  feasible=0%
 
   ── battery_capacity=10 kWh ──
-    Simulated Annealing          time=  2.1s  F=3.4457  feasible=100%
-    Genetic Algorithm            time= 97.0s  F=1439.6037  feasible=67%
-    Memetic Algorithm            time=  3.7s  F=3.5070  feasible=100%
-    ACO                          time= 16.5s  F=3.2169  feasible=100%
+    Simulated Annealing          time=  2.3s  F=3.4559  feasible=100%
+    Genetic Algorithm            time= 83.0s  F=1843.0730  feasible=40%
+    Memetic Algorithm            time=  3.6s  F=3.6314  feasible=100%
+    ACO                          time= 15.0s  F=362.3867  feasible=80%
 
   ── battery_capacity=12 kWh ──
-    Simulated Annealing          time=  1.9s  F=3.4233  feasible=100%
-    Genetic Algorithm            time= 61.6s  F=336.0765  feasible=67%
-    Memetic Algorithm            time=  3.5s  F=3.3163  feasible=100%
-    ACO                          time= 13.3s  F=3.1767  feasible=100%
+    Simulated Annealing          time=  2.4s  F=3.3405  feasible=100%
+    Genetic Algorithm            time= 66.3s  F=1052.9986  feasible=40%
+    Memetic Algorithm            time=  3.5s  F=3.2989  feasible=100%
+    ACO                          time= 12.9s  F=3.2231  feasible=100%
 
   ── battery_capacity=15 kWh ──
-    Simulated Annealing          time=  1.5s  F=3.0751  feasible=100%
-    Genetic Algorithm            time= 23.8s  F=4.8153  feasible=100%
-    Memetic Algorithm            time=  3.8s  F=3.2138  feasible=100%
-    ACO                          time= 12.3s  F=2.9599  feasible=100%
+    Simulated Annealing          time=  1.7s  F=3.1321  feasible=100%
+    Genetic Algorithm            time= 29.7s  F=5.5141  feasible=100%
+    Memetic Algorithm            time=  3.6s  F=3.2074  feasible=100%
+    ACO                          time= 12.0s  F=2.9284  feasible=100%
 
   ── battery_capacity=18 kWh ──
-    Simulated Annealing          time=  1.5s  F=3.0407  feasible=100%
-    Genetic Algorithm            time= 18.6s  F=4.5770  feasible=100%
-    Memetic Algorithm            time=  5.1s  F=3.0675  feasible=100%
-    ACO                          time= 11.8s  F=2.9427  feasible=100%
+    Simulated Annealing          time=  1.6s  F=3.0570  feasible=100%
+    Genetic Algorithm            time= 17.7s  F=4.7427  feasible=100%
+    Memetic Algorithm            time=  5.0s  F=3.0399  feasible=100%
+    ACO                          time= 11.6s  F=2.8914  feasible=100%
 
   ── battery_capacity=20 kWh ──
-    Simulated Annealing          time=  1.5s  F=2.8468  feasible=100%
-    Genetic Algorithm            time= 20.4s  F=3.0485  feasible=100%
-    Memetic Algorithm            time=  2.4s  F=2.9069  feasible=100%
-    ACO                          time= 11.1s  F=2.7280  feasible=100%
+    Simulated Annealing          time=  1.6s  F=2.8765  feasible=100%
+    Genetic Algorithm            time= 20.6s  F=3.1951  feasible=100%
+    Memetic Algorithm            time=  2.7s  F=2.9318  feasible=100%
+    ACO                          time= 11.4s  F=2.7327  feasible=100%
 
 ============================================================
   Battery Scaling — Winner at Each Capacity Level
 ============================================================
   Scale point            Winner                        Avg F(X)  Avg time
   ------------------------------------------------------------------------
-  5 kWh                  Simulated Annealing          2379.9847     7.53s
-  8 kWh                  Simulated Annealing             3.6943     3.15s
-  10 kWh                 ACO                             3.2169    16.46s
-  12 kWh                 ACO                             3.1767    13.30s
-  15 kWh                 ACO                             2.9599    12.29s
-  18 kWh                 ACO                             2.9427    11.80s
-  20 kWh                 ACO                             2.7280    11.08s
+  5 kWh                  Simulated Annealing          2716.6603     7.22s
+  8 kWh                  Simulated Annealing           131.8503     5.37s
+  10 kWh                 Simulated Annealing             3.4559     2.27s
+  12 kWh                 ACO                             3.2231    12.94s
+  15 kWh                 ACO                             2.9284    12.00s
+  18 kWh                 ACO                             2.8914    11.62s
+  20 kWh                 ACO                             2.7327    11.42s
 
-  ACO                          5/7 points  (71%)  █████
-  Simulated Annealing          2/7 points  (29%)  ██
+  ACO                          4/7 points  (57%)  ████
+  Simulated Annealing          3/7 points  (43%)  ███
 
 
 ============================================================
@@ -153,70 +154,70 @@ Weights loaded from EV_routing/results/sf_75/weights.json
   Single SA run — diagnostics
 ============================================================
   Feasible:            True
-  Objective:           2.4888
-  Distance (km):       265.88
-  Travel time (h):     7.65
-  Charging time (h):   0.30
-  Energy (kWh):        78.72
-  Charging cost ($):   8.44
+  Objective:           2.4883
+  Distance (km):       264.42
+  Travel time (h):     7.61
+  Charging time (h):   0.28
+  Energy (kWh):        79.55
+  Charging cost ($):   8.54
   Battery violation:   0.0000
   Infeasible visits:   0
   Evaluations:         150,000
-  Acceptance rate:     14.51%
-  Feasibility rate:    32.90%
+  Acceptance rate:     14.32%
+  Feasibility rate:    29.69%
   Reheats:             4
-  Runtime:             7.10s
+  Runtime:             7.71s
 
 ============================================================
   Single GA run — diagnostics
 ============================================================
   Feasible:            True
-  Objective:           3.0071
-  Distance (km):       296.59
-  Travel time (h):     8.25
-  Charging time (h):   0.29
-  Energy (kWh):        93.51
-  Charging cost ($):   15.43
+  Objective:           2.9785
+  Distance (km):       295.24
+  Travel time (h):     8.18
+  Charging time (h):   0.69
+  Energy (kWh):        100.39
+  Charging cost ($):   12.33
   Battery violation:   0.0000
   Infeasible visits:   0
   Evaluations:         150,000
   Generations:         1,515
-  Feasibility rate:    86.67%
-  Runtime:             36.66s
+  Feasibility rate:    100.00%
+  Runtime:             34.11s
 
 ============================================================
   Single MA run — diagnostics
 ============================================================
   Feasible:            True
-  Objective:           2.5499
-  Distance (km):       263.43
-  Travel time (h):     7.55
-  Charging time (h):   0.38
-  Energy (kWh):        79.48
-  Charging cost ($):   10.25
+  Objective:           2.6635
+  Distance (km):       273.71
+  Travel time (h):     7.87
+  Charging time (h):   0.51
+  Energy (kWh):        83.87
+  Charging cost ($):   10.37
   Battery violation:   0.0000
   Infeasible visits:   0
   Evaluations:         150,000
   Generations:         131
-  Feasibility rate:    64.52%
-  Runtime:             10.10s
+  Feasibility rate:    45.16%
+  Runtime:             12.56s
 
 ============================================================
   Single ACO run — diagnostics
 ============================================================
   Feasible:            True
-  Objective:           2.7276
-  Distance (km):       274.26
-  Travel time (h):     7.72
-  Charging time (h):   0.59
-  Energy (kWh):        86.76
-  Charging cost ($):   11.64
+  Objective:           2.6734
+  Distance (km):       274.22
+  Travel time (h):     7.74
+  Charging time (h):   0.53
+  Energy (kWh):        83.79
+  Charging cost ($):   10.91
   Battery violation:   0.0000
   Infeasible visits:   0
   Evaluations:         150,000
   Iterations:          15,000
   Feasibility rate:    100.00%
-  Runtime:             55.04s
+  Runtime:             54.66s
 
 ============================================================
   Single Greedy run — baseline
@@ -240,9 +241,9 @@ Weights loaded from EV_routing/results/sf_75/weights.json
 Algorithm                     Best     Average       Worst     Std Dev    Feasible    Avg Time
 ----------------------------------------------------------------------------------------------
 Greedy                        3.60        3.60        3.60        0.00       10/10        0.0s
-Simulated Annealing           2.50        2.56        2.61        0.04       10/10        7.2s
-Genetic Algorithm             2.82        3.05        3.28        0.16       10/10       39.6s
-Memetic Algorithm             2.58        2.72        2.79        0.06       10/10       11.2s
+Simulated Annealing           2.50        2.56        2.61        0.04       10/10        7.8s
+Genetic Algorithm             2.82        3.05        3.28        0.16       10/10       39.5s
+Memetic Algorithm             2.58        2.72        2.79        0.06       10/10       11.7s
 ACO                           2.67        2.71        2.75        0.03       10/10       54.2s
 ----------------------------------------------------------------------------------------------
 
@@ -251,9 +252,9 @@ ACO                           2.67        2.71        2.75        0.03       10/
 Algorithm                     Best      Mean       Std     CV%  Feasible   Avg evals  Avg time
 ----------------------------------------------------------------------------------------------
 Greedy                        3.60      3.60      0.00     0.0     10/10           1       0.0s
-Simulated Annealing           2.50      2.56      0.04     1.4     10/10      150000       7.2s
-Genetic Algorithm             2.82      3.05      0.16     5.2     10/10      150000      39.6s
-Memetic Algorithm             2.58      2.72      0.06     2.3     10/10      150000      11.2s
+Simulated Annealing           2.50      2.56      0.04     1.4     10/10      150000       7.8s
+Genetic Algorithm             2.82      3.05      0.16     5.2     10/10      150000      39.5s
+Memetic Algorithm             2.58      2.72      0.06     2.3     10/10      150000      11.7s
 ACO                           2.67      2.71      0.03     1.3     10/10      150000      54.2s
 ----------------------------------------------------------------------------------------------
 
@@ -263,9 +264,9 @@ ACO                           2.67      2.71      0.03     1.3     10/10      15
 Algorithm                     Best            Mean ± Std    Median    CV%  Feasible  Avg time
 ---------------------------------------------------------------------------------------------
 Greedy                       3.597         3.597 ± 0.000     3.597    0.0      100%      0.0s
-Simulated Annealing          2.504         2.561 ± 0.036     2.561    1.4      100%      7.2s
-Genetic Algorithm            2.822         3.046 ± 0.159     3.070    5.2      100%     39.6s
-Memetic Algorithm            2.577         2.720 ± 0.062     2.749    2.3      100%     11.2s
+Simulated Annealing          2.504         2.561 ± 0.036     2.561    1.4      100%      7.8s
+Genetic Algorithm            2.822         3.046 ± 0.159     3.070    5.2      100%     39.5s
+Memetic Algorithm            2.577         2.720 ± 0.062     2.749    2.3      100%     11.7s
 ACO                          2.667         2.710 ± 0.034     2.724    1.3      100%     54.2s
 ---------------------------------------------------------------------------------------------
 
@@ -294,9 +295,9 @@ LaTeX table:
     \textbf{Algorithm} & \textbf{Best} & \textbf{Mean $\pm$ Std} & \textbf{CV\%} & \textbf{Feasible\%} & \textbf{Avg time (s)} \\
     \hline
   Greedy & 3.597 & $3.597 \pm 0.000$ & 0.0 & 100 & 0.0 \\
-  Simulated Annealing & 2.504 & $\textbf{2.561} \pm 0.036$ & 1.4 & 100 & 7.2 \\
-  Genetic Algorithm & 2.822 & $3.046 \pm 0.159$ & 5.2 & 100 & 39.6 \\
-  Memetic Algorithm & 2.577 & $2.720 \pm 0.062$ & 2.3 & 100 & 11.2 \\
+  Simulated Annealing & 2.504 & $\textbf{2.561} \pm 0.036$ & 1.4 & 100 & 7.8 \\
+  Genetic Algorithm & 2.822 & $3.046 \pm 0.159$ & 5.2 & 100 & 39.5 \\
+  Memetic Algorithm & 2.577 & $2.720 \pm 0.062$ & 2.3 & 100 & 11.7 \\
   ACO & 2.667 & $2.710 \pm 0.034$ & 1.3 & 100 & 54.2 \\
     \hline
   \end{tabular}
@@ -312,10 +313,10 @@ LaTeX table:
   Metaheuristic ranking (lower objective = better):
   Rank  Algorithm                         Best        Avg   StdDev  Feasible  Avg time
   --------------------------------------------------------------------------------
-  1     Simulated Annealing             2.5044     2.5611   0.0356     10/10     7.17s  (winner)
-  2     ACO                             2.6668     2.7105   0.0340     10/10    54.23s  (+5.8%)
-  3     Memetic Algorithm               2.5773     2.7201   0.0624     10/10    11.20s  (+6.2%)
-  4     Genetic Algorithm               2.8218     3.0464   0.1593     10/10    39.59s  (+19.0%)
+  1     Simulated Annealing             2.5044     2.5611   0.0356     10/10     7.79s  (winner)
+  2     ACO                             2.6668     2.7105   0.0340     10/10    54.18s  (+5.8%)
+  3     Memetic Algorithm               2.5773     2.7201   0.0624     10/10    11.70s  (+6.2%)
+  4     Genetic Algorithm               2.8218     3.0464   0.1593     10/10    39.54s  (+19.0%)
 
   Cost component decomposition (best run per algorithm):
   Algorithm                     Dist(km)   Time(h)  Energy(kWh)   Cost($)  BattViol
@@ -332,10 +333,10 @@ LaTeX table:
     ACO                           +24.6%  [better]
 
   Wall-clock speed (avg per single run, 150,000 evals):
-    Simulated Annealing          avg 7.17s  <- fastest
-    Genetic Algorithm            avg 39.59s
-    Memetic Algorithm            avg 11.20s
-    ACO                          avg 54.23s  <- slowest
+    Simulated Annealing          avg 7.79s  <- fastest
+    Genetic Algorithm            avg 39.54s
+    Memetic Algorithm            avg 11.70s
+    ACO                          avg 54.18s  <- slowest
 
   Automated checks:
   [OK] All metaheuristics beat Greedy — search adds genuine value over construction.
@@ -366,20 +367,6 @@ Saved: EV_routing/results/sf_75/figures/runtime_comparison.png
   Algorithm diagnostics   -> EV_routing/results/sf_75/algorithm_diagnostics.csv
   Run manifest            -> EV_routing/results/sf_75/run_manifest.yaml
   Summary markdown        -> EV_routing/results/sf_75/summary.md
-
-============================================================
-  Optimality Gap Analysis
-============================================================
-  BKS (Best-Known Solution) = 2.504404
-  (minimum best cost across all 50 runs)
-
-  Greedy                       best=    3.5969  gap_best= 43.62%  avg=    3.5969  gap_avg=  43.62%  feasible=10/10
-  Simulated Annealing          best=    2.5044  gap_best=  0.00%  avg=    2.5611  gap_avg=   2.26%  feasible=10/10
-  Genetic Algorithm            best=    2.8218  gap_best= 12.67%  avg=    3.0464  gap_avg=  21.64%  feasible=10/10
-  Memetic Algorithm            best=    2.5773  gap_best=  2.91%  avg=    2.7201  gap_avg=   8.61%  feasible=10/10
-  ACO                          best=    2.6668  gap_best=  6.48%  avg=    2.7105  gap_avg=   8.23%  feasible=10/10
-  Optimality gap CSV      -> EV_routing/results/sf_75/optimality_gap.csv
-  Optimality gap plot     -> EV_routing/results/sf_75/figures/optimality_gap.png
 
 All figures saved to EV_routing/results/sf_75/figures/
 Greedy best:              ['DEPOT', 'C075', 'C045', 'C026', 'C016', 'C043', 'C041', 'C027', 'C073', 'C068', 'C057', 'C020', 'C061', 'C056', 'C024', 'C053', 'C044', 'C015', 'C013', 'C029', 'C035', 'C038', 'C069', 'C067', 'C047', 'C055', 'C010', 'C074', 'C028', 'C009', 'C033', 'C042', 'C034', 'C030', 'C014', 'C023', 'C065', 'C011', 'C006', 'C032', 'C040', 'EVS04889', 'C012', 'C037', 'C002', 'C004', 'C021', 'C072', 'C025', 'C039', 'C005', 'C001', 'C050', 'C051', 'C052', 'C064', 'C070', 'EVS00405', 'C060', 'C008', 'C063', 'C017', 'C018', 'C048', 'C036', 'C062', 'C058', 'EVS01245', 'C007', 'C046', 'EVS04734', 'C022', 'EVS02273', 'C049', 'EVS01245', 'C019', 'EVS04293', 'C066', 'EVS02443', 'C059', 'C071', 'C031', 'C054', 'EVS04298', 'C003', 'EVS04400', 'DEPOT']

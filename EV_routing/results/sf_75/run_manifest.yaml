@@ -1,5 +1,6 @@
-generated_at: '2026-06-12 15:24:56'
+generated_at: '2026-07-18 21:59:11'
 instance: sf_75
+focus_mode: balanced
 n_seeds: 10
 max_evaluations: 150000
 run_sensitivity: false

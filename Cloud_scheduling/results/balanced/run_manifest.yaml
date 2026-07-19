@@ -1,10 +1,10 @@
-generated_at: '2026-07-02 10:59:18'
+generated_at: '2026-07-18 22:19:51'
 cli:
   algorithms:
   - all
   focus: balanced
   seeds: null
-  sensitivity: true
+  sensitivity: false
   scalability: true
   tune: false
   verbose: false
@@ -24,7 +24,7 @@ objective:
   mem_penalty: 206.46732537791513
   congestion_factor: 1.0
   energy_ref: 12572.20439747399
-  latency_ref: 29266.63736066902
+  latency_ref: 29266.637360669018
   cpu_ref: 2256.6575697651747
   mem_ref: 446274.92682704434
 normalisation:
@@ -38,7 +38,7 @@ calibration_diagnostics:
   n_attempted: 150
   n_feasible: 25
   mean_energy: 12572.20439747399
-  mean_latency: 29266.63736066902
+  mean_latency: 29266.637360669018
   f_max_feasible: 2.0646732537791515
   penalty_multiplier: 100.0
   fallback_to_worst_case: false

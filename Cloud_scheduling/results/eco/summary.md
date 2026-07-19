@@ -1,6 +1,6 @@
 # Cloud Scheduling — Experiment Summary
 
-_Generated: 2026-07-02 14:01_
+_Generated: 2026-07-18 22:13_
 
 ## Setup
 
@@ -10,8 +10,8 @@ _Generated: 2026-07-02 14:01_
 | Tasks / Servers | 50 tasks × 10 servers |
 | Seeds per algorithm | 20 |
 | Objective normalised | Yes |
-| Sensitivity analysis | Run |
-| Scalability analysis | Run |
+| Sensitivity analysis | Skipped (use --sensitivity) |
+| Scalability analysis | Skipped (use --scalability) |
 
 ## F(X) Coefficients (as actually used in this run)
 
@@ -35,14 +35,14 @@ after any sample-based calibration.
 
 ## Main Results — Multi-Seed Comparison
 
-Sorted by average F(X) — lower is better.  All runs: n=50 real tasks, 20 seeds.
+Sorted by average F(X) — lower is better.  All runs: n=50 dataset tasks, 20 seeds.
 
 | Algorithm | Best F | Avg F | Worst F | Std Dev | Feasible | Avg Time |
 |---|---|---|---|---|---|---|
-| Simulated Annealing | 1.1075 | 1.1083 | 1.1103 | 0.0009 | 20/20 | 6.01s |
-| UMDA (EDA) | 1.1085 | 1.1099 | 1.1140 | 0.0013 | 20/20 | 10.36s |
-| Genetic Algorithm | 1.1086 | 1.1165 | 1.1347 | 0.0086 | 20/20 | 6.94s |
-| Branch & Bound | 1.1362 | 1.1362 | 1.1362 | 0.0000 | 1/1 | 60.93s |
+| Simulated Annealing | 1.1075 | 1.1083 | 1.1103 | 0.0009 | 20/20 | 2.48s |
+| UMDA (EDA) | 1.1085 | 1.1099 | 1.1140 | 0.0013 | 20/20 | 2.04s |
+| Genetic Algorithm | 1.1086 | 1.1165 | 1.1347 | 0.0086 | 20/20 | 2.32s |
+| Branch & Bound | 1.1362 | 1.1362 | 1.1362 | 0.0000 | 1/1 | 61.31s |
 | Greedy BFD (baseline) | 1.1557 | 1.1557 | 1.1557 | 0.0000 | 20/20 | 0.00s |
 | Round-Robin (baseline) | 9.2911 | 9.2911 | 9.2911 | 0.0000 | 0/1 | 0.00s |
 | Random (baseline) | 3.2487 | 16.9628 | 32.7172 | 10.2209 | 0/20 | 0.00s |
@@ -68,39 +68,16 @@ Always infeasible: Round-Robin (baseline), Random (baseline) — expected for na
 
 ## Sensitivity Analysis
 
-Sensitivity results saved to:
-- `results/eco/sensitivity_sa.csv` — SA: T₀ sweep and cooling-rate sweep
-- `results/eco/sensitivity_ga.csv` — GA: population-size and crossover-prob sweeps
-- `results/eco/sensitivity_umda.csv` — UMDA: population-size and selection-ratio sweeps
-
-**What sensitivity analysis tells you:**
-Each sweep fixes all parameters except one and measures how F(X) changes.
-A parameter that barely affects results is _robust_ (your chosen value is fine anywhere in the range).
-A parameter that changes results significantly is _sensitive_ — the thesis should justify the chosen value.
-The auto-estimated T₀ for SA is specifically designed to remove T₀ from being a sensitive parameter.
+Skipped. Run with `--sensitivity` to sweep hyperparameters and verify robustness.
 
 ## Scalability Analysis
 
-Scalability results saved to:
-- `results/eco/scalability_horizontal.csv` — quality and runtime vs task count (n=20…500+)
-- `results/eco/scalability_vertical.csv` — quality vs server count (constraint tightness)
-
-**Cross-instance cost values are NOT directly comparable.** Each row in the scalability
-CSVs is normalised with refs (E_ref, L_ref, λ) computed against the calibration pool
-of *that specific instance*. At very high utilisation (e.g. vertical's 6-server point at
-~80% CPU util) the random feasible samples cluster around heavily congested configurations,
-so L_ref can be much larger than at low utilisation — making normalised F drop even though
-the raw latency rises. Use `improvement_over_greedy_pct` for cross-instance comparison;
-treat `avg_cost` as a within-instance quantity only.
+Skipped. Run with `--scalability` to test how algorithms perform at increasing problem sizes.
 
 ## Solution Quality Benchmark (Optimality Gap vs. Exact Reference)
 
-- `results/eco/optimality_gap.csv` — gap between each metaheuristic and the B&B exact solution
-
-Run on a small instance (n=20, m=4) where Branch & Bound can reach the true optimum within
-the time limit. This gives an _absolute_ quality measurement (% from optimum), anchoring the
-relative %-vs-greedy numbers from the scalability axes. Note: this is **not** a scalability
-test — it runs at a single fixed size and says nothing about how algorithms scale.
+Skipped. Run with `--scalability` (which also triggers this benchmark) to measure how close
+each metaheuristic gets to the true optimum on a small exact-solvable instance.
 
 ## Output Files
 

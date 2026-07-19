@@ -28,7 +28,8 @@ class WilcoxonResult:
     algo_b: str
     statistic: float
     p_value: float
-    significant: bool
+    p_holm: float           # Holm step-down adjusted p-value (family = all pairs)
+    significant: bool       # based on the Holm-adjusted p-value
     better: str  # name of algorithm with lower mean cost
 
 
@@ -113,25 +114,39 @@ def pairwise_wilcoxon(
             algo_b=r2.algorithm_name,
             statistic=stat,
             p_value=p,
-            significant=p < alpha,
+            p_holm=p,            # provisional; adjusted below
+            significant=False,   # provisional; set below
             better=better,
         ))
+
+    # Holm step-down correction over the family of all pairwise tests:
+    # sort raw p ascending, multiply the i-th smallest by (m - i), enforce
+    # monotonicity, cap at 1.  Controls the family-wise error rate without
+    # the full conservativeness of Bonferroni (Holm 1979).
+    m = len(out)
+    order = sorted(range(m), key=lambda i: out[i].p_value)
+    running = 0.0
+    for rank, i in enumerate(order):
+        adj = min(1.0, (m - rank) * out[i].p_value)
+        running = max(running, adj)
+        out[i].p_holm = running
+        out[i].significant = running < alpha
     return out
 
 
 def print_wilcoxon_table(tests: list[WilcoxonResult], alpha: float = 0.05) -> None:
     """Print pairwise Wilcoxon results as a formatted table."""
-    print(f"=== Pairwise Wilcoxon Signed-Rank Tests (paired, two-sided, α={alpha}) ===")
-    print(f"  {'Pair':<40}  {'W':>8}  {'p-value':>9}  Result")
-    print(f"  {'-'*40}  {'-'*8}  {'-'*9}  {'-'*24}")
+    print(f"=== Pairwise Wilcoxon Signed-Rank Tests (paired, two-sided, Holm-adjusted, α={alpha}) ===")
+    print(f"  {'Pair':<40}  {'W':>8}  {'p-value':>9}  {'p-Holm':>9}  Result")
+    print(f"  {'-'*40}  {'-'*8}  {'-'*9}  {'-'*9}  {'-'*24}")
     for t in tests:
         pair = f"{t.algo_a} vs {t.algo_b}"
         if t.significant:
             verdict = f"{t.better} better *"
         else:
             verdict = "no sig. difference"
-        print(f"  {pair:<40}  {t.statistic:>8.1f}  {t.p_value:>9.4f}  {verdict}")
-    print(f"  (* p < {alpha})\n")
+        print(f"  {pair:<40}  {t.statistic:>8.1f}  {t.p_value:>9.4f}  {t.p_holm:>9.4f}  {verdict}")
+    print(f"  (* Holm-adjusted p < {alpha})\n")
 
 
 # ---------------------------------------------------------------------------

@@ -1,11 +1,11 @@
-generated_at: '2026-07-02 14:24:04'
+generated_at: '2026-07-18 22:16:30'
 cli:
   algorithms:
   - all
   focus: performance
   seeds: null
-  sensitivity: true
-  scalability: true
+  sensitivity: false
+  scalability: false
   tune: false
   verbose: false
 instance:

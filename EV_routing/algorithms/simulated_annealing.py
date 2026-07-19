@@ -58,6 +58,7 @@ def simulated_annealing(
     reheat_factor: float = 0.4,
     max_evaluations: int | None = None,
     time_limit_s: float | None = None,
+    initial_solution: list[str] | None = None,
 ) -> tuple[list[str], RouteEvaluation, SAStatistics]:
     """
     Simulated annealing for EV routing.
@@ -83,6 +84,10 @@ def simulated_annealing(
         Hard stopping criterion — primary budget control shared with all algorithms.
     time_limit_s:
         Optional wall-clock limit.
+    initial_solution:
+        Optional warm-start route.  When given, SA starts from this route
+        instead of the greedy-feasible construction (used by the ACO→SA
+        hybrid).
 
     Returns
     -------
@@ -98,7 +103,10 @@ def simulated_annealing(
             return True
         return False
 
-    current_solution = build_ev_feasible_solution(data, ev_params)
+    if initial_solution is not None:
+        current_solution = list(initial_solution)
+    else:
+        current_solution = build_ev_feasible_solution(data, ev_params)
     current_eval = evaluate_route(current_solution, data, ev_params, weights)
     current_cost = current_eval.objective_value
 

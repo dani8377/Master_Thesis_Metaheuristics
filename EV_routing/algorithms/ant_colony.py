@@ -283,6 +283,7 @@ def ant_colony_optimization(
     candidate_list_k: int = 0,
     max_evaluations: int = 150_000,
     time_limit_s: float | None = None,
+    heuristic_basis: str = "distance",
 ) -> tuple[list[str], RouteEvaluation, ACOStatistics]:
     """
     Max-Min Ant System (MMAS) for EV routing.
@@ -327,9 +328,13 @@ def ant_colony_optimization(
     if candidate_list_k > 0:
         candidate_list = _build_candidate_list(data, candidate_list_k)
 
-    # Precompute heuristic matrix η(i,j) = 1/dist, zero on diagonal
+    # Precompute heuristic matrix η(i,j), zero on diagonal.
+    #   "distance" (default): η = 1/dist — the classic TSP heuristic.
+    #   "energy": η = 1/energy — aligns construction with the energy term
+    #   of the objective (used to test eco-mode steerability).
+    basis = data.energy_array if heuristic_basis == "energy" else data.dist_array
     with np.errstate(divide="ignore", invalid="ignore"):
-        heuristic = np.where(data.dist_array > 0, 1.0 / data.dist_array, 0.0)
+        heuristic = np.where(basis > 1e-9, 1.0 / np.maximum(basis, 1e-9), 0.0)
 
     # Initialise pheromone using the greedy-solution cost (standard MMAS init).
     # The greedy solution is also kept as an "elite ant" that deposits pheromone

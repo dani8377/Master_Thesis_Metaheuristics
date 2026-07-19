@@ -1,8 +1,8 @@
 focus_mode,n_tasks,n_servers,algorithm,best,average,worst,std_dev,feasible_runs,n_runs,avg_runtime_s
-performance,50,10,Simulated Annealing,0.9539,0.9574,0.9639,0.0025,20,20,12.4221
-performance,50,10,Genetic Algorithm,0.9575,0.9615,0.9656,0.0026,20,20,6.9184
-performance,50,10,UMDA (EDA),0.9585,0.9644,0.9709,0.0037,20,20,9.1245
-performance,50,10,Branch & Bound,1.2277,1.2277,1.2277,0.0000,1,1,60.6484
-performance,50,10,Greedy BFD (baseline),1.2608,1.2608,1.2608,0.0000,20,20,0.0006
-performance,50,10,Round-Robin (baseline),9.0235,9.0235,9.0235,0.0000,0,1,0.0003
-performance,50,10,Random (baseline),2.9691,16.8491,32.7830,10.3226,0,20,0.0001
+performance,50,10,Simulated Annealing,0.9539,0.9574,0.9639,0.0025,20,20,2.4738
+performance,50,10,Genetic Algorithm,0.9575,0.9615,0.9656,0.0026,20,20,2.2898
+performance,50,10,UMDA (EDA),0.9585,0.9644,0.9709,0.0037,20,20,2.0205
+performance,50,10,Branch & Bound,1.2187,1.2187,1.2187,0.0000,1,1,61.0831
+performance,50,10,Greedy BFD (baseline),1.2608,1.2608,1.2608,0.0000,20,20,0.0002
+performance,50,10,Round-Robin (baseline),9.0235,9.0235,9.0235,0.0000,0,1,0.0000
+performance,50,10,Random (baseline),2.9691,16.8491,32.7830,10.3226,0,20,0.0000

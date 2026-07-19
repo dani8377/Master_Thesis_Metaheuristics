@@ -1,6 +1,6 @@
 # Cloud Scheduling — Experiment Summary
 
-_Generated: 2026-07-02 11:35_
+_Generated: 2026-07-18 22:25_
 
 ## Setup
 
@@ -10,7 +10,7 @@ _Generated: 2026-07-02 11:35_
 | Tasks / Servers | 50 tasks × 10 servers |
 | Seeds per algorithm | 20 |
 | Objective normalised | Yes |
-| Sensitivity analysis | Run |
+| Sensitivity analysis | Skipped (use --sensitivity) |
 | Scalability analysis | Run |
 
 ## F(X) Coefficients (as actually used in this run)
@@ -35,14 +35,14 @@ after any sample-based calibration.
 
 ## Main Results — Multi-Seed Comparison
 
-Sorted by average F(X) — lower is better.  All runs: n=50 real tasks, 20 seeds.
+Sorted by average F(X) — lower is better.  All runs: n=50 dataset tasks, 20 seeds.
 
 | Algorithm | Best F | Avg F | Worst F | Std Dev | Feasible | Avg Time |
 |---|---|---|---|---|---|---|
-| Simulated Annealing | 1.8086 | 1.8133 | 1.8237 | 0.0034 | 20/20 | 6.16s |
-| Genetic Algorithm | 1.8128 | 1.8155 | 1.8201 | 0.0020 | 20/20 | 6.42s |
-| UMDA (EDA) | 1.8141 | 1.8175 | 1.8248 | 0.0031 | 20/20 | 5.80s |
-| Branch & Bound | 1.9981 | 1.9981 | 1.9981 | 0.0000 | 1/1 | 60.63s |
+| Simulated Annealing | 1.8086 | 1.8133 | 1.8237 | 0.0034 | 20/20 | 2.46s |
+| Genetic Algorithm | 1.8128 | 1.8155 | 1.8201 | 0.0020 | 20/20 | 2.32s |
+| UMDA (EDA) | 1.8141 | 1.8175 | 1.8248 | 0.0031 | 20/20 | 2.01s |
+| Branch & Bound | 1.9938 | 1.9938 | 1.9938 | 0.0000 | 1/1 | 61.16s |
 | Greedy BFD (baseline) | 2.0062 | 2.0062 | 2.0062 | 0.0000 | 20/20 | 0.00s |
 | Round-Robin (baseline) | 14.9027 | 14.9027 | 14.9027 | 0.0000 | 0/1 | 0.00s |
 | Random (baseline) | 5.1077 | 27.4391 | 53.0855 | 16.6268 | 0/20 | 0.00s |
@@ -68,16 +68,7 @@ Always infeasible: Round-Robin (baseline), Random (baseline) — expected for na
 
 ## Sensitivity Analysis
 
-Sensitivity results saved to:
-- `results/balanced/sensitivity_sa.csv` — SA: T₀ sweep and cooling-rate sweep
-- `results/balanced/sensitivity_ga.csv` — GA: population-size and crossover-prob sweeps
-- `results/balanced/sensitivity_umda.csv` — UMDA: population-size and selection-ratio sweeps
-
-**What sensitivity analysis tells you:**
-Each sweep fixes all parameters except one and measures how F(X) changes.
-A parameter that barely affects results is _robust_ (your chosen value is fine anywhere in the range).
-A parameter that changes results significantly is _sensitive_ — the thesis should justify the chosen value.
-The auto-estimated T₀ for SA is specifically designed to remove T₀ from being a sensitive parameter.
+Skipped. Run with `--sensitivity` to sweep hyperparameters and verify robustness.
 
 ## Scalability Analysis
 

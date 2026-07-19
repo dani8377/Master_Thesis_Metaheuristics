@@ -2,7 +2,7 @@ algorithm,n_seeds,mean_total_evaluations,mean_n_generations_completed,mean_sa_re
 Simulated Annealing,20,150401.000000,,6.450000,0.005147,0.255646,0.710325,,,,,
 Genetic Algorithm,20,147100.000000,1500.000000,,,,,,,,,
 UMDA (EDA),20,148600.000000,1500.000000,,,,,0.333442,,,,
-Branch & Bound,1,,,,,,,,False,0.937664,21.1722,56816
+Branch & Bound,1,,,,,,,,False,0.937664,21.1722,224711
 Greedy BFD (baseline),20,1.000000,,,,,,,,,,
 Round-Robin (baseline),1,1.000000,,,,,,,,,,
 Random (baseline),20,1.000000,,,,,,,,,,

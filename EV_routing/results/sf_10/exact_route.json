@@ -1,0 +1,38 @@
+{
+  "objective": 1.6066520278963048,
+  "route": [
+    "DEPOT",
+    "EVS02443",
+    "C003",
+    "EVS04365",
+    "C008",
+    "C001",
+    "C005",
+    "EVS01509",
+    "C004",
+    "C002",
+    "C006",
+    "EVS04734",
+    "C007",
+    "C009",
+    "C010",
+    "DEPOT"
+  ],
+  "states_popped": 927850,
+  "solve_time_s": 4.68853616702836,
+  "weights_from": "EV_routing/results/sf_75/weights.json",
+  "params_from": "EV_routing/results/sf_75/params.json",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "max_evaluations": 150000
+}

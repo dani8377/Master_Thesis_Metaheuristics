@@ -1,0 +1,6 @@
+{
+  "name": "sf_10",
+  "n_customers": 10,
+  "n_stations": 30,
+  "built_from": "sf_25 (prefix subset, same fixed customer ordering)"
+}

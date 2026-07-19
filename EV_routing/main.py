@@ -744,7 +744,7 @@ def run_scalability_analysis(
         print("  No metaheuristics selected — skipping scalability.")
         return
 
-    SCALE_SEEDS = [0, 1, 2]
+    SCALE_SEEDS = [0, 1, 2, 3, 4]
     SCALE_EVALS = 30_000
 
     _print_section(
