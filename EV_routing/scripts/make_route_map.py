@@ -3,8 +3,10 @@ Route-map figure: greedy nearest-neighbour route vs. SA's best route on the
 sf_75 instance, drawn over the OpenStreetMap basemap (same style as the
 instance map in the Problem Specification chapter).
 
-Runs greedy (deterministic) and SA (seed 0, 150k evaluations, tuned
-parameters) fresh, then plots both routes side by side.
+Runs greedy (deterministic) and SA (seed 12, 150k evaluations, tuned
+parameters) fresh, then plots both routes side by side. Seed 12 is the
+best-known-solution seed of the 20-seed main experiment
+(results/sf_75/results_per_seed.csv).
 
 Output:
     EV_routing/results/sf_75/figures/route_comparison_map.png
@@ -62,7 +64,7 @@ print(f"[greedy] F={greedy_eval.objective_value:.4f} "
       f"dist={greedy_eval.total_distance_km:.1f} km "
       f"feasible={greedy_eval.feasible}")
 
-random.seed(0)
+random.seed(12)
 sa_route, sa_eval, _ = simulated_annealing(
     data, ev_params, weights, max_evaluations=150_000, **params["SA"])
 print(f"[SA]     F={sa_eval.objective_value:.4f} "
@@ -94,7 +96,7 @@ fig, axes = plt.subplots(1, 2, figsize=(13, 7), sharex=True, sharey=True)
 
 panels = [
     ("Greedy nearest-neighbour", greedy_route, greedy_eval, axes[0]),
-    ("Simulated Annealing (best, seed 0)", sa_route, sa_eval, axes[1]),
+    ("Simulated Annealing (best, seed 12)", sa_route, sa_eval, axes[1]),
 ]
 
 cust_xy = to_webmerc([coords[c] for c in cust["Customer ID"]])

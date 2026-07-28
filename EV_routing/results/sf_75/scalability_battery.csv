@@ -1,29 +1,29 @@
 algorithm,battery_capacity_kwh,avg_runtime_s,avg_cost,feasible_pct
-Simulated Annealing,5,7.2196,2716.6603,0.0
-Simulated Annealing,8,5.3731,131.8503,80.0
-Simulated Annealing,10,2.2692,3.4559,100.0
-Simulated Annealing,12,2.4370,3.3405,100.0
-Simulated Annealing,15,1.7248,3.1321,100.0
-Simulated Annealing,18,1.6334,3.0570,100.0
-Simulated Annealing,20,1.6135,2.8765,100.0
-Genetic Algorithm,5,57.8358,26882.6083,0.0
-Genetic Algorithm,8,71.9414,13548.6801,0.0
-Genetic Algorithm,10,83.0480,1843.0730,40.0
-Genetic Algorithm,12,66.3146,1052.9986,40.0
-Genetic Algorithm,15,29.6649,5.5141,100.0
-Genetic Algorithm,18,17.7295,4.7427,100.0
-Genetic Algorithm,20,20.6144,3.1951,100.0
-Memetic Algorithm,5,3.4692,9336.9308,0.0
-Memetic Algorithm,8,3.6252,2769.2271,0.0
-Memetic Algorithm,10,3.6221,3.6314,100.0
-Memetic Algorithm,12,3.4634,3.2989,100.0
-Memetic Algorithm,15,3.6257,3.2074,100.0
-Memetic Algorithm,18,5.0125,3.0399,100.0
-Memetic Algorithm,20,2.6840,2.9318,100.0
-ACO,5,16.4396,28820.6861,0.0
-ACO,8,12.6491,15526.9557,0.0
-ACO,10,15.0425,362.3867,80.0
-ACO,12,12.9352,3.2231,100.0
-ACO,15,11.9976,2.9284,100.0
-ACO,18,11.6166,2.8914,100.0
-ACO,20,11.4214,2.7327,100.0
+Simulated Annealing,5,7.3273,2941.6355,0.0
+Simulated Annealing,8,3.7621,95.2723,85.7
+Simulated Annealing,10,2.2263,3.4794,100.0
+Simulated Annealing,12,1.8220,3.3309,100.0
+Simulated Annealing,15,1.7317,3.1457,100.0
+Simulated Annealing,18,1.6499,3.0758,100.0
+Simulated Annealing,20,1.6312,2.8825,100.0
+Genetic Algorithm,5,58.4387,26711.3766,0.0
+Genetic Algorithm,8,72.3607,13290.7622,0.0
+Genetic Algorithm,10,76.0865,2375.0606,42.9
+Genetic Algorithm,12,73.4479,753.3614,57.1
+Genetic Algorithm,15,26.0034,5.1399,100.0
+Genetic Algorithm,18,17.9707,5.0287,100.0
+Genetic Algorithm,20,18.0619,3.1741,100.0
+Memetic Algorithm,5,3.5705,9292.4279,0.0
+Memetic Algorithm,8,3.7686,2385.3246,14.3
+Memetic Algorithm,10,3.6937,3.5843,100.0
+Memetic Algorithm,12,3.5492,3.3059,100.0
+Memetic Algorithm,15,3.5682,3.2469,100.0
+Memetic Algorithm,18,4.7739,3.1769,100.0
+Memetic Algorithm,20,2.7433,2.9462,100.0
+ACO,5,13.5005,28820.6861,0.0
+ACO,8,12.6139,15526.9557,0.0
+ACO,10,15.1799,772.8723,57.1
+ACO,12,12.8435,3.2293,100.0
+ACO,15,11.8272,2.9777,100.0
+ACO,18,11.4833,2.8682,100.0
+ACO,20,10.9903,2.7369,100.0
