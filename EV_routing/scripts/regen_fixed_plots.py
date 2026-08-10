@@ -91,7 +91,7 @@ def fix_battery() -> None:
 
     for ax in (axq, axf):
         ax.invert_xaxis()  # loose -> tight
-        ax.set_xlabel("Battery capacity (kWh)  (← more constrained)")
+        ax.set_xlabel("Battery capacity (kWh)  (more constrained →)")
         ax.grid(alpha=0.3)
     axq.set_ylabel("Average objective value (feasible cells only, lower = better)")
     axq.set_title("Solution Quality vs. Constraint Tightness")

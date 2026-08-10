@@ -701,11 +701,11 @@ def plot_scalability(
             ax.invert_xaxis()
             ax.legend(fontsize=9)
 
-        axes[0].set_xlabel("Battery capacity (kWh)  (← more constrained)", fontsize=11)
+        axes[0].set_xlabel("Battery capacity (kWh)  (more constrained →)", fontsize=11)
         axes[0].set_ylabel("Average objective value  (lower = better)", fontsize=11)
         axes[0].set_title("Solution Quality vs. Constraint Tightness", fontsize=12, fontweight="bold")
 
-        axes[1].set_xlabel("Battery capacity (kWh)  (← more constrained)", fontsize=11)
+        axes[1].set_xlabel("Battery capacity (kWh)  (more constrained →)", fontsize=11)
         axes[1].set_ylabel("Feasible solutions (%)", fontsize=11)
         axes[1].set_title("Feasibility Rate vs. Constraint Tightness", fontsize=12, fontweight="bold")
         axes[1].set_ylim(-5, 110)
