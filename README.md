@@ -36,7 +36,7 @@ uv run run.py
 # Cloud scheduling only (all algorithms, balanced focus, 20 seeds)
 uv run run.py cloud
 
-# EV routing only (all algorithms, 10 seeds)
+# EV routing only (all algorithms, 10 seeds by default; the thesis runs used 20)
 uv run run.py ev
 
 # Unit tests for the cloud module (33 tests)
@@ -56,9 +56,9 @@ A `Makefile` with the same two targets (`make cloud`, `make ev`) is provided for
 convenience.
 
 Rough runtimes from the committed runs: about 3 to 4 minutes for a full cloud run
-with 20 seeds (of which 60 s is the Branch & Bound time limit), and about 20
-minutes for a full EV run with 10 seeds, most of it ACO. The optional
-`--sensitivity` and `--scalability` sweeps add considerably more.
+at 20 seeds, of which 60 s is the Branch & Bound time limit, and about 40 minutes
+for a full EV run at 20 seeds (roughly 20 at the default 10), most of it ACO. The
+optional `--sensitivity` and `--scalability` sweeps add considerably more.
 
 ---
 
@@ -412,7 +412,7 @@ the dataset, so instances larger than the 6,345-row file are possible. The serve
 count scales with the task count at one server per five tasks, which holds CPU
 utilisation near 50 % at every size, so runtime growth reflects algorithmic
 scaling and not rising constraint pressure. Sizes: 20, 50, 100, 200, 500 tasks,
-3 seeds each.
+8 seeds each.
 
 At n ≥ 200 the budget of 150,000 evaluations, which was calibrated for n = 50,
 is no longer enough for the growing search space, and the three algorithms
@@ -427,19 +427,19 @@ budget-dependent divergence is reported as a finding rather than corrected;
 the same total budget.
 
 **Axis 2, constraint tightness.** The same 50 tasks throughout, with the server
-count varied from 20 (about 25 % CPU utilisation) down to 6 (above 80 %), 3 seeds
+count varied from 20 (about 25 % CPU utilisation) down to 6 (above 80 %), 8 seeds
 each. This shows how quality and feasibility degrade as packing pressure rises,
 independent of problem size.
 
 **Axis 3, optimality gap.** A 20-task, 4-server instance is solved by Branch &
-Bound, and SA, GA and UMDA are run on the same instance with 5 seeds. Their gaps
+Bound, and SA, GA and UMDA are run on the same instance with 10 seeds. Their gaps
 from the B&B bound give a baseline-independent measure of solution quality on an
 instance small enough to be solved exactly.
 
 ## Sensitivity analysis
 
 `uv run run.py cloud --sensitivity` varies one hyperparameter at a time while
-holding the rest fixed, with 5 seeds per point. It answers whether the chosen
+holding the rest fixed, with 10 seeds per point. It answers whether the chosen
 value sits in a robust region, which is a different question from what `--tune`
 answers.
 
@@ -627,6 +627,7 @@ changes.
 
 ```bash
 PYTHONPATH=EV_routing python EV_routing/main.py                          # all algorithms, 10 seeds
+PYTHONPATH=EV_routing python EV_routing/main.py --seeds 20               # the protocol behind the reported results
 PYTHONPATH=EV_routing python EV_routing/main.py --algorithms SA ACO      # selected algorithms
 PYTHONPATH=EV_routing python EV_routing/main.py --seeds 5                # quick check
 PYTHONPATH=EV_routing python EV_routing/main.py --mode eco               # energy-weighted rerun
@@ -641,7 +642,7 @@ PYTHONPATH=EV_routing python EV_routing/main.py --opt-gap                # gap v
 | `--seeds` | `-s` | integer | 10 | seeds per algorithm |
 | `--mode` | `-M` | `balanced eco time` | `balanced` | focus mode, non-balanced modes write to their own directory |
 | `--sensitivity` | `-S` | flag | off | two-parameter sweeps per algorithm, 3 seeds and 30,000 evaluations per point |
-| `--scalability` | `-L` | flag | off | customer-count and battery-capacity axes, 5 seeds and 30,000 evaluations per point |
+| `--scalability` | `-L` | flag | off | customer-count and battery-capacity axes, 7 seeds and 30,000 evaluations per point |
 | `--opt-gap` | `-G` | flag | off | gap against the best solution found in this run |
 | `--verbose` | `-v` | flag | off | per-seed progress |
 
@@ -707,9 +708,9 @@ uv run run.py cloud --focus eco
 uv run run.py cloud --focus balanced --sensitivity --scalability
 
 # EV: main comparison and the two focus-mode reruns
-PYTHONPATH=EV_routing python EV_routing/main.py
-PYTHONPATH=EV_routing python EV_routing/main.py --mode eco
-PYTHONPATH=EV_routing python EV_routing/main.py --mode time
+PYTHONPATH=EV_routing python EV_routing/main.py --seeds 20
+PYTHONPATH=EV_routing python EV_routing/main.py --seeds 20 --mode eco
+PYTHONPATH=EV_routing python EV_routing/main.py --seeds 20 --mode time
 
 # EV: sweeps and follow-ups
 PYTHONPATH=EV_routing python EV_routing/main.py --sensitivity --scalability --opt-gap
@@ -718,8 +719,8 @@ PYTHONPATH=EV_routing python EV_routing/scripts/side_experiments.py
 ```
 
 Protocol in both problems: 150,000 objective evaluations per run, hyperparameters
-frozen after a separate tuning stage, and a fixed seed set (20 seeds for cloud,
-10 for EV, 3 to 5 for the sweeps). Every run writes a `run_manifest.yaml` next to
+frozen after a separate tuning stage, and a fixed seed set (20 seeds for both
+main comparisons, 3 to 10 for the sweeps). Every run writes a `run_manifest.yaml` next to
 its results, which is the file to check when a number in the thesis needs to be
 traced back to the configuration that produced it.
 
@@ -765,10 +766,10 @@ front rather than defended later.
   before the main loop, so SA uses roughly 150,400 against 150,000 for GA and
   UMDA, a 0.3 % asymmetry. It is reported separately as
   `stats.t0_probe_evaluations` in the diagnostics CSV.
-- **Sample sizes are modest.** 20 seeds for the cloud comparison, 10 for the EV
-  comparison, 3 to 5 for the sweeps. Standard deviations are point estimates with
-  wide confidence intervals, and the significance tests should be read as
-  exploratory. Holm adjustment is applied, but more seeds would be a
+- **Sample sizes are modest.** 20 seeds for each main comparison, and 3 to 10 for
+  the sweeps. Standard deviations are point estimates with wide confidence
+  intervals, and the significance tests should be read as exploratory rather than
+  confirmatory. Holm adjustment is applied, but more seeds would still be a
   straightforward improvement.
 - **One instance per setting.** Each cloud configuration uses one fixed task
   subset and one server pool, with only the algorithm RNG varying. The EV study
