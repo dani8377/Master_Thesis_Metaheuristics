@@ -809,13 +809,13 @@ def plot_vertical_scaling(vert_data: dict, figures_dir) -> None:
         ax.grid(True, alpha=_GRID_ALPHA)
         ax.legend(fontsize=9)
 
-    axes[0].set_xlabel("Number of servers  (← more constrained)", fontsize=11)
+    axes[0].set_xlabel("Number of servers  (more constrained →)", fontsize=11)
     axes[0].set_ylabel("Improvement over Greedy BFD (%)", fontsize=11)
     axes[0].set_title("Solution Quality vs. Constraint Tightness",
                       fontsize=12, fontweight="bold")
     axes[0].axhline(0, color="gray", linewidth=0.8, linestyle="--")
 
-    axes[1].set_xlabel("Number of servers  (← more constrained)", fontsize=11)
+    axes[1].set_xlabel("Number of servers  (more constrained →)", fontsize=11)
     axes[1].set_ylabel("Feasible solutions (%)", fontsize=11)
     axes[1].set_title("Feasibility Rate vs. Constraint Tightness",
                       fontsize=12, fontweight="bold")

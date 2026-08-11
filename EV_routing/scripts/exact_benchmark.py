@@ -46,7 +46,7 @@ SRC_INSTANCE  = Path("EV_routing/instances/sf_25")
 DST_INSTANCE  = Path("EV_routing/instances/sf_10")
 RESULTS_DIR   = Path("EV_routing/results/sf_10")
 BASE_RESULTS  = Path("EV_routing/results/sf_75")   # weights + tuned params
-SEEDS         = list(range(10))
+SEEDS         = list(range(20))
 MAX_EVALS     = 150_000
 EPS           = 1e-9
 

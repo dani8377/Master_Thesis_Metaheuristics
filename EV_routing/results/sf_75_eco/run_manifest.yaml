@@ -1,7 +1,7 @@
-generated_at: '2026-06-13 01:22:20'
+generated_at: '2026-07-27 15:24:22'
 instance: sf_75
 focus_mode: eco
-n_seeds: 10
+n_seeds: 20
 max_evaluations: 150000
 run_sensitivity: false
 algorithm_hyperparameters:

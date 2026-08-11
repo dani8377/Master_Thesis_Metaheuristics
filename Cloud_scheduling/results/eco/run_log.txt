@@ -29,33 +29,33 @@
   Single SA Diagnostic Run
 ============================================================
   Feasible:              True
-  Objective value F(X):  1.1076
-  Total energy (W):      11270.85
-  Total latency (ms):    24032.88
+  Objective value F(X):  1.1077
+  Total energy (W):      11273.59
+  Total latency (ms):    24019.86
   CPU violation (%):     0.0000
   Memory violation (MB): 0.00
   Active servers:        4/10
-  Runtime:               2.52s
+  Runtime:               2.53s
 
   SA search statistics:
     Candidates evaluated:    150000  (+ 401 T_0 probe evals  -> total budget 150401)
-    Improving accepted:      17092
-    Worsening accepted:      26315
+    Improving accepted:      15652
+    Worsening accepted:      24712
     Structural rejections:   0
-    Acceptance rate:         28.94%
-    Feasibility rate:        72.60%
+    Acceptance rate:         26.91%
+    Feasibility rate:        71.83%
     Reheat count:            7
-    Final temperature:       0.002684
+    Final temperature:       0.001162
 
   Per-server task distribution (# = 1 task):
     Server  0:   0 tasks  
-    Server  1:  10 tasks  ##########
+    Server  1:   9 tasks  #########
     Server  2:   0 tasks  
     Server  3:   5 tasks  #####
     Server  4:  27 tasks  ###########################
     Server  5:   0 tasks  
     Server  6:   0 tasks  
-    Server  7:   8 tasks  ########
+    Server  7:   9 tasks  #########
     Server  8:   0 tasks  
     Server  9:   0 tasks  
 
@@ -71,7 +71,7 @@
   Run  5/20  seed=4  cost=1.11  time=2.5s  [feasible]
   Run  6/20  seed=5  cost=1.11  time=2.5s  [feasible]
   Run  7/20  seed=6  cost=1.11  time=2.5s  [feasible]
-  Run  8/20  seed=7  cost=1.11  time=2.5s  [feasible]
+  Run  8/20  seed=7  cost=1.11  time=2.6s  [feasible]
   Run  9/20  seed=8  cost=1.11  time=2.5s  [feasible]
   Run 10/20  seed=9  cost=1.11  time=2.5s  [feasible]
   Run 11/20  seed=10  cost=1.11  time=2.5s  [feasible]
@@ -80,58 +80,58 @@
   Run 14/20  seed=13  cost=1.11  time=2.5s  [feasible]
   Run 15/20  seed=14  cost=1.11  time=2.5s  [feasible]
   Run 16/20  seed=15  cost=1.11  time=2.5s  [feasible]
-  Run 17/20  seed=16  cost=1.11  time=2.5s  [feasible]
+  Run 17/20  seed=16  cost=1.11  time=2.6s  [feasible]
   Run 18/20  seed=17  cost=1.11  time=2.5s  [feasible]
   Run 19/20  seed=18  cost=1.11  time=2.5s  [feasible]
   Run 20/20  seed=19  cost=1.11  time=2.5s  [feasible]
 
   Running Genetic Algorithm (20 seeds) ...
-  Run  1/20  seed=0  cost=1.13  time=2.3s  [feasible]
+  Run  1/20  seed=0  cost=1.13  time=2.4s  [feasible]
   Run  2/20  seed=1  cost=1.13  time=2.3s  [feasible]
-  Run  3/20  seed=2  cost=1.11  time=2.3s  [feasible]
-  Run  4/20  seed=3  cost=1.11  time=2.3s  [feasible]
+  Run  3/20  seed=2  cost=1.11  time=2.4s  [feasible]
+  Run  4/20  seed=3  cost=1.11  time=2.4s  [feasible]
   Run  5/20  seed=4  cost=1.12  time=2.3s  [feasible]
   Run  6/20  seed=5  cost=1.12  time=2.3s  [feasible]
   Run  7/20  seed=6  cost=1.11  time=2.3s  [feasible]
   Run  8/20  seed=7  cost=1.13  time=2.3s  [feasible]
   Run  9/20  seed=8  cost=1.12  time=2.3s  [feasible]
   Run 10/20  seed=9  cost=1.11  time=2.3s  [feasible]
-  Run 11/20  seed=10  cost=1.11  time=2.3s  [feasible]
-  Run 12/20  seed=11  cost=1.11  time=2.3s  [feasible]
+  Run 11/20  seed=10  cost=1.11  time=2.4s  [feasible]
+  Run 12/20  seed=11  cost=1.11  time=2.4s  [feasible]
   Run 13/20  seed=12  cost=1.11  time=2.3s  [feasible]
-  Run 14/20  seed=13  cost=1.11  time=2.3s  [feasible]
+  Run 14/20  seed=13  cost=1.11  time=2.4s  [feasible]
   Run 15/20  seed=14  cost=1.12  time=2.3s  [feasible]
   Run 16/20  seed=15  cost=1.11  time=2.3s  [feasible]
-  Run 17/20  seed=16  cost=1.11  time=2.3s  [feasible]
+  Run 17/20  seed=16  cost=1.11  time=2.4s  [feasible]
   Run 18/20  seed=17  cost=1.12  time=2.3s  [feasible]
-  Run 19/20  seed=18  cost=1.11  time=2.3s  [feasible]
-  Run 20/20  seed=19  cost=1.12  time=2.3s  [feasible]
+  Run 19/20  seed=18  cost=1.11  time=2.4s  [feasible]
+  Run 20/20  seed=19  cost=1.12  time=2.4s  [feasible]
 
   Running UMDA (EDA) (20 seeds) ...
-  Run  1/20  seed=0  cost=1.11  time=2.0s  [feasible]
-  Run  2/20  seed=1  cost=1.11  time=2.0s  [feasible]
-  Run  3/20  seed=2  cost=1.11  time=2.0s  [feasible]
-  Run  4/20  seed=3  cost=1.11  time=2.0s  [feasible]
+  Run  1/20  seed=0  cost=1.11  time=2.1s  [feasible]
+  Run  2/20  seed=1  cost=1.11  time=2.1s  [feasible]
+  Run  3/20  seed=2  cost=1.11  time=2.1s  [feasible]
+  Run  4/20  seed=3  cost=1.11  time=2.1s  [feasible]
   Run  5/20  seed=4  cost=1.11  time=2.1s  [feasible]
   Run  6/20  seed=5  cost=1.11  time=2.1s  [feasible]
-  Run  7/20  seed=6  cost=1.11  time=2.0s  [feasible]
-  Run  8/20  seed=7  cost=1.11  time=2.0s  [feasible]
-  Run  9/20  seed=8  cost=1.11  time=2.0s  [feasible]
-  Run 10/20  seed=9  cost=1.11  time=2.0s  [feasible]
-  Run 11/20  seed=10  cost=1.11  time=2.0s  [feasible]
-  Run 12/20  seed=11  cost=1.11  time=2.0s  [feasible]
-  Run 13/20  seed=12  cost=1.11  time=2.0s  [feasible]
-  Run 14/20  seed=13  cost=1.11  time=2.0s  [feasible]
+  Run  7/20  seed=6  cost=1.11  time=2.1s  [feasible]
+  Run  8/20  seed=7  cost=1.11  time=2.1s  [feasible]
+  Run  9/20  seed=8  cost=1.11  time=2.1s  [feasible]
+  Run 10/20  seed=9  cost=1.11  time=2.1s  [feasible]
+  Run 11/20  seed=10  cost=1.11  time=2.1s  [feasible]
+  Run 12/20  seed=11  cost=1.11  time=2.1s  [feasible]
+  Run 13/20  seed=12  cost=1.11  time=2.1s  [feasible]
+  Run 14/20  seed=13  cost=1.11  time=2.1s  [feasible]
   Run 15/20  seed=14  cost=1.11  time=2.1s  [feasible]
-  Run 16/20  seed=15  cost=1.11  time=2.1s  [feasible]
-  Run 17/20  seed=16  cost=1.11  time=2.0s  [feasible]
-  Run 18/20  seed=17  cost=1.11  time=2.0s  [feasible]
-  Run 19/20  seed=18  cost=1.11  time=2.0s  [feasible]
-  Run 20/20  seed=19  cost=1.11  time=2.0s  [feasible]
+  Run 16/20  seed=15  cost=1.11  time=2.0s  [feasible]
+  Run 17/20  seed=16  cost=1.11  time=2.1s  [feasible]
+  Run 18/20  seed=17  cost=1.11  time=2.1s  [feasible]
+  Run 19/20  seed=18  cost=1.11  time=2.1s  [feasible]
+  Run 20/20  seed=19  cost=1.11  time=2.1s  [feasible]
 
   Running Branch and Bound (time limit=60s) ...
-  Run  1/1  seed=0  cost=1.14  time=61.3s  [feasible]
-  B&B: nodes=224,711  root_lb=0.9377  best=1.1362  gap=21.2%  proven_optimal=False
+  Run  1/1  seed=0  cost=1.14  time=61.2s  [feasible]
+  B&B: nodes=220,867  root_lb=0.9377  best=1.1362  gap=21.2%  proven_optimal=False
 
   Running Greedy BFD baseline ...
   Running Round-Robin baseline (deterministic — 1 run) ...
@@ -142,10 +142,10 @@
 ============================================================
 Algorithm                                Best      Average        Worst    Std Dev   Feasible   Avg Time
 --------------------------------------------------------------------------------------------------------
-Simulated Annealing                      1.11         1.11         1.11       0.00      20/20      2.48s
-Genetic Algorithm                        1.11         1.12         1.13       0.01      20/20      2.32s
-UMDA (EDA)                               1.11         1.11         1.11       0.00      20/20      2.04s
-Branch & Bound                           1.14         1.14         1.14       0.00       1/1     61.31s
+Simulated Annealing                      1.11         1.11         1.11       0.00      20/20      2.52s
+Genetic Algorithm                        1.11         1.12         1.13       0.01      20/20      2.35s
+UMDA (EDA)                               1.11         1.11         1.11       0.00      20/20      2.09s
+Branch & Bound                           1.14         1.14         1.14       0.00       1/1     61.22s
 Greedy BFD (baseline)                    1.16         1.16         1.16       0.00      20/20      0.00s
 Round-Robin (baseline)                   9.29         9.29         9.29       0.00       0/1      0.00s
 Random (baseline)                        3.25        16.96        32.72      10.22       0/20      0.00s
@@ -177,9 +177,9 @@ Random (baseline)                        3.25        16.96        32.72      10.
   Metaheuristic ranking (lower F(X) = better):
   Rank  Algorithm                       Best F      Avg F   StdDev  Feasible  Avg time
   --------------------------------------------------------------------------------
-  1     Simulated Annealing               1.11       1.11     0.00     20/20     2.48s  (winner)
-  2     UMDA (EDA)                        1.11       1.11     0.00     20/20     2.04s  (+0.1%)
-  3     Genetic Algorithm                 1.11       1.12     0.01     20/20     2.32s  (+0.7%)
+  1     Simulated Annealing               1.11       1.11     0.00     20/20     2.52s  (winner)
+  2     UMDA (EDA)                        1.11       1.11     0.00     20/20     2.09s  (+0.1%)
+  3     Genetic Algorithm                 1.11       1.12     0.01     20/20     2.35s  (+0.7%)
 
   Energy vs latency decomposition of F(X) - best run per algorithm:
   Algorithm                       Energy      Latency  Servers  E-contrib%  L-contrib%
@@ -195,9 +195,9 @@ Random (baseline)                        3.25        16.96        32.72      10.
     UMDA (EDA)                     +4.0%  [better]
 
   Wall-clock speed (per single run, ~150 000 evaluations each):
-    Simulated Annealing          avg 2.48s <- slowest
-    Genetic Algorithm            avg 2.32s
-    UMDA (EDA)                   avg 2.04s <- fastest
+    Simulated Annealing          avg 2.52s <- slowest
+    Genetic Algorithm            avg 2.35s
+    UMDA (EDA)                   avg 2.09s <- fastest
     All algorithms run in similar time - evaluation budgets are calibrated.
 
   Expected behaviour and sanity check:
@@ -250,8 +250,284 @@ Random (baseline)                        3.25        16.96        32.72      10.
   Algorithm diagnostics CSV    -> /Users/daniel/Desktop/Master_Thesis_Metaheuristics/Cloud_scheduling/results/eco/algorithm_diagnostics.csv
   Run manifest saved           -> /Users/daniel/Desktop/Master_Thesis_Metaheuristics/Cloud_scheduling/results/eco/run_manifest.yaml
 
-  (Sensitivity analysis skipped - use --sensitivity / -S to enable)
-  (Scalability analysis skipped - use --scalability / -L to enable)
+============================================================
+  SA Sensitivity Analysis
+============================================================
+
+  Temperature sweep (cooling_rate=0.99):
+      T_init         Best      Average    Std Dev Feasible
+  --------------------------------------------------------------
+       0.005       1.1075       1.1110     0.0051      10/10
+        0.01       1.1074       1.1078     0.0005      10/10
+        0.05       1.1074       1.1083     0.0013      10/10
+         0.1       1.1076       1.1087     0.0014      10/10
+         0.5       1.1074       1.1339     0.0221      10/10
+         1.0       1.1458       1.1527     0.0043      10/10
+
+  Cooling-rate sweep (T_0 fixed at 0.0409; max_temp_steps auto-scaled per alpha so T reaches min_T=1e-08):
+       alpha    steps      evals         Best      Average    Std Dev Feasible
+  ------------------------------------------------------------------------------------
+       0.990     1515     75,750       1.1074       1.1085     0.0015      10/10
+       0.992     1896     94,800       1.1076       1.1086     0.0014      10/10
+       0.995     3038    151,900       1.1074       1.1086     0.0014      10/10
+       0.997     5067    253,350       1.1074       1.1101     0.0074      10/10
+       0.999    15217    760,850       1.1399       1.1440     0.0024      10/10
+
+  Sensitivity results saved ->/Users/daniel/Desktop/Master_Thesis_Metaheuristics/Cloud_scheduling/results/eco/sensitivity_sa.csv
+  Sensitivity plot saved  ->/Users/daniel/Desktop/Master_Thesis_Metaheuristics/Cloud_scheduling/figures/eco/sa_sensitivity.png
+
+============================================================
+  GA Sensitivity Analysis
+============================================================
+
+  Population-size sweep (crossover_prob=0.8):
+    pop_size         Best      Average    Std Dev Feasible
+  --------------------------------------------------------------
+          20       1.1144       1.1329     0.0091      10/10
+          50       1.1117       1.1234     0.0057      10/10
+         100       1.1086       1.1203     0.0094      10/10
+
+  Crossover-prob sweep (population_size=100):
+  crossover_p         Best      Average    Std Dev Feasible
+  --------------------------------------------------------------
+         0.6       1.1086       1.1184     0.0061      10/10
+         0.7       1.1090       1.1175     0.0074      10/10
+         0.8       1.1086       1.1203     0.0094      10/10
+         0.9       1.1089       1.1119     0.0036      10/10
+         1.0       1.1080       1.1096     0.0015      10/10
+
+  Sensitivity results saved ->/Users/daniel/Desktop/Master_Thesis_Metaheuristics/Cloud_scheduling/results/eco/sensitivity_ga.csv
+  Sensitivity plot saved  ->/Users/daniel/Desktop/Master_Thesis_Metaheuristics/Cloud_scheduling/figures/eco/ga_sensitivity.png
+
+============================================================
+  UMDA Sensitivity Analysis
+============================================================
+
+  Population-size sweep (selection_ratio=0.5):
+    pop_size         Best      Average    Std Dev Feasible
+  --------------------------------------------------------------
+          50       1.1181       1.1196     0.0017      10/10
+         100       1.1089       1.1101     0.0015      10/10
+         200       1.1099       1.1157     0.0096      10/10
+
+  Selection-ratio sweep (population_size=100):
+   sel_ratio         Best      Average    Std Dev Feasible
+  --------------------------------------------------------------
+         0.2       1.1085       1.1098     0.0015      10/10
+         0.3       1.1087       1.1146     0.0068      10/10
+         0.5       1.1089       1.1101     0.0015      10/10
+         0.7       1.1091       1.1113     0.0018      10/10
+
+  Sensitivity results saved ->/Users/daniel/Desktop/Master_Thesis_Metaheuristics/Cloud_scheduling/results/eco/sensitivity_umda.csv
+  Sensitivity plot saved  ->/Users/daniel/Desktop/Master_Thesis_Metaheuristics/Cloud_scheduling/figures/eco/umda_sensitivity.png
+
+============================================================
+  Scalability Axis 1 — Horizontal: Task-Count Scaling
+============================================================
+  Synthetic tasks  |  8 seeds  |  server ratio 1:5  |  sizes: [20, 50, 100, 200, 500]
+
+  ── n_tasks=   20  n_servers=   4 ──
+    Simulated Annealing          time=  2.18s  F=1.1302  vs_greedy=+3.0%  feasible=8/8
+    Genetic Algorithm            time=  2.07s  F=1.1305  vs_greedy=+3.0%  feasible=8/8
+    UMDA (EDA)                   time=  1.80s  F=1.1330  vs_greedy=+2.8%  feasible=8/8
+
+  ── n_tasks=   50  n_servers=  10 ──
+    Simulated Annealing          time=  2.51s  F=1.1013  vs_greedy=+4.0%  feasible=8/8
+    Genetic Algorithm            time=  2.37s  F=1.1069  vs_greedy=+3.5%  feasible=8/8
+    UMDA (EDA)                   time=  2.06s  F=1.1048  vs_greedy=+3.7%  feasible=8/8
+
+  ── n_tasks=  100  n_servers=  20 ──
+
+  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  [calibration] FALLBACK TRIGGERED on this scalability instance:
+    only 1 of 150 samples were feasible
+    (min_feasible_calibration = 10).
+    Reverted to worst-case normalisation; mode preference ratios
+    no longer reflect equal expected contribution on this instance.
+  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    Simulated Annealing          time=  3.01s  F=0.6242  vs_greedy=+15.6%  feasible=8/8
+    Genetic Algorithm            time=  2.77s  F=0.6435  vs_greedy=+13.0%  feasible=7/8
+    UMDA (EDA)                   time=  2.57s  F=0.6949  vs_greedy=+6.0%  feasible=7/8
+
+  ── n_tasks=  200  n_servers=  40 ──
+
+  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  [calibration] FALLBACK TRIGGERED on this scalability instance:
+    only 1 of 150 samples were feasible
+    (min_feasible_calibration = 10).
+    Reverted to worst-case normalisation; mode preference ratios
+    no longer reflect equal expected contribution on this instance.
+  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    Simulated Annealing          time=  4.04s  F=0.5949  vs_greedy=+16.0%  feasible=8/8
+    Genetic Algorithm            time=  3.62s  F=0.6437  vs_greedy=+9.1%  feasible=6/8
+    UMDA (EDA)                   time=  3.66s  F=0.7078  vs_greedy=+0.0%  feasible=8/8
+
+  ── n_tasks=  500  n_servers= 100 ──
+
+  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  [calibration] FALLBACK TRIGGERED on this scalability instance:
+    only 1 of 150 samples were feasible
+    (min_feasible_calibration = 10).
+    Reverted to worst-case normalisation; mode preference ratios
+    no longer reflect equal expected contribution on this instance.
+  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    Simulated Annealing          time=  7.19s  F=0.5879  vs_greedy=+14.2%  feasible=6/8
+    Genetic Algorithm            time=  6.44s  F=0.6468  vs_greedy=+5.6%  feasible=6/8
+    UMDA (EDA)                   time=  9.17s  F=0.6854  vs_greedy=+0.0%  feasible=8/8
+
+  Note — Fixed-Budget Behaviour at Scale:
+  ─────────────────────────────────────────────────────────
+  The following algorithm-size combinations show near-zero
+  improvement over Greedy BFD (< 0.1%):
+  UMDA (EDA) at n=200
+  UMDA (EDA) at n=500
+
+  This is expected fixed-budget behaviour, not a code error.
+  The evaluation budget (150 K calls) was calibrated for n=50;
+  at larger n the search space grows much faster than the budget.
+  UMDA is the typical case: its univariate model has n×m
+  parameters estimated from only pop_size/2 selected individuals
+  per generation, so at large n the signal-to-noise ratio is too
+  low to learn task-server affinities and the model collapses
+  onto its perturbed-greedy initial population, returning the
+  greedy elite unchanged (thesis Section 9.1.3).
+  To restore improvement at larger n, scale the budget
+  proportionally (e.g. max_temp_steps ∝ n/50 in config.yaml).
+  ─────────────────────────────────────────────────────────
+
+============================================================
+  Horizontal Scaling — Winner at Each Scale Point
+============================================================
+  Scale Point              Winner                        Avg F(X)  vs Greedy  Avg Time
+  ------------------------------------------------------------------------------------
+  n=20, m=4                Simulated Annealing             1.1302      +3.0%     2.18s
+  n=50, m=10               Simulated Annealing             1.1013      +4.0%     2.51s
+  n=100, m=20              Simulated Annealing             0.6242     +15.6%     3.01s
+  n=200, m=40              Simulated Annealing             0.5949     +16.0%     4.04s
+  n=500, m=100             Simulated Annealing             0.5879     +14.2%     7.19s
+
+  Simulated Annealing          5/5 scale points  (100%)  █████
+
+  Horizontal scalability plot  -> /Users/daniel/Desktop/Master_Thesis_Metaheuristics/Cloud_scheduling/figures/eco/scalability_horizontal.png
+  Horizontal CSV saved         -> /Users/daniel/Desktop/Master_Thesis_Metaheuristics/Cloud_scheduling/results/eco/scalability_horizontal.csv
+
+============================================================
+  Scalability Axis 2 — Vertical: Constraint Tightness
+============================================================
+  Fixed 50 dataset tasks  |  8 seeds  |  server counts: [20, 15, 10, 8, 6]
+
+  ── n_servers= 20  CPU utilisation≈26% ──
+    Simulated Annealing          time= 2.51s  F=1.0184  vs_greedy=+8.6%  feasible=8/8 (100%)
+    Genetic Algorithm            time= 2.31s  F=1.0478  vs_greedy=+5.9%  feasible=8/8 (100%)
+    UMDA (EDA)                   time= 2.10s  F=1.0228  vs_greedy=+8.2%  feasible=8/8 (100%)
+
+  ── n_servers= 15  CPU utilisation≈34% ──
+    Simulated Annealing          time= 2.52s  F=1.0343  vs_greedy=+8.8%  feasible=8/8 (100%)
+    Genetic Algorithm            time= 2.33s  F=1.0572  vs_greedy=+6.8%  feasible=8/8 (100%)
+    UMDA (EDA)                   time= 2.08s  F=1.0367  vs_greedy=+8.6%  feasible=8/8 (100%)
+
+  ── n_servers= 10  CPU utilisation≈53% ──
+    Simulated Annealing          time= 2.49s  F=1.1056  vs_greedy=+4.2%  feasible=8/8 (100%)
+    Genetic Algorithm            time= 2.32s  F=1.1105  vs_greedy=+3.8%  feasible=8/8 (100%)
+    UMDA (EDA)                   time= 2.03s  F=1.1091  vs_greedy=+3.9%  feasible=8/8 (100%)
+
+  ── n_servers=  8  CPU utilisation≈63% ──
+    Simulated Annealing          time= 2.49s  F=1.1176  vs_greedy=+4.3%  feasible=8/8 (100%)
+    Genetic Algorithm            time= 2.33s  F=1.1193  vs_greedy=+4.2%  feasible=8/8 (100%)
+    UMDA (EDA)                   time= 2.04s  F=1.1202  vs_greedy=+4.1%  feasible=8/8 (100%)
+
+  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  [calibration] FALLBACK TRIGGERED on this scalability instance:
+    only 5 of 150 samples were feasible
+    (min_feasible_calibration = 10).
+    Reverted to worst-case normalisation; mode preference ratios
+    no longer reflect equal expected contribution on this instance.
+  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  ── n_servers=  6  CPU utilisation≈81% ──
+    Simulated Annealing          time= 2.49s  F=0.6718  vs_greedy=+4.1%  feasible=8/8 (100%)
+    Genetic Algorithm            time= 2.33s  F=0.6730  vs_greedy=+3.9%  feasible=8/8 (100%)
+    UMDA (EDA)                   time= 2.04s  F=0.6837  vs_greedy=+2.4%  feasible=8/8 (100%)
+
+============================================================
+  Vertical Scaling — Winner at Each Tightness Level
+============================================================
+  Scale Point              Winner                        Avg F(X)  vs Greedy  Avg Time
+  ------------------------------------------------------------------------------------
+  m=20 (26% util)          Simulated Annealing             1.0184      +8.6%     2.51s
+  m=15 (34% util)          Simulated Annealing             1.0343      +8.8%     2.52s
+  m=10 (53% util)          Simulated Annealing             1.1056      +4.2%     2.49s
+  m=8 (63% util)           Simulated Annealing             1.1176      +4.3%     2.49s
+  m=6 (81% util)           Simulated Annealing             0.6718      +4.1%     2.49s
+
+  Simulated Annealing          5/5 scale points  (100%)  █████
+
+  Vertical scalability plot    -> /Users/daniel/Desktop/Master_Thesis_Metaheuristics/Cloud_scheduling/figures/eco/scalability_vertical.png
+  Vertical CSV saved           -> /Users/daniel/Desktop/Master_Thesis_Metaheuristics/Cloud_scheduling/results/eco/scalability_vertical.csv
+
+============================================================
+  Solution Quality Benchmark — Optimality Gaps vs. Exact Reference
+============================================================
+  Instance: n=20 tasks, m=4 servers, CPU utilisation≈58%
+  Seeds: 10  |  B&B always included for exact reference
+
+  Running Branch & Bound (time_limit=60s) ...
+  Run  1/1  seed=0  cost=1.13  time=43.3s  [feasible]
+  B&B: nodes=500,000  root_lb=0.9976  best=1.1315  gap=13.4%  proven_optimal=False
+
+  Running Simulated Annealing (10 seeds) ...
+  Run  1/10  seed=0  cost=1.13  time=2.2s  [feasible]
+  Run  2/10  seed=1  cost=1.13  time=2.2s  [feasible]
+  Run  3/10  seed=2  cost=1.13  time=2.2s  [feasible]
+  Run  4/10  seed=3  cost=1.13  time=2.2s  [feasible]
+  Run  5/10  seed=4  cost=1.13  time=2.2s  [feasible]
+  Run  6/10  seed=5  cost=1.13  time=2.1s  [feasible]
+  Run  7/10  seed=6  cost=1.13  time=2.2s  [feasible]
+  Run  8/10  seed=7  cost=1.13  time=2.2s  [feasible]
+  Run  9/10  seed=8  cost=1.13  time=2.1s  [feasible]
+  Run 10/10  seed=9  cost=1.13  time=2.2s  [feasible]
+    Best=1.1315  B&B=1.1315  optimality_gap=+0.0%  feasible=10/10
+
+  Running Genetic Algorithm (10 seeds) ...
+  Run  1/10  seed=0  cost=1.13  time=2.1s  [feasible]
+  Run  2/10  seed=1  cost=1.13  time=2.1s  [feasible]
+  Run  3/10  seed=2  cost=1.13  time=2.1s  [feasible]
+  Run  4/10  seed=3  cost=1.13  time=2.1s  [feasible]
+  Run  5/10  seed=4  cost=1.13  time=2.1s  [feasible]
+  Run  6/10  seed=5  cost=1.13  time=2.1s  [feasible]
+  Run  7/10  seed=6  cost=1.13  time=2.0s  [feasible]
+  Run  8/10  seed=7  cost=1.13  time=2.0s  [feasible]
+  Run  9/10  seed=8  cost=1.13  time=2.0s  [feasible]
+  Run 10/10  seed=9  cost=1.13  time=2.0s  [feasible]
+    Best=1.1315  B&B=1.1315  optimality_gap=+0.0%  feasible=10/10
+
+  Running UMDA (EDA) (10 seeds) ...
+  Run  1/10  seed=0  cost=1.13  time=1.8s  [feasible]
+  Run  2/10  seed=1  cost=1.13  time=1.8s  [feasible]
+  Run  3/10  seed=2  cost=1.13  time=1.8s  [feasible]
+  Run  4/10  seed=3  cost=1.13  time=1.8s  [feasible]
+  Run  5/10  seed=4  cost=1.13  time=1.8s  [feasible]
+  Run  6/10  seed=5  cost=1.13  time=1.8s  [feasible]
+  Run  7/10  seed=6  cost=1.14  time=1.8s  [feasible]
+  Run  8/10  seed=7  cost=1.14  time=1.8s  [feasible]
+  Run  9/10  seed=8  cost=1.13  time=1.8s  [feasible]
+  Run 10/10  seed=9  cost=1.13  time=1.8s  [feasible]
+    Best=1.1315  B&B=1.1315  optimality_gap=+0.0%  feasible=10/10
+
+============================================================
+  Optimality Gap Summary — vs. B&B Exact Reference
+============================================================
+  B&B reference cost: 1.1315  (gap=13.4%)
+
+  Algorithm                    Best F(X)   Gap vs B&B  Avg Time  Feasible
+  ------------------------------------------------------------------------
+  Simulated Annealing             1.1315        +0.0%     2.16s     10/10
+  Genetic Algorithm               1.1315        +0.0%     2.05s     10/10
+  UMDA (EDA)                      1.1315        +0.0%     1.79s     10/10
+  Greedy BFD (baseline)           1.1690        +3.3%   (deterministic)
+
+  Optimality-gap plot          -> /Users/daniel/Desktop/Master_Thesis_Metaheuristics/Cloud_scheduling/figures/eco/optimality_gap.png
+  Lower-bound CSV saved        -> /Users/daniel/Desktop/Master_Thesis_Metaheuristics/Cloud_scheduling/results/eco/optimality_gap.csv
   Summary saved                -> /Users/daniel/Desktop/Master_Thesis_Metaheuristics/Cloud_scheduling/results/eco/summary.md
 
 ============================================================

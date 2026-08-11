@@ -40,7 +40,7 @@ POP_SIZES = {  # population size N per task count (mu = N/2 selected)
     500: [100, 500, 1000],
 }
 BUDGET = 150_000 if not SMOKE else 5_000
-SEEDS = [0, 1, 2] if not SMOKE else [0]
+SEEDS = [0, 1, 2, 3, 4] if not SMOKE else [0]
 
 BASE_WEIGHTS = ObjectiveWeights(
     energy_weight=1.0, latency_weight=1.0,

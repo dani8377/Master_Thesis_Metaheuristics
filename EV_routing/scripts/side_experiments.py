@@ -93,7 +93,7 @@ def save(rows: list[dict], name: str) -> None:
 
 
 def run_hybrid() -> None:
-    seeds = [0] if SMOKE else list(range(10))
+    seeds = [0] if SMOKE else list(range(20))
     budgets = [3_000] if SMOKE else [30_000, 150_000]
     data = load_problem_data(Path("EV_routing/instances/sf_75"), EV_PARAMS)
     weights = make_weights()
@@ -118,7 +118,7 @@ def run_hybrid() -> None:
 
 
 def run_eco() -> None:
-    seeds = [0] if SMOKE else list(range(10))
+    seeds = [0] if SMOKE else list(range(20))
     budget = 3_000 if SMOKE else 150_000
     data = load_problem_data(Path("EV_routing/instances/sf_75"), EV_PARAMS)
     weights = make_weights(ECO_MULT)
@@ -139,7 +139,7 @@ def run_eco() -> None:
 
 
 def run_candlist() -> None:
-    seeds = [0] if SMOKE else list(range(5))
+    seeds = [0] if SMOKE else list(range(10))
     budget = 3_000 if SMOKE else 30_000
     sizes = [300] if SMOKE else [300, 500]
     rows = []

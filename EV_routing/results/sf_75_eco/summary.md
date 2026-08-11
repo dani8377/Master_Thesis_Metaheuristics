@@ -1,37 +1,37 @@
 # EV Routing — Experiment Summary
 
-_Generated: 2026-06-13 01:22_
+_Generated: 2026-07-27 15:24_
 
 ## Setup
 
 | Parameter | Value |
 |---|---|
 | Instance | **sf_75** (75 customers, 30 charging stations, 1 depot) |
-| Seeds per algorithm | 10 |
+| Seeds per algorithm | 20 |
 | Evaluation budget | 150,000 per run |
 | Sensitivity analysis | Skipped — use `--sensitivity` to enable |
 
 ## Main Results — Multi-Seed Comparison
 
-Sorted by average objective — lower is better.  Budget: 150,000 evals, 10 seeds.
+Sorted by average objective — lower is better.  Budget: 150,000 evals, 20 seeds.
 
 | Algorithm | Best | Avg | Worst | Std | Feasible | Avg Time |
 |---|---|---|---|---|---|---|
-| Simulated Annealing | 2.4507 | 2.5443 | 2.6555 | 0.0586 | 10/10 | 7.35s |
-| Memetic Algorithm | 2.6262 | 2.7317 | 2.8136 | 0.0591 | 10/10 | 10.86s |
-| ACO | 2.7104 | 2.7796 | 2.8025 | 0.0271 | 10/10 | 52.88s |
-| Genetic Algorithm | 2.6986 | 2.8853 | 3.1584 | 0.1404 | 10/10 | 54.43s |
-| Greedy | 3.6037 | 3.6037 | 3.6037 | 0.0000 | 10/10 | 0.00s |
+| Simulated Annealing | 2.4507 | 2.5438 | 2.6555 | 0.0602 | 20/20 | 7.85s |
+| Memetic Algorithm | 2.5877 | 2.7097 | 2.8169 | 0.0772 | 20/20 | 11.78s |
+| ACO | 2.7104 | 2.7818 | 2.8025 | 0.0256 | 20/20 | 54.22s |
+| Genetic Algorithm | 2.6986 | 2.8936 | 3.1730 | 0.1416 | 20/20 | 50.11s |
+| Greedy | 3.6037 | 3.6037 | 3.6037 | 0.0000 | 20/20 | 0.00s |
 
 ## Winner and Baseline Comparison
 
-**Simulated Annealing** achieved the best average objective = **2.5443** (best seed: 2.4507).
+**Simulated Annealing** achieved the best average objective = **2.5438** (best seed: 2.4507).
 
 Improvement over Greedy baseline:
-- **Simulated Annealing**: +29.40% (avg 2.5443 vs Greedy 3.6037)
-- **Genetic Algorithm**: +19.94% (avg 2.8853 vs Greedy 3.6037)
-- **Memetic Algorithm**: +24.20% (avg 2.7317 vs Greedy 3.6037)
-- **ACO**: +22.87% (avg 2.7796 vs Greedy 3.6037)
+- **Simulated Annealing**: +29.41% (avg 2.5438 vs Greedy 3.6037)
+- **Genetic Algorithm**: +19.71% (avg 2.8936 vs Greedy 3.6037)
+- **Memetic Algorithm**: +24.81% (avg 2.7097 vs Greedy 3.6037)
+- **ACO**: +22.81% (avg 2.7818 vs Greedy 3.6037)
 
 ## Sensitivity Analysis
 
