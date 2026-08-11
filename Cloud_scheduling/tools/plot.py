@@ -888,9 +888,7 @@ def plot_optimality_gap_comparison(
     ax.set_xticks(x)
     ax.set_xticklabels(names, rotation=15, ha="right", fontsize=9)
     ax.set_ylabel("Objective value F(X)  (lower is better)", fontsize=11)
-    # Title subline: use the actual problem size (passed in by the caller).
-    # NOTE: an earlier version of this function pulled `seeds[0]` here — that
-    # is a SEED VALUE (e.g. 0), not a task count, so the title was wrong.
+    # Problem size for the subtitle comes from the caller, not from the seed list.
     size_str = f"{n_tasks} tasks x {n_servers} servers" if n_tasks is not None else "small instance"
     ax.set_title(
         "Optimality Gap — metaheuristics vs. B&B exact reference\n"

@@ -139,45 +139,25 @@ def genetic_algorithm(
     local_search_iters: int = 0,
 ) -> tuple[list[str], RouteEvaluation, GAStatistics]:
     """
-    Generational GA for EV routing — also serves as the Memetic Algorithm (MA)
-    when ``local_search_iters > 0``.
+    Generational GA for EV routing.  With ``local_search_iters > 0`` the same
+    function is the Memetic Algorithm.
 
-    Representation
-    --------------
-    Routes are variable-length lists (same as SA): DEPOT → customers+stations → DEPOT.
-    Charging stations may appear multiple times.
+    Individuals are variable-length routes, DEPOT -> customers and stations ->
+    DEPOT, where a station may appear more than once.
 
-    Crossover (OX + CS repair)
-    --------------------------
-    1. Extract the customer-only subsequence from each parent.
-    2. Apply Order Crossover to produce a child customer permutation.
-    3. Greedily re-insert charging stations wherever energy would run out.
+    Crossover extracts the customer-only subsequence from each parent, applies
+    Order Crossover, then greedily re-inserts charging stations wherever the
+    child would otherwise run out of energy.  Mutation applies one random
+    neighbourhood move with probability ``mutation_rate``, using the same
+    operators as SA.  Parents come from tournaments of size ``tournament_size``
+    and the best ``elitism_count`` individuals survive unchanged.
 
-    Mutation
-    --------
-    With probability ``mutation_rate``, apply one random neighborhood move
-    (reuses the same operators as SA: swap, relocate, 2-opt, CS insert/remove/move).
+    In the memetic variant each offspring gets up to ``local_search_iters``
+    first-improvement attempts before joining the population.  Those
+    evaluations count against ``max_evaluations``, so the budget stays
+    comparable with the other algorithms.
 
-    Local search / Memetic phase (MA only)
-    ---------------------------------------
-    When ``local_search_iters > 0``, each offspring undergoes up to
-    ``local_search_iters`` attempts at a first-improvement move before joining
-    the population.  Evaluations consumed here count against ``max_evaluations``,
-    keeping the budget comparison honest.  This makes the GA problem-aware at
-    the individual level — the same domain operators SA uses are now applied
-    locally to every offspring.
-
-    Selection
-    ---------
-    Tournament selection of size ``tournament_size``.
-
-    Elitism
-    -------
-    The top ``elitism_count`` individuals survive each generation unchanged.
-
-    Stopping
-    --------
-    Whichever of ``max_evaluations`` or ``time_limit_s`` is reached first.
+    Stops at whichever of ``max_evaluations`` or ``time_limit_s`` comes first.
     """
     stats = GAStatistics()
     customer_ids = set(data.customers["Node ID"].tolist())

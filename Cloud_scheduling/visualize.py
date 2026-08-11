@@ -1,41 +1,27 @@
-"""
-visualize.py — Visual frontend for the Cloud Resource Allocation problem.
+r"""
+Allocation figures for the cloud scheduling problem.
 
-PURPOSE
--------
-Turns the console-only experiment output into an intuitive picture of WHAT the
-scheduler actually decides: which tasks land on which servers, how full each
-server is (CPU and memory), which servers stay idle (saving idle power), and
-how the allocation improves as the search runs.
+Draws what the scheduler actually decides: which tasks land on which servers,
+how full each server is, which servers stay idle, and how the allocation
+improves during the search.  Each server is a rack whose height is its CPU
+capacity, tasks are stacked blocks (height = CPU demand, colour = priority),
+a slim gauge beside each rack shows memory use, and idle servers are greyed
+out with "0 W" to make the consolidation incentive visible.  The header
+reports F(X), energy, latency, active servers and feasibility.
 
-The renderings are designed to double as thesis figures: colourblind-safe
-Okabe–Ito palette, no chartjunk, saved as 300-dpi PNG *and* vector PDF.
+Two styles are produced, both colourblind-safe (Okabe-Ito) and saved as
+300-dpi PNG and vector PDF:
 
-WHAT IT SHOWS
--------------
-Each server is drawn as a "rack" whose height is proportional to its CPU
-capacity C_j, so hardware heterogeneity is visible at a glance.  Tasks are
-stacked blocks inside the rack — block height ∝ CPU demand c_i, colour =
-priority class (Low / Medium / High).  Next to every rack a slim gauge shows
-memory utilisation.  Idle servers are greyed out ("0 W"), directly visualising
-the consolidation incentive of the energy term.  A header reports F(X),
-energy, latency, active servers and feasibility — the same numbers as the
-console tables, computed with the identical calibrated objective.
+    detailed  screen-oriented, with task IDs, per-server power and memory
+              gauges.  Used for the GIFs and the appendix; too dense for a
+              thesis column.
+    paper     drawn at final print size (5.8 in, >= 7.5 pt type), no task
+              labels or memory gauge.  Include with
+              \includegraphics[width=\textwidth]{...} and it will not be
+              downscaled below its design size.
 
-TWO FIGURE STYLES
------------------
-detailed  — screen-oriented: task IDs, per-server power, memory gauges.
-            Best for the defence presentation, the GIF animations, and the
-            appendix.  Too dense to survive shrinking to thesis column width.
-paper     — print-oriented: drawn at final print size (5.8 in wide) with
-            >= 7.5 pt fonts, no task labels, no memory gauge — only the
-            message a reader needs in five seconds: which servers are active,
-            how full they are, and why F(X) improved.  Include in LaTeX with
-            \includegraphics[width=\textwidth]{...} and it will not be
-            downscaled below its design size.
-
-USAGE  (run from the "Cloud_scheduling" directory)
---------------------------------------------------
+Usage (run from the Cloud_scheduling directory)
+-----------------------------------------------
     uv run python visualize.py                      # both styles, balanced focus
     uv run python visualize.py --style paper        # print figures only
     uv run python visualize.py --algorithm GA       # compare against the GA instead
@@ -52,14 +38,11 @@ USAGE  (run from the "Cloud_scheduling" directory)
 Outputs land in  figures/<focus>/allocation_*.png|pdf|gif  so they sit next to
 the other per-focus figures.  Paper-style files carry the `_paper` suffix.
 
-RELATIONSHIP TO THE EXPERIMENTS
--------------------------------
-The instance, the focus-mode weights, and the sample-based normalisation
-(Deb 2001/2000) are loaded exactly as in main.py, so every F(X) shown here is
-directly comparable to the values in the thesis result tables.  The SA
-animation uses the snapshot_callback observer hook in simulated_annealing(),
-which records the best-so-far assignment whenever it improves and never
-influences the search.
+The instance, the focus-mode weights and the calibration are loaded exactly as
+in main.py, so every F(X) shown here matches the result tables.  The SA
+animation rides on the snapshot_callback hook in simulated_annealing(), which
+only observes: it records the best-so-far assignment whenever it improves and
+never influences the search.
 """
 from __future__ import annotations
 
@@ -405,16 +388,8 @@ def render_comparison(
 
 
 # ---------------------------------------------------------------------------
-# Paper-style figures (print-oriented, drawn at final thesis size)
-# ---------------------------------------------------------------------------
-#
-# Design rules for print:
-#   * The figure is drawn at the physical size it will occupy on the page
-#     (5.8 in ~ \textwidth), so no font ever shrinks below its set size.
-#   * No per-task labels, no memory gauge, no per-server wattage — a reader
-#     should get the message (which servers are used, how full, why F
-#     improved) in seconds without zooming.
-#   * All fonts >= 7.5 pt at final size.
+# Paper-style figures: drawn at their final page size (5.8 in), fonts >= 7.5 pt,
+# and stripped of task labels, memory gauges and per-server wattage.
 # ---------------------------------------------------------------------------
 
 def draw_racks_paper(

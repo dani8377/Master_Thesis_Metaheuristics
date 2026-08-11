@@ -1,14 +1,11 @@
 """
-test_algorithms.py — Smoke tests for SA, GA, UMDA, and baselines.
+Smoke tests for SA, GA, UMDA and the baselines.
 
-Verifies algorithmic correctness on a synthetic small instance where all
-three metaheuristics SHOULD beat the greedy starting point (since the
-greedy is sub-optimal at this scale and the search has plenty of budget
-relative to the search space).
-
-This test demonstrates that the algorithms work correctly under good
-conditions and isolates the n>=200 "0% improvement" phenomenon as a
-budget/scale issue rather than a code bug.
+The instance is small enough that greedy is clearly sub-optimal and the budget
+is generous relative to the search space, so all three metaheuristics should
+beat the greedy start.  That also separates the flat "no improvement over
+greedy" result seen at n >= 200 from an actual bug: here the same code does
+improve.
 
 Run from the Cloud_scheduling directory:
     uv run --with numpy --with pandas --with pyyaml python tests/test_algorithms.py
@@ -275,23 +272,16 @@ def test_greedy_uses_best_fit_not_first_fit() -> None:
         server_idle_power=np.array([10, 10], dtype=np.float64),
         server_efficiency=np.array([1.0, 1.0], dtype=np.float64),
     )
-    # Tasks are sorted by CPU descending: [50, 30, 10] -> order [0, 1, 2]
-    # Task 0 (cpu=50): both servers empty, picks 0 (tie-break by index)
-    # Task 1 (cpu=30): server 0 has load 50, server 1 has load 0 — BFD picks server 0
-    # Task 2 (cpu=10): server 0 has load 80, server 1 has load 0 — BFD picks server 0
-    # FFD would also pick 0 each time (first available), so this case doesn't distinguish.
-
-    # Better test: task 0 already loaded enough that the next must split.
-    # Task 0 cpu=80, task 1 cpu=30 — server 0 has cap 100.
-    # After task 0 on server 0 (load=80), task 1 (cpu=30) would NOT fit in server 0 (80+30>100).
-    # FFD picks first feasible -> server 1
-    # BFD picks most-loaded feasible -> server 1 (only choice)
-    # So the difference only shows when both servers fit but one is more loaded.
-
+    # Tasks are sorted by CPU descending, [50, 30, 10], and all three fit on
+    # server 0, so best-fit consolidates them there:
+    #   task 0 (cpu=50): both servers empty, index tie-break picks server 0
+    #   task 1 (cpu=30): server 0 at 50, server 1 at 0, most-loaded is server 0
+    #   task 2 (cpu=10): server 0 at 80, still the most-loaded feasible server
+    # On this instance first-fit would make the same three choices, so what is
+    # asserted below is the packing itself: heaviest first, and no capacity
+    # violated.
     a = build_greedy_assignment(data)
-    # Assert task 0 (heaviest) goes first, packed onto some server
     assert a[0] in (0, 1)
-    # Tasks 1 and 2 should be placed where they fit, packed tightly
     cpu_loads = [0.0, 0.0]
     for i in range(3):
         cpu_loads[a[i]] += data.cpu[i]

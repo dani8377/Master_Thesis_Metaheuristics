@@ -1,32 +1,13 @@
 """
-data_loader.py — Problem instance loader for the Cloud Scheduling problem.
+Problem instance loader.
 
-PURPOSE
--------
-This file is responsible for turning the raw CSV dataset into the fast,
-numpy-backed data structure (SchedulingProblemData) that every other module
-in this package works with.  It is the single point of contact with the
-filesystem: all other modules receive a SchedulingProblemData object and
-never touch the CSV directly.
+Turns the task CSV into SchedulingProblemData, the numpy-backed structure every
+other module works with.  This is the only module that touches the filesystem.
 
-WHAT IT DOES
-------------
-1.  Reads the cloud resource allocation CSV (one row per task).
-2.  Extracts the four columns used by the baseline formulation:
-    CPU_Usage, Memory_Usage, Energy_Consumption, Service_Latency, Task_Priority.
-3.  Synthesises a heterogeneous server pool (since the dataset has no server
-    table).  Ten servers with varying core counts, memory, idle power draw,
-    and energy efficiency are defined as DEFAULT_SERVER_POOL.
-4.  Packs everything into numpy arrays so that the hot evaluation loop in
-    objective.py can use vectorised operations instead of Python loops.
-
-HOW IT FITS IN
---------------
-    data_loader  →  SchedulingProblemData
-                         ↓
-              objective / neighborhoods / initial_solution / feasibility
-                         ↓
-              simulated_annealing  →  experiment  →  plot
+The dataset describes tasks only (CPU, memory, energy, latency, priority), so
+the ten-server pool is defined here as DEFAULT_SERVER_POOL and is part of the
+instance specification rather than the data.  Everything is packed into numpy
+arrays so evaluate_schedule() can stay vectorised in the 150k-call inner loop.
 """
 from __future__ import annotations
 

@@ -1,54 +1,23 @@
 """
-neighborhoods.py — Neighbourhood operators for the Cloud Scheduling problem.
+Neighbourhood operators for the cloud scheduling problem.
 
-PURPOSE
--------
-Defines how the search moves from one candidate assignment to the next.
-Each operator takes the current assignment and returns a *new* assignment
-(a shallow copy with a small change applied) — the original is never
-modified in place.
+Every operator returns a new assignment (a shallow copy with one small change)
+and never modifies its input:
 
-THE FIVE OPERATORS
-------------------
-reassign_random_task  (broad exploration)
-    Picks a random task and moves it to a random different server.
-    The most general move: can reach any other assignment in a finite number
-    of steps, ensuring the search is not trapped in one region.
+    reassign_random_task      random task -> random other server.  The general
+                              move that keeps the whole space reachable.
+    swap_tasks                exchange the servers of two tasks.
+    relocate_from_overloaded  move a task off the most CPU-loaded server, which
+                              targets the capacity penalty directly.
+    consolidate_tasks         least-loaded server -> most-loaded.  Empties
+                              servers, so it lowers idle power, E(X).
+    spread_tasks              most-loaded server -> least-loaded.  Lowers
+                              congestion, L(X).
 
-swap_tasks  (exchange)
-    Swaps the server assignments of two randomly chosen tasks.
-    Net effect on total server loads: zero on CPU/memory overall, but can
-    rebalance which tasks land on which servers.  Useful when both tasks are
-    on congested servers.
-
-relocate_from_overloaded  (penalty repair)
-    Identifies the most CPU-loaded server and moves one of its tasks elsewhere.
-    Directly targets the primary source of CPU overcapacity penalty and
-    latency congestion, so this move tends to improve feasibility quickly.
-
-consolidate_tasks  (energy optimisation)
-    Moves a task from the least-loaded active server to the most-loaded one.
-    If the source server becomes empty after the move it goes idle, eliminating
-    its fixed idle-power cost and reducing E(X).  This is the energy-saving
-    direction of the energy–latency trade-off.
-
-spread_tasks  (latency optimisation)
-    Moves a task from the most-loaded server to the least-loaded one.
-    Directly reduces CPU congestion on the busiest server, lowering L(X).
-    This is the latency-improving direction and opposes consolidate_tasks.
-
-THE TRADE-OFF
--------------
-consolidate_tasks ↔ spread_tasks form the core tension the metaheuristic
-must resolve: energy rewards packing (fewer idle servers), latency penalises
-packing (more congestion).  SA navigates between these extremes by
-accepting both moves with probabilities that depend on the current temperature.
-
-DISPATCHER
-----------
-generate_neighbor() selects one operator uniformly at random.  The uniform
-selection gives SA equal opportunity to explore all directions; the acceptance
-criterion (not this file) decides whether the resulting candidate is kept.
+The last two pull in opposite directions, which is the energy-latency tension
+the search has to resolve.  generate_neighbor() picks one operator uniformly
+at random; whether the candidate is kept is decided by the acceptance
+criterion, not here.
 """
 from __future__ import annotations
 

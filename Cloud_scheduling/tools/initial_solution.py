@@ -1,46 +1,16 @@
 """
-initial_solution.py — Initial assignment constructors for the Cloud Scheduling problem.
+Initial assignment constructors for the cloud scheduling problem.
 
-PURPOSE
--------
-Generates the starting assignment that SA begins its search from.  A good
-initial solution can dramatically reduce the number of iterations needed to
-reach feasibility, so starting smart (rather than randomly) matters.
+    build_random_assignment       uniformly random.  Usually infeasible.
+    build_round_robin_assignment  task i -> server i % m.  Ignores demands.
+    build_greedy_assignment       Best-Fit Decreasing.  Used as the warm start
+                                  for SA, GA and UMDA, and as the greedy baseline.
 
-THREE CONSTRUCTORS ARE PROVIDED
----------------------------------
-build_random_assignment:
-    Every task gets a uniformly random server.  Simple, but almost always
-    starts infeasible and far from optimal.  Useful as a worst-case baseline.
-
-build_round_robin_assignment:
-    Tasks are distributed to servers in round-robin order (task i → server
-    i % m).  Spreads load evenly but ignores resource demands entirely.
-    Nearly always feasible for balanced workloads but rarely energy-optimal.
-
-build_greedy_assignment  ← used by SA, GA, UMDA, and the greedy baseline
-    BEST-Fit Decreasing (BFD) bin-packing variant.  Tasks are sorted heaviest
-    CPU-first, then each task is placed on the MOST-LOADED feasible server
-    (best-fit) — NOT the first feasible server (which would be First-Fit
-    Decreasing, FFD).  Best-fit produces a tighter packing than first-fit,
-    minimising the number of active servers and their associated idle-power
-    cost.  This is a stronger baseline than true FFD.
-
-NAMING NOTE (important for thesis clarity)
--------------------------------------------
-The function is named "build_greedy_assignment" and the baseline runner is
-named "greedy_ffd_baseline" for backwards-compatibility with older code.
-The IMPLEMENTATION is Best-Fit Decreasing (BFD) and the user-facing label in
-all current plots, CSVs and tables is "Greedy BFD".  Refer to it as "Greedy
-BFD" in the thesis to keep the algorithm description aligned with the code.
-
-WHY BEST-FIT (not FIRST-FIT)?
------------------------------
-Both BFD and FFD are linear-time bin-packing heuristics.  BFD typically
-produces tighter packings (more empty bins/servers) because it actively
-prefers high-utilisation servers, whereas FFD just picks the first that
-fits.  Tighter packing means fewer active servers, which directly reduces
-idle-power energy cost — exactly what this objective rewards.
+Naming: the function and the baseline runner (greedy_ffd_baseline) keep their
+old "ffd" labels so existing imports still work, but the implementation is
+best-fit, not first-fit, and everything user-facing calls it "Greedy BFD".
+Best-fit packs tighter than first-fit, which leaves more servers empty and so
+saves idle power, which is what this objective rewards.
 """
 from __future__ import annotations
 
@@ -66,26 +36,13 @@ def build_round_robin_assignment(data: SchedulingProblemData) -> list[int]:
 
 def build_greedy_assignment(data: SchedulingProblemData) -> list[int]:
     """
-    Greedy Best-Fit Decreasing (BFD) initial assignment.
+    Greedy Best-Fit Decreasing assignment.
 
-    Note: function name retains the historical "greedy_assignment" label
-    for backwards compatibility, but this is BFD (best-fit), not FFD
-    (first-fit).  See module docstring for the distinction.
-
-    Algorithm
-    ---------
-    1. Sort tasks by CPU usage descending — heaviest tasks first.
-       (CPU is typically the tighter resource; placing large tasks first
-        leaves smaller tasks more room to fit anywhere.)
-    2. For each task, find all servers that still have spare capacity for
-       both its CPU and memory requirements.
-    3. Among feasible servers, pick the one with the highest current CPU
-       load (BEST-FIT packing).  This consolidates tasks onto fewer servers,
-       reducing the number of active servers and their idle-power cost.
-       (True First-Fit Decreasing would pick the lowest-index feasible server.)
-    4. If no server has room, fall back to the least CPU-loaded server.
-       This produces a soft-infeasibility that SA will repair via its penalty
-       terms rather than crashing the initial construction.
+    Tasks are sorted by CPU demand descending (CPU is the tighter resource, so
+    the large tasks are placed while there is still room), and each is put on
+    the feasible server with the highest current CPU load.  If no server has
+    room, the task goes to the least-loaded one, which leaves a violation for
+    the penalty terms to repair rather than failing the construction.
     """
     n = data.n_tasks
     m = data.n_servers

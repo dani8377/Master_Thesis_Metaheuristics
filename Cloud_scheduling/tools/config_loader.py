@@ -150,10 +150,8 @@ _DEFAULT_ALGORITHMS = AlgorithmConfig(
 _DEFAULT_SENSITIVITY = SensitivityConfig(
     n_seeds=5,
     sa=dict(
-        # Calibrated for the NORMALISED objective (F(X) ~ 1).  Earlier defaults
-        # used raw-units values (500..20000) which are 4-5 orders of magnitude
-        # too large once normalisation is enabled.  Keep these in lockstep with
-        # config.yaml -> sensitivity.sa.temperatures.
+        # Scaled for the normalised objective, where F(X) is around 1.  Keep in
+        # step with config.yaml -> sensitivity.sa.temperatures.
         temperatures=[0.005, 0.01, 0.05, 0.1, 0.5, 1.0],
         cooling_rates=[0.990, 0.992, 0.995, 0.997, 0.999],
     ),

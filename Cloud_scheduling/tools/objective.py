@@ -69,32 +69,25 @@ class FocusMode(str, Enum):
 @dataclass
 class ObjectiveWeights:
     """
-    Tunable coefficients for the objective function.
+    Coefficients of the objective function.
 
-    w_e, w_l are PREFERENCE RATIOS applied *after* the normalisation refs
-    (energy_ref, latency_ref) divide each raw term to expectation 1.  At that
-    point (w_e=1, w_l=1) means equal contribution and (w_e=0.2, w_l=1.0) means
-    "latency is 5x more important than energy" — a true preference share, not a
-    unit-conversion factor.
+    w_e and w_l are preference ratios that apply after the refs have divided
+    each raw term to expectation 1, so (1, 1) means equal contribution and
+    (0.2, 1.0) means latency counts five times as much as energy.
 
-    lambda_cpu, lambda_mem penalise capacity violations.  Under sample-based
-    calibration (Deb 2000) these are *overwritten* at run time to
-    `penalty_multiplier * F_max(feasible)`; the values supplied here are only
-    used under the legacy `worst_case` method.
+    lambda_cpu and lambda_mem penalise capacity violations.  Under sample-based
+    calibration they are overwritten at run time with
+    penalty_multiplier * F_max(feasible) (Deb 2000); the values set here are
+    used only under the legacy worst_case method.
 
-    gamma (congestion_factor) is NOT a preference weight.  It is a parameter of
-    the latency function itself: l_eff_i = l_i * (1 + gamma * U_j / C_j).
-    Different gamma values change the SHAPE of L(X) before normalisation; the
-    per-mode value expresses SLA tightness, not preference.
+    gamma (congestion_factor) is not a weight but a parameter of the latency
+    function, l_eff_i = l_i * (1 + gamma * U_j / C_j), so it changes the shape
+    of L(X) before any normalisation.
 
-    Normalisation refs (energy_ref, latency_ref, cpu_ref, mem_ref):
-        When set, each objective term is divided by its reference value before
-        weighting.  Set by compute_sample_normalization() (Deb 2001) or
-        compute_normalization_constants() (worst-case) and attached in main.py
-        after data is loaded.
-        Default None = no normalisation; w_e / w_l act on raw units and the
-        Watts-vs-ms scale mismatch dominates (only useful for ablation studies
-        with `normalize_objective: false`).
+    The four refs are attached in main.py once the data is loaded, by
+    compute_sample_normalization() or compute_normalization_constants().  Left
+    at None the objective runs in raw units, where the watts-versus-milliseconds
+    scale gap dominates; that is only useful for ablation.
     """
 
     energy_weight: float     = 1.0      # w_e  — preference share on normalised E
@@ -109,17 +102,9 @@ class ObjectiveWeights:
     mem_ref: float | None    = None     # reference memory violation magnitude (total memory demand)
 
 
-# ---------------------------------------------------------------------------
-# Focus-mode weight presets
-#
-# REMOVED in favour of tools/config_loader.py + config.yaml.  Production code,
-# tests, and the experiment harness all read weights through load_config(), so
-# config.yaml is the single source of truth.  Keeping a parallel copy here as
-# module-level constants was just a way to drift out of sync.  If you need
-# weights in an ad-hoc script, call:
-#     from tools.config_loader import load_config
-#     weights = load_config().objective["balanced"]   # or "performance" / "eco"
-# ---------------------------------------------------------------------------
+# Focus-mode weight presets live in config.yaml, not here, so there is one
+# source of truth.  Ad-hoc scripts can reach them through
+#     load_config().objective["balanced"]   # or "performance" / "eco"
 
 
 @dataclass
@@ -186,14 +171,8 @@ def compute_normalization_constants(
 @dataclass
 class CalibrationDiagnostics:
     """
-    Reports what the sample-based calibration actually found.
-
-    Saved to the run manifest so the thesis can quote concrete numbers:
-    "150 candidate assignments were drawn, of which N were feasible; the mean
-    energy across feasibles was X Watts, the mean priority-weighted latency
-    was Y ms.  Penalty weights were set to 100x the maximum feasible normalised
-    objective, ensuring strict dominance of every feasible solution over every
-    infeasible one (Deb 2000)."
+    What the sample-based calibration found, written to the run manifest so a
+    reported result can be traced back to the calibration behind it.
     """
 
     n_attempted: int        # total candidate assignments drawn
@@ -211,21 +190,16 @@ def _sample_calibration_pool(
     seed: int,
 ) -> list[list[int]]:
     """
-    Draw n_samples candidate assignments via a mix of greedy + perturbed-greedy +
-    pure-random construction.  The mix is chosen so that, across plausible problem
-    tightness levels, enough samples land in the feasible region to give a stable
-    mean estimate.
+    Draw n_samples candidate assignments:
 
-    Strategy:
-        sample 0          : greedy BFD (deterministic, often feasible)
-        next 40%          : greedy with low perturbation (10% gene re-assignment)
-        next 30%          : greedy with high perturbation (30% gene re-assignment)
-        remaining ~30%    : uniformly random assignment
+        1 x     greedy BFD (deterministic, usually feasible)
+        40%     greedy with 10% of genes reassigned
+        30%     greedy with 30% reassigned
+        ~30%    uniformly random
 
-    This concentrates samples around the feasible region without losing coverage
-    of the wider search space.
+    The mix keeps enough samples inside the feasible region for a stable mean,
+    without collapsing onto the greedy solution.
     """
-    # Local imports keep the module's import graph lean
     from tools.initial_solution import (
         build_greedy_assignment,
         build_random_assignment,
@@ -275,51 +249,30 @@ def compute_sample_normalization(
     min_feasible: int = 10,
 ) -> tuple["ObjectiveWeights", CalibrationDiagnostics]:
     """
-    Sample-based normalisation following Deb (2001), with parameter-less
-    penalty calibration following Deb (2000).
+    Sample-based normalisation (Deb 2001) with parameter-less penalty
+    calibration (Deb 2000).
 
-    Procedure
-    ---------
-    1. Generate n_samples candidate assignments (greedy + perturbed + random).
-    2. Evaluate each and split into feasible / infeasible subsets.
-    3. If at least min_feasible feasibles were found:
-         E_ref   = mean total_energy  over feasibles
-         L_ref   = mean total_latency over feasibles
-         lambda_cpu = lambda_mem = penalty_multiplier x F_max_feasible
-             where F_max_feasible = max (w_e * E/E_ref + w_l * L/L_ref) over feasibles.
-       The CPU and memory violation refs remain the total-demand upper bound so
-       that lambda's units match the (normalised) feasible-objective units.
-    4. Otherwise fall back to compute_normalization_constants() and emit a
-       warning in the diagnostics.
+    Draw n_samples assignments, keep the feasible ones, and set
 
-    Why this is correct (Deb 2001):
-       With E_ref = E[E(X)] and L_ref = E[L(X)] over a representative sample,
-       each normalised term has expectation 1 across that sample, so
-       w_e = w_l = 1 means "equal expected contribution".  Focus-mode
-       multipliers (e.g. eco: w_e=1, w_l=0.2) then express genuine preference
-       shares rather than compensating for scale mismatch.
+        E_ref = mean E(X),  L_ref = mean L(X)   over the feasible subset
+        lambda_cpu = lambda_mem = penalty_multiplier * F_max_feasible
 
-    Why the penalty rule is correct (Deb 2000):
-       For any feasible X:   F_obj(X) <= F_max_feasible.
-       For any infeasible X: F_obj(X) >= 0 AND penalty_multiplier * F_max_feasible *
-       (violation / total_demand) gets added.  With penalty_multiplier = 100, any
-       violation > 1% of total demand strictly dominates every feasible solution;
-       smaller violations are vanishingly rare in practice (a single overloaded
-       task by 50% on a tight server typically gives violation / total_demand of
-       order 0.005-0.02, which still produces a large penalty contribution).
+    where F_max_feasible is the largest w_e*E/E_ref + w_l*L/L_ref among the
+    feasibles.  Each normalised term then has expectation 1, so the weights
+    read as preference shares, and any violation above about 1% of total demand
+    costs more than the entire feasible objective range.  The violation refs
+    stay at total demand so lambda has the same units as the normalised
+    objective.
 
-    Returns
-    -------
-    calibrated_weights : ObjectiveWeights
-        Copy of base_weights with energy_ref, latency_ref, cpu_ref, mem_ref,
-        cpu_penalty and mem_penalty set from the calibration.
-    diagnostics : CalibrationDiagnostics
-        What the procedure observed.  Save to the run manifest.
+    Falls back to compute_normalization_constants() if fewer than min_feasible
+    samples are feasible, and records that in the diagnostics.
+
+    Returns the calibrated weights and a CalibrationDiagnostics for the manifest.
     """
     pool = _sample_calibration_pool(data, n_samples=n_samples, seed=seed)
 
-    # Evaluate every sample with the FEASIBILITY-ONLY weights so we can collect
-    # the raw E(X) and L(X) values without any penalty contamination.
+    # Evaluate with penalties and refs switched off, so the collected E(X) and
+    # L(X) are raw values.
     raw_weights = replace(
         base_weights,
         cpu_penalty=0.0, mem_penalty=0.0,
@@ -403,42 +356,27 @@ def evaluate_schedule(
 
     assignment[i] = j  means task i is placed on server j (0-indexed).
     """
-    # Convert to numpy once so all downstream ops are vectorised
     a = np.asarray(assignment, dtype=np.int32)  # shape (n_tasks,)
     m = data.n_servers
 
-    # ------------------------------------------------------------------ #
-    # Step 1: Compute per-server CPU and memory loads using bincount.     #
-    # bincount(a, weights=x)[j] = sum of x[i] for all i where a[i] == j  #
-    # This is equivalent to U_cpu_j = Σ_i c_i · x_ij in the formulation. #
-    # ------------------------------------------------------------------ #
+    # Server loads: bincount(a, weights=x)[j] = sum of x[i] over tasks on j,
+    # which is U_cpu_j = sum_i c_i * x_ij.
     cpu_load = np.bincount(a, weights=data.cpu, minlength=m)   # shape (m,)
     mem_load = np.bincount(a, weights=data.mem, minlength=m)   # shape (m,)
-    # y_j = 1 if at least one task is assigned to server j, else 0
-    active   = np.bincount(a, minlength=m) > 0                  # bool, shape (m,)
+    active   = np.bincount(a, minlength=m) > 0                 # y_j
 
-    # ------------------------------------------------------------------ #
-    # Step 2: Energy model                                                #
-    # E(X) = Σ_j e_idle_j · y_j  +  Σ_i η_{a_i} · e_i                 #
-    # ------------------------------------------------------------------ #
+    # Energy:  E(X) = sum_j e_idle_j * y_j  +  sum_i eta_{a_i} * e_i
     idle_energy     = float(np.dot(data.server_idle_power, active))
-    # server_efficiency[a] broadcasts: for each task i, look up η of its server
     workload_energy = float(np.dot(data.server_efficiency[a], data.energy))
     total_energy    = idle_energy + workload_energy
 
-    # ------------------------------------------------------------------ #
-    # Step 3: Priority-weighted congestion latency                        #
-    # l̂_ij = l_i · (1 + γ · U_cpu_j / C_j)                            #
-    # L(X) = Σ_i ω(p_i) · l̂_ij                                        #
-    # ------------------------------------------------------------------ #
-    # load_ratio[i] = CPU utilisation ratio of the server task i is on
+    # Latency:  l_eff_i = l_i * (1 + gamma * U_cpu_j / C_j),
+    #           L(X)    = sum_i omega(p_i) * l_eff_i
     load_ratio  = cpu_load[a] / data.server_cpu_cap[a]
     eff_latency = data.latency * (1.0 + weights.congestion_factor * load_ratio)
 
-    # Priority weights omega(p_i) are pre-computed at load time on
-    # SchedulingProblemData.priority_weights, so we skip the np.clip + lookup
-    # cost on the hot path.  Fall back to the in-line computation if the field
-    # is missing (older callers, hand-built test fixtures, etc.).
+    # omega(p_i) is precomputed at load time; the fallback covers hand-built
+    # test fixtures that do not set the field.
     p_weights = data.priority_weights
     if p_weights is None:
         p_idx     = np.clip(data.priority, 0, 2).astype(np.int32)
@@ -446,17 +384,12 @@ def evaluate_schedule(
 
     total_latency = float(np.dot(p_weights, eff_latency))
 
-    # ------------------------------------------------------------------ #
-    # Step 4: Capacity violation penalties                                #
-    # ------------------------------------------------------------------ #
+    # Capacity violations, summed over servers
     cpu_violation = float(np.sum(np.maximum(0.0, cpu_load - data.server_cpu_cap)))
     mem_violation = float(np.sum(np.maximum(0.0, mem_load - data.server_mem_cap)))
 
-    # ------------------------------------------------------------------ #
-    # Step 5: Combine into scalar objective                               #
-    # When normalisation refs are present each term is divided by its    #
-    # worst-case reference so the result is dimensionless [0, 1].        #
-    # ------------------------------------------------------------------ #
+    # Scalar objective.  With refs set, every term is divided by its reference
+    # first, so the four terms are dimensionless and comparable.
     e_ref = weights.energy_ref or 1.0
     l_ref = weights.latency_ref or 1.0
     c_ref = weights.cpu_ref or 1.0

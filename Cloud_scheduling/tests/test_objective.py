@@ -299,14 +299,13 @@ def test_normalised_terms_in_unit_range() -> None:
 # ---------------------------------------------------------------------------
 
 def test_single_task_one_server_active() -> None:
-    """One task on server 0: idle_energy = 10 (only server 0 active)."""
+    """All tasks on server 0: idle_energy = 10, since only server 0 is active."""
     data = _tiny_instance()
     weights = ObjectiveWeights(
         energy_weight=1.0, latency_weight=1.0,
         cpu_penalty=10.0, mem_penalty=10.0, congestion_factor=1.0,
     )
-    # Put just one task on server 0 by setting the others on... wait, we need 4 tasks.
-    # Instead, put all 4 on server 0:
+    # All four tasks on server 0, so only that server is active
     ev = evaluate_schedule([0, 0, 0, 0], data, weights)
     assert ev.n_active_servers == 1, f"expected 1 active server, got {ev.n_active_servers}"
 

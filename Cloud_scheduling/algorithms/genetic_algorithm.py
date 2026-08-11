@@ -101,20 +101,13 @@ def genetic_algorithm(
 
     verbose_interval = max(1, n_generations // 10)
 
-    # ------------------------------------------------------------------ #
-    # Initialise population                                                #
-    # One greedy-BFD solution gives the population a strong head start.   #
-    # The rest are random to ensure initial diversity.                     #
-    # ------------------------------------------------------------------ #
+    # One greedy BFD solution for a head start, the rest random for diversity.
     population: list[list[int]] = [build_greedy_assignment(data)]
     for _ in range(population_size - 1):
         population.append(build_random_assignment(data))
 
-    # ------------------------------------------------------------------ #
-    # Evaluate initial population                                          #
-    # Track the best ScheduleEvaluation as we go so we don't pay for a    #
-    # redundant re-evaluation of the winner afterwards.                    #
-    # ------------------------------------------------------------------ #
+    # Evaluate the initial population, keeping the best evaluation as we go so
+    # the winner does not have to be re-evaluated at the end.
     fitness: list[float]     = []
     best_solution: list[int] = population[0][:]
     best_eval                = evaluate_schedule(population[0], data, weights)

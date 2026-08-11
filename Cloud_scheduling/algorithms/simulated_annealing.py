@@ -81,52 +81,28 @@ def estimate_initial_temperature(
     verbose: bool = False,
 ) -> tuple[float, int]:
     """
-    Estimate T_0 so that `target_acceptance` fraction of random worsening moves
-    are accepted at the start of the search.
+    Estimate T_0 so that `target_acceptance` of random worsening moves are
+    accepted at the start of the search.
 
-    Method: sample n_samples random neighbour moves from the greedy solution,
-    collect the positive deltas (worsening), then solve
-        exp(-mean_delta / T_0) = target_acceptance  =>  T_0 = -mean_delta / ln(p).
+    Samples n_samples neighbour moves from the greedy solution, collects the
+    positive deltas and solves
 
-    Returns
-    -------
-    T_0 : float
-        Calibrated starting temperature.
-    n_evaluated : int
-        Number of evaluate_schedule() calls consumed by the probe (to be added
-        to the algorithm's total budget counter so SA, GA, UMDA budgets remain
-        directly comparable).
+        exp(-mean_delta / T_0) = target_acceptance   =>   T_0 = -mean_delta / ln(p)
 
-    Feasibility filter (theoretical motivation):
-    --------------------------------------------
-    Worsening moves that involve the infeasible region produce huge deltas
-    dominated by the lambda*violation penalty term, not the objective gradient
-    we actually want to calibrate against.  Two failure modes if we include
-    those deltas:
+    Only feasible -> feasible worsening moves count.  Any move touching the
+    infeasible region carries a lambda * violation step that is around 100x
+    F_max_feasible, so including those deltas would inflate mean_delta by more
+    than an order of magnitude and give a T_0 that lets SA random-walk out of
+    the greedy basin instead of exploiting it.  For the same reason the probe's
+    walk-forward stays inside the feasible region once it gets there.
 
-      (a) feasibility-changing moves (feasible -> infeasible, or vice-versa)
-          jump the full lambda*violation step and skew mean_delta upward.
-      (b) infeasible -> infeasible moves are STILL dominated by penalty-term
-          changes because lambda is ~100x F_max_feasible; their mean delta is
-          one to two orders of magnitude larger than the feasible-to-feasible
-          objective-gradient deltas that matter for SA's actual search.
+    If too few feasible-to-feasible deltas are found, which happens when greedy
+    itself is infeasible on a very tight instance, the estimate falls back in
+    steps: same-feasibility-class deltas, then all worsening deltas, then 1.0.
 
-    The previous version filtered to "feasibility-preserving" (current and
-    candidate share feasibility status), accepting (b).  Combined with the 15%
-    walk-forward (which drifts the probe into the infeasible region — empirically
-    ~68% of probe steps end up infeasible even when starting from feasible
-    greedy), this inflated mean_delta by ~20-30x and produced T_0 values that
-    caused SA to random-walk away from the strong greedy starting basin instead
-    of exploiting it.
-
-    We therefore restrict the calibration sample to **feasible -> feasible**
-    worsening moves and prevent the walk-forward from drifting into the
-    infeasible region once the probe has reached a feasible state.
-
-    If too few feasible-to-feasible worsening deltas are found (e.g. when
-    greedy itself is infeasible at extreme constraint tightness), fall back
-    progressively: same-feasibility-class deltas, then all worsening deltas,
-    then T_0 = 1.0.
+    Returns the temperature and the number of evaluate_schedule() calls the
+    probe used, which the caller adds to SA's budget so the comparison with GA
+    and UMDA stays honest.
     """
     assignment       = build_greedy_assignment(data)
     current_eval     = evaluate_schedule(assignment, data, weights)
@@ -266,13 +242,10 @@ def simulated_annealing(
     _window_evals    = 0
     _window_accepts  = 0
 
-    # ---- Main loop ----
-    # min_temperature is a FLOOR, not a stopping criterion: the schedule never
-    # drops below it, but the search always runs all max_temp_steps so SA
-    # consumes its full evaluation budget (iterations_per_temperature x
-    # max_temp_steps), matching GA/UMDA and the EV module's SA.  Near the
-    # floor, acceptance of worsening moves is effectively zero, so the tail
-    # behaves as hill-climbing until a reheat fires.
+    # min_temperature is a floor, not a stopping criterion: the loop always runs
+    # all max_temp_steps so SA spends its full budget like GA and UMDA.  At the
+    # floor almost no worsening move is accepted, so the tail is hill-climbing
+    # until a reheat fires.
     for step_num in range(max_temp_steps):
         step_improved = False
 

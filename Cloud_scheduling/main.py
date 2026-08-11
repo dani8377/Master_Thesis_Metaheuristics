@@ -608,23 +608,13 @@ def _plot_sensitivity(
 
 
 # ---------------------------------------------------------------------------
-# Hyperparameter tuning — grid search (--tune flag)
-# ---------------------------------------------------------------------------
+# Hyperparameter tuning, grid search (--tune)
 #
-# Workflow:
-#   1. Generate the full Cartesian product of parameter values per algorithm.
-#   2. Run each combination over n_seeds; record the mean F(X).
-#   3. Pick the combination with the lowest mean F(X) (ties broken by lowest
-#      std_dev, then by lowest mean runtime).
-#   4. Write results/tuning_<algo>.csv with EVERY combination's score so the
-#      thesis can show the full grid.
-#   5. Write results/tuning_summary.md with the recommended values.
-#
-# This is intentionally separate from --sensitivity:
-#   --sensitivity sweeps ONE parameter at a time (showing robustness around a
-#                  point), and reports values across the swept range.
-#   --tune        sweeps the full PRODUCT, picks the global best, and is meant
-#                  to be run ONCE at the start of a thesis chapter.
+# Runs every combination in the config grid over n_seeds, picks the lowest mean
+# F(X) (ties broken by standard deviation, then runtime), and writes both the
+# full grid (tuning_<algo>.csv) and the recommendation (tuning_summary.md).
+# Distinct from --sensitivity, which varies one parameter at a time to show
+# robustness around the chosen point rather than searching for it.
 # ---------------------------------------------------------------------------
 
 def _compute_main_budget(kwargs: dict, algo: str) -> int:
@@ -1455,12 +1445,10 @@ def _save_vertical_csv(vert_data: dict, results_dir) -> None:
 
 
 # ---------------------------------------------------------------------------
-# Optimality-gap benchmark (B&B exact reference on small, tractable instance)
-#
-# NOT a scalability test — runs at a single fixed (small) size.  Its purpose
-# is to anchor the relative %-vs-greedy numbers from the horizontal/vertical
-# axes with an absolute %-vs-optimum measurement on the one size where B&B
-# can reach the true optimum within the time limit.
+# Optimality-gap benchmark against B&B.  Not a scalability axis: it runs at one
+# small size, the only one where B&B reaches the optimum inside the time limit,
+# and anchors the relative "% better than greedy" numbers to an absolute
+# "% above optimum".
 # ---------------------------------------------------------------------------
 
 def run_optimality_gap_analysis(
@@ -1746,10 +1734,10 @@ def _save_algorithm_diagnostics_csv(
                 "n_seeds":   len(r.seeds),
             }
 
-            # Total evaluations -- supported by SA (total_budget_consumed =
-            # main loop + T_0 probe), GA/UMDA (total_evaluations), B&B (no eval
-            # count, only nodes_explored).  We report the BUDGET-CONSUMED value
-            # for SA so the column is directly comparable across algorithms.
+            # Evaluation count per algorithm: GA and UMDA report
+            # total_evaluations, SA reports total_budget_consumed (main loop
+            # plus T_0 probe) so the column stays comparable, and B&B has no
+            # evaluation count at all, only nodes explored.
             totals: list = []
             for s in stats_list:
                 if hasattr(s, "total_evaluations"):
@@ -2044,14 +2032,8 @@ def main() -> None:
     weights_base = cfg.objective[focus.value]   # without normalisation refs
     weights      = weights_base
 
-    # ------------------------------------------------------------------ #
-    # Directories                                                          #
-    #                                                                      #
-    # Outputs are partitioned by focus mode so successive runs with        #
-    # --focus balanced / eco / performance do not overwrite each other.    #
-    #   Cloud_scheduling/results/<focus>/*.csv  *.md  run_log.txt          #
-    #   Cloud_scheduling/figures/<focus>/*.png                             #
-    # ------------------------------------------------------------------ #
+    # Outputs are partitioned by focus mode (results/<focus>/, figures/<focus>/)
+    # so runs in different modes do not overwrite each other.
     base_dir    = Path(__file__).parent
     dataset_dir = base_dir / "datasets"
     figures_dir = base_dir / "figures" / focus.value
@@ -2059,16 +2041,10 @@ def main() -> None:
     figures_dir.mkdir(parents=True, exist_ok=True)
     results_dir.mkdir(parents=True, exist_ok=True)
 
-    # ------------------------------------------------------------------ #
-    # Install Tee so every print goes to results/run_log.txt as well as   #
-    # the terminal.  Restored on the way out via try/finally below.       #
-    # ------------------------------------------------------------------ #
+    # Tee every print into results/run_log.txt as well as the terminal.
     log_path = _install_console_log(results_dir)
     print(f"  [log] capturing console output to {log_path}")
 
-    # ------------------------------------------------------------------ #
-    # Load problem instance                                                #
-    # ------------------------------------------------------------------ #
     data = load_problem_data(dataset_dir, n_tasks=cfg.experiment.n_tasks)
 
     _print_section("Problem Instance")
@@ -2079,17 +2055,12 @@ def main() -> None:
     print(f"  Total CPU capacity:  {data.server_cpu_cap.sum():.0f} %")
     print(f"  Total mem capacity:  {data.server_mem_cap.sum() / 1024:.0f} GB")
 
-    # ------------------------------------------------------------------ #
-    # Objective normalisation                                              #
-    #                                                                      #
-    # Two methods (set in config.yaml -> experiment.normalize_method):     #
-    #   'sample'      -- Deb 2001 mean-over-feasibles + Deb 2000 penalty   #
-    #                    calibration.  cpu_penalty / mem_penalty in the    #
-    #                    objective section of config.yaml are IGNORED in   #
-    #                    this mode (replaced by the calibrated values).    #
-    #   'worst_case'  -- legacy upper-bound refs from problem geometry;    #
-    #                    cpu_penalty / mem_penalty taken from config.yaml. #
-    # ------------------------------------------------------------------ #
+    # Objective normalisation, set by config.yaml -> normalize_method.
+    #   sample      Deb 2001 mean over feasibles plus Deb 2000 penalty
+    #               calibration.  The cpu_penalty / mem_penalty entries in
+    #               config.yaml are ignored here and replaced by the
+    #               calibrated values.
+    #   worst_case  legacy upper bounds, penalties read from config.yaml.
     calibration_diag: CalibrationDiagnostics | None = None
     if cfg.experiment.normalize_objective:
         method = cfg.experiment.normalize_method.lower()
@@ -2147,20 +2118,14 @@ def main() -> None:
     _print_section(f"Objective Focus Mode")
     _print_focus_summary(focus, weights)
 
-    # ------------------------------------------------------------------ #
-    # Algorithm hyperparameters -loaded from config.yaml                  #
-    # ------------------------------------------------------------------ #
+    # Algorithm hyperparameters, from config.yaml
     sa_kwargs   = cfg.algorithms.sa
     ga_kwargs   = cfg.algorithms.ga
     umda_kwargs = cfg.algorithms.umda
     bb_kwargs   = cfg.algorithms.bb
 
-    # ------------------------------------------------------------------ #
-    # --tune: one-off grid search over hyperparameters, then exit.        #
-    # Tuning is a setup step, not part of the main experiment, so we do   #
-    # NOT run the multi-seed experiments / plots / scalability afterwards #
-    # to avoid burning extra time and confusing the results.              #
-    # ------------------------------------------------------------------ #
+    # --tune is a setup step, not part of the experiment, so it exits afterwards
+    # instead of also running the multi-seed comparison and the plots.
     if run_tune:
         run_tuning(
             run_flags=run_flags,
@@ -2338,13 +2303,9 @@ def main() -> None:
         )
         print(f"  Convergence (all metaheuristics) ->{conv_path}")
 
-    # ------------------------------------------------------------------ #
-    # Bar charts                                                           #
-    # ------------------------------------------------------------------ #
-    # Filter out noisy baselines (Random, Round-Robin) whose scores are so much
-    # worse than the metaheuristics that they compress the y-axis and hide the
-    # interesting differences.  Greedy BFD and B&B stay in since they are
-    # informative comparison points on the same scale as the metaheuristics.
+    # Bar charts.  Random and Round-Robin are left out because their scores are
+    # far enough off to compress the y-axis and hide the differences that
+    # matter.  Greedy BFD and B&B stay in, being on the same scale.
     _scale_noisy = {"random", "round"}
     _scaled_results = [
         r for r in all_results

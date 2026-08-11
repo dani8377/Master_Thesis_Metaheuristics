@@ -1,52 +1,19 @@
 """
-baselines.py — One-shot reference baselines for the Cloud Scheduling problem.
+One-shot reference baselines for the cloud scheduling problem.
 
-PURPOSE
--------
-Provides three simple non-iterative construction heuristics that serve as
-reference points for comparing against the metaheuristics (SA, GA, UMDA).
-Each baseline builds a single assignment and returns it immediately — there
-is no search, no iterations, and no improvement loop.
+Three construction heuristics that build a single assignment and return it,
+with no search loop.  They set the reference points the metaheuristics are
+measured against:
 
-WHY INCLUDE BASELINES?
------------------------
-Including baselines in the thesis results table answers the fundamental question:
-"How much does the metaheuristic actually contribute?"
+    greedy_ffd_baseline        Best-Fit Decreasing packing, the same starting
+                               solution SA and GA use.  Deterministic.  The
+                               "ffd" in the name is historical; the code is BFD.
+    round_robin_baseline       task i -> server i % m.  Deterministic, ignores
+                               resource demands.
+    random_assignment_baseline uniformly random, varies per seed.
 
-  - If SA/GA/UMDA achieve dramatically lower costs than the greedy BFD baseline,
-    that validates the investment in metaheuristic search.
-  - If the greedy baseline is already near-optimal, that tells us the problem
-    structure is well-suited to greedy construction and long searches may not
-    be worth the computational cost.
-  - Random assignment provides an absolute lower bound on algorithm quality —
-    no sensible algorithm should be worse than random.
-
-THREE BASELINES
----------------
-greedy_ffd_baseline:
-    Best-Fit Decreasing bin-packing — the same initial solution that SA and
-    GA start from.  It is deterministic: all seeds give identical results.
-    Including it isolates the improvement attributable to the search beyond
-    the initial construction.  (The "ffd" in the function name is a legacy
-    label kept for backwards-compatible imports; the implementation is BFD.)
-
-round_robin_baseline:
-    Cyclic assignment: task i → server (i % n_servers).  Spreads tasks evenly
-    across servers without considering resource requirements.  Deterministic.
-    Provides a load-balanced reference that ignores energy efficiency.
-
-random_assignment_baseline:
-    Uniformly random assignment.  The result varies across seeds because the
-    experiment harness seeds Python's random module before each call.
-    This is the worst-case reference — it shows what happens with zero
-    domain knowledge.
-
-STATISTICS INTERFACE
---------------------
-Each baseline returns a BaselineStatistics object whose best_cost_history
-contains a single element — the one-shot objective value.  This satisfies
-the interface expected by run_experiments() and plot.py (which access
-stats.best_cost_history), even though there is no convergence to visualise.
+Each returns a BaselineStatistics whose best_cost_history holds a single
+value, which is what run_experiments() and plot.py expect.
 """
 from __future__ import annotations
 

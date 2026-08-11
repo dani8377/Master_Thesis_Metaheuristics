@@ -191,25 +191,12 @@ def umda(
     # so random.randint(...) here is deterministic per seed.
     np_rng = np.random.default_rng(random.randint(0, 2**31 - 1))
 
-    # ------------------------------------------------------------------ #
-    # Initialise population                                                #
-    #                                                                      #
-    # Theoretical motivation for the mixed strategy:                       #
-    #                                                                      #
-    # Pure random initialisation gives UMDA's univariate model an almost   #
-    # uniform marginal distribution as input — at large n the random       #
-    # assignments are heavily infeasible and dominated by penalty terms,   #
-    # so the model can't learn meaningful task-server preferences and      #
-    # tends to return the greedy elite unchanged.                          #
-    #                                                                      #
-    # Strategy: seed half the population with PERTURBED greedy variants    #
-    # (each task reassigned with probability 0.1 to a random server) and   #
-    # the rest with pure random assignments.  This gives the model         #
-    # information-rich starting points (which it can learn from) while     #
-    # preserving exploration via random samples.  At n=50 this slightly    #
-    # speeds convergence; at n>=200 it is what allows the model to learn   #
-    # at all.                                                              #
-    # ------------------------------------------------------------------ #
+    # Initial population: greedy, then half perturbed greedy and half random.
+    # A purely random start leaves the marginals almost uniform, and at large n
+    # the random assignments are so infeasible that penalty terms swamp the
+    # signal, so the model learns nothing and just returns the greedy elite.
+    # The perturbed variants give it something to learn from while the random
+    # half keeps the exploration.
     population: list[list[int]] = [build_greedy_assignment(data)]
     greedy_base = population[0]
     n_perturbed = (population_size - 1) // 2  # roughly half perturbed, half random
@@ -223,11 +210,8 @@ def umda(
     for _ in range(population_size - 1 - n_perturbed):
         population.append(build_random_assignment(data))
 
-    # ------------------------------------------------------------------ #
-    # Evaluate initial population                                          #
-    # Track the best ScheduleEvaluation as we go so we don't pay for a    #
-    # redundant re-evaluation of the winner afterwards.                    #
-    # ------------------------------------------------------------------ #
+    # Evaluate the initial population, keeping the best evaluation as we go so
+    # the winner does not have to be re-evaluated at the end.
     fitness: list[float]     = []
     best_solution: list[int] = population[0][:]
     best_eval                = evaluate_schedule(population[0], data, weights)

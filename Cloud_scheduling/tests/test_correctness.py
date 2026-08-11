@@ -1,31 +1,16 @@
 """
-test_correctness.py - Empirical validation of the cloud-scheduling implementation.
+Checks the implementation against the thesis formulation.
 
-WHAT THIS PROVES
-----------------
-Each test computes the expected value of F(X) (or one of its components) by hand
-on a small, fully-specified problem, then checks that evaluate_schedule() returns
-exactly that value (to numerical precision).
+Every test works out F(X), or one of its components, by hand on a small fully
+specified instance and asserts that evaluate_schedule() returns that value to
+numerical precision.  The algorithm tests check the invariants each method is
+supposed to hold (elitism never loses the best, the temperature decreases, the
+UMDA model stays a distribution, and so on).
 
-If every assertion in this file passes, the implementation is *demonstrably*
-identical to the thesis formulation. This is the empirical evidence to point to
-during a thesis defence:
+Run with pytest, or directly for a PASS/FAIL listing:
 
-    "The objective function and algorithms are verified by tests/test_correctness.py.
-     Every formula component is checked against an independently computed value on a
-     small instance, and every algorithm is checked for the invariants required by
-     its theoretical specification."
-
-HOW TO RUN
-----------
-    cd "Cloud_scheduling"
+    cd Cloud_scheduling
     uv run python -m tests.test_correctness
-
-or
-
-    uv run python "Cloud_scheduling/tests/test_correctness.py"
-
-All tests print a PASS/FAIL line. A final summary line reports the total.
 """
 from __future__ import annotations
 

@@ -11,3 +11,7 @@
 #                      committed after running `run.py cloud --tune`.
 *.pyc
 .DS_Store
+
+# Staging area for files that are not part of the thesis hand-in.
+# Move the folder out of the project (or delete it) before submitting.
+to be removed/

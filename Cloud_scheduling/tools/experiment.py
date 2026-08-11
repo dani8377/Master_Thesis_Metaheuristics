@@ -1,35 +1,18 @@
 """
-experiment.py — Multi-seed experiment harness for the Cloud Scheduling problem.
+Multi-seed experiment harness.
 
-PURPOSE
--------
-Runs any compatible scheduling algorithm multiple times (one run per random
-seed) and collects the results into a single ExperimentResults object.
+Runs one algorithm once per seed and aggregates the runs into a single
+ExperimentResults (best, mean, worst, standard deviation, feasibility count,
+runtimes).  Since the algorithms are stochastic, a single run says little; the
+spread across seeds is what the comparison is based on.
 
-WHY MULTIPLE SEEDS?
--------------------
-SA is stochastic — it uses random.random() and random.choice() throughout.
-A single run's result is therefore noise-sensitive: it might be unusually
-good or bad by luck.  Running with 10 independent seeds and reporting the
-mean, standard deviation, best, and worst gives a statistically meaningful
-picture of the algorithm's actual performance.
+Any callable with the signature
 
-GENERIC DESIGN
---------------
-The AlgorithmFn type alias is intentionally loose.  Any callable with the
-signature:
     algorithm(data, weights, **kwargs) -> (assignment, ScheduleEvaluation, stats)
-can be passed to run_experiments() without modification.  This makes it
-trivial to compare multiple algorithms (SA, random restart, greedy, etc.)
-using the same harness and the same seeds.
 
-RELATIONSHIP TO EV ROUTING
----------------------------
-Mirrors EV_routing/tools/experiment.py exactly in structure, with the
-EV-specific types (ProblemData, EVParameters, RouteEvaluation) replaced by
-their cloud scheduling equivalents (SchedulingProblemData, ObjectiveWeights,
-ScheduleEvaluation).  The ev_params argument is dropped because cloud
-scheduling has no physical vehicle model.
+can be passed in, so all algorithms and baselines share the same harness and
+the same seeds.  EV_routing/tools/experiment.py is the same design with the
+EV types substituted.
 """
 from __future__ import annotations
 
