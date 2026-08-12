@@ -1,6 +1,12 @@
 """
 main.py - Entry point for the Cloud Scheduling experiments.
 
+Master's thesis "Evaluation of Metaheuristic Algorithms for Energy Optimisation
+in Scheduling and Routing".
+Christian Wu (s194597) and Daniel Diamant (s205336)
+Supervisor: Professor Carsten Witt, DTU Compute
+Technical University of Denmark, August 2026
+
 Orchestrates all algorithms (SA, GA, UMDA, B&B, baselines) over multiple random seeds
 and produces comparison tables, convergence plots, bar charts, and CSV files.
 All hyperparameters are read from config.yaml; edit that file to reproduce any experiment.

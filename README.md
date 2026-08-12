@@ -1,7 +1,13 @@
 # Master's Thesis — Metaheuristics for Combinatorial Optimisation
 
 Python code for the Master's thesis _"Evaluation of Metaheuristic Algorithms for
-Energy Optimisation in Scheduling and Routing"_ (DTU Compute).
+Energy Optimisation in Scheduling and Routing"_.
+
+- **Authors:** Christian Wu (s194597) and Daniel Diamant (s205336)
+- **Supervisor:** Professor Carsten Witt, DTU Compute
+- **Institution:** Technical University of Denmark (DTU), Department of Applied
+  Mathematics and Computer Science (DTU Compute)
+- **Submitted:** August 2026
 
 Two combinatorial optimisation problems are studied, each with its own solution
 representation, objective function and set of algorithms:
