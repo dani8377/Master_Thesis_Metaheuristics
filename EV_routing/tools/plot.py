@@ -142,6 +142,8 @@ def plot_convergence_by_evaluations(
     title: str | None = None,
     save_path: str | Path | None = None,
     show: bool = True,
+    mark_evals: int | None = None,
+    mark_label: str | None = None,
 ) -> matplotlib.figure.Figure:
     """
     Best-cost convergence with number of objective evaluations on the x-axis.
@@ -149,6 +151,12 @@ def plot_convergence_by_evaluations(
     Uses ``stats.evals_at_step`` so both SA (per temperature step) and GA
     (per generation) are placed on the same evaluation axis, enabling a
     fair computational-budget comparison for the thesis.
+
+    ``mark_evals`` draws a vertical reference line at that evaluation count,
+    used to show the reduced budget of the scalability sweeps against the
+    full-budget curves: reading the ranking off the line reproduces the
+    reduced-budget ordering, reading it at the right-hand edge reproduces
+    the full-budget one.
     """
     if isinstance(results, ExperimentResults):
         results_list = [results]
@@ -183,6 +191,16 @@ def plot_convergence_by_evaluations(
         color = _algo_color(idx)
         ax.plot(grid / 1_000, mean, linewidth=2.0, label=exp.algorithm_name, color=color)
         ax.fill_between(grid / 1_000, mean - std, mean + std, alpha=0.10, color=color)
+
+    if mark_evals is not None:
+        ax.axvline(mark_evals / 1_000, color="#555555", linestyle="--",
+                   linewidth=1.2, zorder=1)
+        ax.annotate(
+            mark_label or f"{mark_evals:,} evals",
+            xy=(mark_evals / 1_000, 1.0), xycoords=("data", "axes fraction"),
+            xytext=(4, -10), textcoords="offset points",
+            fontsize=9, color="#555555", ha="left", va="top",
+        )
 
     ax.set_xlabel("Objective evaluations (thousands)")
     ax.set_ylabel("Best objective value")
