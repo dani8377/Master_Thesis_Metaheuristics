@@ -332,7 +332,27 @@ def ant_colony_optimization(
     #   "distance" (default): η = 1/dist — the classic TSP heuristic.
     #   "energy": η = 1/energy — aligns construction with the energy term
     #   of the objective (used to test eco-mode steerability).
-    basis = data.energy_array if heuristic_basis == "energy" else data.dist_array
+    #   "weighted": η = 1/(w_d·d + w_t·t + w_e·e) — the arc-decomposable part
+    #   of the objective under the active focus-mode weights, so construction
+    #   itself becomes mode-aware.  Charging cost and charging time are
+    #   necessarily excluded: they depend on which station is visited and on
+    #   the battery state on arrival, not on the arc (i,j) alone.
+    if heuristic_basis == "energy":
+        basis = data.energy_array
+    elif heuristic_basis == "weighted":
+        with np.errstate(divide="ignore", invalid="ignore"):
+            travel_h = np.where(
+                data.dur_array > 0.0,
+                data.dur_array / 3600.0,
+                data.dist_array / ev_params.average_speed_kmh,
+            )
+        basis = (
+            weights.distance_weight * data.dist_array
+            + weights.travel_time_weight * travel_h
+            + weights.energy_weight * data.energy_array
+        )
+    else:
+        basis = data.dist_array
     with np.errstate(divide="ignore", invalid="ignore"):
         heuristic = np.where(basis > 1e-9, 1.0 / np.maximum(basis, 1e-9), 0.0)
 
