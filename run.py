@@ -1,5 +1,5 @@
 """
-Run script — replaces Makefile for systems without make.
+Run script, replacing the Makefile for systems without make.
 
 Master's thesis "Evaluation of Metaheuristic Algorithms for Energy Optimisation
 in Scheduling and Routing".
@@ -18,8 +18,11 @@ Cloud_scheduling options (passed after 'cloud'):
     uv run run.py cloud --algorithms SA --seeds 3 # quick single-algorithm test
     uv run run.py cloud --focus performance       # latency-focused weights
 
-For all cloud CLI options:
+EV_routing options are passed the same way, after 'ev'.
+
+For the full option list of either problem:
     uv run run.py cloud --help
+    uv run run.py ev --help
 """
 
 import os
@@ -59,15 +62,19 @@ _args    = sys.argv[1:]
 targets  = [a for a in _args if a in ("ev", "cloud")]
 extras   = [a for a in _args if a not in ("ev", "cloud")]
 
+# Print usage rather than falling through to the "run both" default below.
+# Without this guard, `run.py --help` (or any mistyped target) starts a
+# multi-hour run of both problems and overwrites the committed results.
+if extras and not targets:
+    print(__doc__)
+    sys.exit(0 if extras[0] in ("-h", "--help") else 1)
+
 # Default: run both problems if no target given
 if not targets:
     targets = ["ev", "cloud"]
 
 for target in targets:
     if target == "ev":
-        run("EV Routing", "EV_routing", from_root=True)  # EV flags: run EV_routing/main.py directly
+        run("EV Routing", "EV_routing", extras, from_root=True)
     elif target == "cloud":
         run("Cloud Scheduling", "Cloud_scheduling", extras)
-    else:
-        print(f"Unknown target '{target}'. Use: ev  cloud")
-        sys.exit(1)
