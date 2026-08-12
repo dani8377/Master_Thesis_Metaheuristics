@@ -7,11 +7,11 @@ energy-heuristic follow-up rules out the *basis* of the heuristic as the cause,
 but it holds beta = 6.0 fixed -- the exponent tuned under Balanced weights and
 reused unchanged in every mode.  Two untested explanations remain:
 
-  (a) beta is too high.  The pheromone term IS mode-aware (deposits are 1/F on
-      complete routes, so tau sees all four cost terms), but tau^alpha is
-      drowned out by eta^beta at beta = 6.0.  Lowering beta should let the
-      mode-aware signal through.
-  (b) eta is mode-blind.  Making eta itself reflect the active weights should
+  (a) beta is too high.  The pheromone term DOES reflect the mode (deposits are
+      1/F on complete routes, so tau sees all four cost terms), but tau^alpha is
+      outweighed by eta^beta at beta = 6.0.  Lowering beta should let the
+      pheromone signal through.
+  (b) eta ignores the mode.  Making eta itself reflect the active weights should
       let the mode steer construction directly.
 
 This runs the 2 x 4 factorial (heuristic basis x beta) under Eco weights on

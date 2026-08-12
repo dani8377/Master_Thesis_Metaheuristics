@@ -14,8 +14,10 @@ normalisation methods are provided:
                  their refs in practice, so w_e=w_l=1 does NOT guarantee
                  equal expected contribution.
 
-  sample      -- compute_sample_normalization: draw N feasible solutions and
-                 set E_ref / L_ref to their EMPIRICAL MEAN (Deb 2001).  Then
+  sample      -- compute_sample_normalization: draw N assignments (mostly
+                 perturbed greedy, see _sample_calibration_pool) and set
+                 E_ref / L_ref to the EMPIRICAL MEAN over the feasible
+                 subset (Deb 2001).  Then
                  with w_e=w_l=1 the two terms contribute equally in
                  expectation, and the focus-mode multipliers become true
                  preference shares.  Penalty weights lambda_cpu / lambda_mem
