@@ -1,6 +1,12 @@
 """
 Run script — replaces Makefile for systems without make.
 
+Master's thesis "Evaluation of Metaheuristic Algorithms for Energy Optimisation
+in Scheduling and Routing".
+Christian Wu (s194597) and Daniel Diamant (s205336)
+Supervisor: Professor Carsten Witt, DTU Compute
+Technical University of Denmark, August 2026
+
 Usage (from the project root):
     uv run run.py                       # both problems, default settings
     uv run run.py ev                    # EV routing only

@@ -1,6 +1,12 @@
 """
 main.py - Entry point for the EV Routing experiments.
 
+Master's thesis "Evaluation of Metaheuristic Algorithms for Energy Optimisation
+in Scheduling and Routing".
+Christian Wu (s194597) and Daniel Diamant (s205336)
+Supervisor: Professor Carsten Witt, DTU Compute
+Technical University of Denmark, August 2026
+
 Orchestrates all algorithms (SA, GA, MA, ACO, Greedy) over multiple random seeds
 and produces comparison tables, convergence plots, box charts, and CSV files.
 Hyperparameters are read from params.json; objective weights from weights.json.
