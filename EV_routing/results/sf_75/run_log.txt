@@ -6,70 +6,70 @@ Focus mode 'balanced': multipliers {'distance': 1.0, 'time': 1.0, 'energy': 1.0,
   Single SA run — diagnostics
 ============================================================
   Feasible:            True
-  Objective:           2.6163
-  Distance (km):       273.85
-  Travel time (h):     7.73
-  Charging time (h):   0.35
-  Energy (kWh):        85.46
-  Charging cost ($):   9.47
+  Objective:           2.5241
+  Distance (km):       262.15
+  Travel time (h):     7.45
+  Charging time (h):   0.38
+  Energy (kWh):        79.39
+  Charging cost ($):   9.92
   Battery violation:   0.0000
   Infeasible visits:   0
   Evaluations:         150,000
-  Acceptance rate:     14.05%
-  Feasibility rate:    35.06%
+  Acceptance rate:     14.20%
+  Feasibility rate:    34.01%
   Reheats:             1
-  Runtime:             7.79s
+  Runtime:             8.23s
 
 ============================================================
   Single GA run — diagnostics
 ============================================================
   Feasible:            True
-  Objective:           3.1465
-  Distance (km):       311.96
-  Travel time (h):     8.64
-  Charging time (h):   0.52
-  Energy (kWh):        100.10
-  Charging cost ($):   14.93
+  Objective:           3.2417
+  Distance (km):       307.24
+  Travel time (h):     8.55
+  Charging time (h):   0.69
+  Energy (kWh):        100.25
+  Charging cost ($):   17.73
   Battery violation:   0.0000
   Infeasible visits:   0
   Evaluations:         150,000
   Generations:         1,515
-  Feasibility rate:    86.67%
-  Runtime:             32.31s
+  Feasibility rate:    100.00%
+  Runtime:             68.17s
 
 ============================================================
   Single MA run — diagnostics
 ============================================================
   Feasible:            True
-  Objective:           2.8446
-  Distance (km):       285.59
-  Travel time (h):     8.19
-  Charging time (h):   0.54
-  Energy (kWh):        85.75
-  Charging cost ($):   13.06
+  Objective:           2.7171
+  Distance (km):       283.02
+  Travel time (h):     8.11
+  Charging time (h):   0.53
+  Energy (kWh):        86.03
+  Charging cost ($):   9.90
   Battery violation:   0.0000
   Infeasible visits:   0
   Evaluations:         150,000
   Generations:         131
-  Feasibility rate:    58.06%
-  Runtime:             11.88s
+  Feasibility rate:    67.74%
+  Runtime:             13.45s
 
 ============================================================
   Single ACO run — diagnostics
 ============================================================
   Feasible:            True
-  Objective:           2.6869
-  Distance (km):       276.10
-  Travel time (h):     7.82
+  Objective:           2.6885
+  Distance (km):       276.52
+  Travel time (h):     7.79
   Charging time (h):   0.53
-  Energy (kWh):        83.71
-  Charging cost ($):   10.93
+  Energy (kWh):        84.04
+  Charging cost ($):   10.94
   Battery violation:   0.0000
   Infeasible visits:   0
   Evaluations:         150,000
   Iterations:          15,000
   Feasibility rate:    100.00%
-  Runtime:             54.73s
+  Runtime:             55.18s
 
 ============================================================
   Single Greedy run — baseline
@@ -93,10 +93,10 @@ Focus mode 'balanced': multipliers {'distance': 1.0, 'time': 1.0, 'energy': 1.0,
 Algorithm                     Best     Average       Worst     Std Dev    Feasible    Avg Time
 ----------------------------------------------------------------------------------------------
 Greedy                        3.60        3.60        3.60        0.00       20/20        0.0s
-Simulated Annealing           2.46        2.56        2.75        0.07       20/20        7.8s
-Genetic Algorithm             2.82        3.04        3.28        0.13       20/20       42.1s
-Memetic Algorithm             2.54        2.70        2.79        0.07       20/20       11.7s
-ACO                           2.67        2.72        2.79        0.04       20/20       54.2s
+Simulated Annealing           2.46        2.56        2.75        0.07       20/20        7.9s
+Genetic Algorithm             2.82        3.04        3.28        0.13       20/20       42.8s
+Memetic Algorithm             2.54        2.70        2.79        0.07       20/20       11.9s
+ACO                           2.67        2.72        2.79        0.04       20/20       54.1s
 ----------------------------------------------------------------------------------------------
 
 === Detailed Metrics ===
@@ -104,10 +104,10 @@ ACO                           2.67        2.72        2.79        0.04       20/
 Algorithm                     Best      Mean       Std     CV%  Feasible   Avg evals  Avg time
 ----------------------------------------------------------------------------------------------
 Greedy                        3.60      3.60      0.00     0.0     20/20           1       0.0s
-Simulated Annealing           2.46      2.56      0.07     2.6     20/20      150000       7.8s
-Genetic Algorithm             2.82      3.04      0.13     4.1     20/20      150000      42.1s
-Memetic Algorithm             2.54      2.70      0.07     2.5     20/20      150000      11.7s
-ACO                           2.67      2.72      0.04     1.3     20/20      150000      54.2s
+Simulated Annealing           2.46      2.56      0.07     2.6     20/20      150000       7.9s
+Genetic Algorithm             2.82      3.04      0.13     4.1     20/20      150000      42.8s
+Memetic Algorithm             2.54      2.70      0.07     2.5     20/20      150000      11.9s
+ACO                           2.67      2.72      0.04     1.3     20/20      150000      54.1s
 ----------------------------------------------------------------------------------------------
 
 
@@ -116,10 +116,10 @@ ACO                           2.67      2.72      0.04     1.3     20/20      15
 Algorithm                     Best            Mean ± Std    Median    CV%  Feasible  Avg time
 ---------------------------------------------------------------------------------------------
 Greedy                       3.597         3.597 ± 0.000     3.597    0.0      100%      0.0s
-Simulated Annealing          2.465         2.558 ± 0.067     2.561    2.6      100%      7.8s
-Genetic Algorithm            2.822         3.044 ± 0.126     3.051    4.1      100%     42.1s
-Memetic Algorithm            2.541         2.700 ± 0.068     2.713    2.5      100%     11.7s
-ACO                          2.667         2.717 ± 0.036     2.720    1.3      100%     54.2s
+Simulated Annealing          2.465         2.558 ± 0.067     2.561    2.6      100%      7.9s
+Genetic Algorithm            2.822         3.044 ± 0.126     3.051    4.1      100%     42.8s
+Memetic Algorithm            2.541         2.700 ± 0.068     2.713    2.5      100%     11.9s
+ACO                          2.667         2.717 ± 0.036     2.720    1.3      100%     54.1s
 ---------------------------------------------------------------------------------------------
 
 === Pairwise Wilcoxon Signed-Rank Tests (paired, two-sided, Holm-adjusted, α=0.05) ===
@@ -147,10 +147,10 @@ LaTeX table:
     \textbf{Algorithm} & \textbf{Best} & \textbf{Mean $\pm$ Std} & \textbf{CV\%} & \textbf{Feasible\%} & \textbf{Avg time (s)} \\
     \hline
   Greedy & 3.597 & $3.597 \pm 0.000$ & 0.0 & 100 & 0.0 \\
-  Simulated Annealing & 2.465 & $\textbf{2.558} \pm 0.067$ & 2.6 & 100 & 7.8 \\
-  Genetic Algorithm & 2.822 & $3.044 \pm 0.126$ & 4.1 & 100 & 42.1 \\
-  Memetic Algorithm & 2.541 & $2.700 \pm 0.068$ & 2.5 & 100 & 11.7 \\
-  ACO & 2.667 & $2.717 \pm 0.036$ & 1.3 & 100 & 54.2 \\
+  Simulated Annealing & 2.465 & $\textbf{2.558} \pm 0.067$ & 2.6 & 100 & 7.9 \\
+  Genetic Algorithm & 2.822 & $3.044 \pm 0.126$ & 4.1 & 100 & 42.8 \\
+  Memetic Algorithm & 2.541 & $2.700 \pm 0.068$ & 2.5 & 100 & 11.9 \\
+  ACO & 2.667 & $2.717 \pm 0.036$ & 1.3 & 100 & 54.1 \\
     \hline
   \end{tabular}
 \end{table}
@@ -165,10 +165,10 @@ LaTeX table:
   Metaheuristic ranking (lower objective = better):
   Rank  Algorithm                         Best        Avg   StdDev  Feasible  Avg time
   --------------------------------------------------------------------------------
-  1     Simulated Annealing             2.4649     2.5583   0.0665     20/20     7.79s  (winner)
-  2     Memetic Algorithm               2.5412     2.6997   0.0677     20/20    11.72s  (+5.5%)
-  3     ACO                             2.6668     2.7174   0.0364     20/20    54.21s  (+6.2%)
-  4     Genetic Algorithm               2.8218     3.0441   0.1263     20/20    42.15s  (+19.0%)
+  1     Simulated Annealing             2.4649     2.5583   0.0665     20/20     7.87s  (winner)
+  2     Memetic Algorithm               2.5412     2.6997   0.0677     20/20    11.92s  (+5.5%)
+  3     ACO                             2.6668     2.7174   0.0364     20/20    54.10s  (+6.2%)
+  4     Genetic Algorithm               2.8218     3.0441   0.1263     20/20    42.75s  (+19.0%)
 
   Cost component decomposition (best run per algorithm):
   Algorithm                     Dist(km)   Time(h)  Energy(kWh)   Cost($)  BattViol
@@ -185,10 +185,10 @@ LaTeX table:
     ACO                           +24.5%  [better]
 
   Wall-clock speed (avg per single run, 150,000 evals):
-    Simulated Annealing          avg 7.79s  <- fastest
-    Genetic Algorithm            avg 42.15s
-    Memetic Algorithm            avg 11.72s
-    ACO                          avg 54.21s  <- slowest
+    Simulated Annealing          avg 7.87s  <- fastest
+    Genetic Algorithm            avg 42.75s
+    Memetic Algorithm            avg 11.92s
+    ACO                          avg 54.10s  <- slowest
 
   Automated checks:
   [OK] All metaheuristics beat Greedy — search adds genuine value over construction.

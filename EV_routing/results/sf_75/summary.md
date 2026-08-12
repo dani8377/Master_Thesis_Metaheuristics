@@ -1,6 +1,6 @@
 # EV Routing — Experiment Summary
 
-_Generated: 2026-07-28 14:37_
+_Generated: 2026-08-12 14:57_
 
 ## Setup
 
@@ -17,10 +17,10 @@ Sorted by average objective — lower is better.  Budget: 150,000 evals, 20 seed
 
 | Algorithm | Best | Avg | Worst | Std | Feasible | Avg Time |
 |---|---|---|---|---|---|---|
-| Simulated Annealing | 2.4649 | 2.5583 | 2.7522 | 0.0665 | 20/20 | 7.79s |
-| Memetic Algorithm | 2.5412 | 2.6997 | 2.7870 | 0.0677 | 20/20 | 11.72s |
-| ACO | 2.6668 | 2.7174 | 2.7856 | 0.0364 | 20/20 | 54.21s |
-| Genetic Algorithm | 2.8218 | 3.0441 | 3.2816 | 0.1263 | 20/20 | 42.15s |
+| Simulated Annealing | 2.4649 | 2.5583 | 2.7522 | 0.0665 | 20/20 | 7.87s |
+| Memetic Algorithm | 2.5412 | 2.6997 | 2.7870 | 0.0677 | 20/20 | 11.92s |
+| ACO | 2.6668 | 2.7174 | 2.7856 | 0.0364 | 20/20 | 54.10s |
+| Genetic Algorithm | 2.8218 | 3.0441 | 3.2816 | 0.1263 | 20/20 | 42.75s |
 | Greedy | 3.5969 | 3.5969 | 3.5969 | 0.0000 | 20/20 | 0.00s |
 
 ## Winner and Baseline Comparison

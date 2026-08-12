@@ -59,6 +59,11 @@ PARAMS_FILE   = RESULTS_DIR / "params.json"
 
 MAX_EVALS = 150_000
 
+# Reduced budget used by the scalability sweeps.  Also marked on the
+# full-budget convergence figure, so the reduced-budget ranking can be read
+# off the same plot.
+REDUCED_EVALS = 30_000
+
 # ── Focus modes ───────────────────────────────────────────────────────────────
 # Weight presets applied on top of the calibrated weights, mirroring the cloud
 # module's Performance/Balanced/Eco modes.  Each multiplier vector sums to 4.0,
@@ -751,7 +756,7 @@ def run_scalability_analysis(
         return
 
     SCALE_SEEDS = [0, 1, 2, 3, 4, 5, 6]
-    SCALE_EVALS = 30_000
+    SCALE_EVALS = REDUCED_EVALS
 
     _print_section(
         f"Scalability Axis 1 — Customer-Count Scaling  "
@@ -1476,6 +1481,8 @@ def main() -> None:
             title=f"Convergence by objective evaluations (budget = {MAX_EVALS:,})",
             save_path=FIGURES_DIR / "convergence_by_evaluations.png",
             show=False,
+            mark_evals=REDUCED_EVALS,
+            mark_label=f"reduced budget ({REDUCED_EVALS//1000}k)",
         )
 
     plot_box_comparison(
