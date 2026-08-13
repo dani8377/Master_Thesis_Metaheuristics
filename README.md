@@ -469,9 +469,9 @@ artefact of a truncated range): SA `cooling_rate` ∈ {0.980, 0.985, 0.990, 0.99
 0.999} × `iterations_per_temperature` ∈ {25, 50, 100, 150, 200}; GA
 `population_size` ∈ {25, 50, 100, 150, 200} × `crossover_prob` ∈ {0.6, 0.8,
 0.95}; UMDA `population_size` ∈ {50, 100, 200} × `selection_ratio` ∈ {0.3, 0.5,
-0.7}. Each combination runs 3 seeds at one third of the normal budget, which
-preserves the ranking of combinations (Birattari 2009) but makes the absolute F
-values incomparable to the main experiment.
+0.7}. Each combination runs 3 seeds at one third of the normal budget. Tuning at
+a reduced budget assumes short-run results extend to longer runs (Birattari
+2009); the absolute F values are not comparable to the main experiment.
 
 ## Formula-to-code map
 
