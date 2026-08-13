@@ -290,7 +290,8 @@ def ant_colony_optimization(
 
     Construction
     ------------
-    Each ant builds a complete route using a battery-aware ACS selection rule.
+    Each ant builds a complete route using the ACS selection rule, inserting
+    charging stations as the battery requires.
     Customers are chosen by pheromone × heuristic (attractiveness matrix,
     precomputed once per iteration for speed).  Charging stations enter the
     candidate set when battery drops below ``battery_threshold_frac``, so the
@@ -334,7 +335,7 @@ def ant_colony_optimization(
     #   of the objective (used to test eco-mode steerability).
     #   "weighted": η = 1/(w_d·d + w_t·t + w_e·e) — the arc-decomposable part
     #   of the objective under the active focus-mode weights, so construction
-    #   itself becomes mode-aware.  Charging cost and charging time are
+    #   itself reflects the mode.  Charging cost and charging time are
     #   necessarily excluded: they depend on which station is visited and on
     #   the battery state on arrival, not on the arc (i,j) alone.
     if heuristic_basis == "energy":

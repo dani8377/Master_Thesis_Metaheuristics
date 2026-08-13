@@ -2,9 +2,9 @@
 Budget-adaptive ACO→SA hybrid.
 
 Motivated by the budget-dependent reversal observed in the benchmarking
-study: ACO's battery-aware construction reaches good routes within the
-first few thousand evaluations, while SA needs a long cooling schedule but
-ultimately descends further.  The hybrid spends the first fraction of the
+study: ACO's construction, which inserts charging stations as the battery
+requires, reaches good routes within the first few thousand evaluations,
+while SA needs a long cooling schedule but ultimately descends further.  The hybrid spends the first fraction of the
 evaluation budget on ACO construction, then hands ACO's best route to SA
 as a warm start for the remainder of the budget.
 

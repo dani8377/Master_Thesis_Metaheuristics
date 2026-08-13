@@ -3,8 +3,8 @@ Nearest-neighbor greedy baseline for the EV routing problem.
 
 Deterministic constructive heuristic: greedy nearest-neighbor customer ordering
 with proactive charging-station insertion. Produces the same route regardless
-of the random seed — serves as the reference lower bound for how much the
-metaheuristics improve upon the simplest possible approach.
+of the random seed — serves as the reference baseline against which the
+metaheuristics' improvement is measured.
 """
 from __future__ import annotations
 
