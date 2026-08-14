@@ -1706,3 +1706,413 @@ $D^{Se}_{l-1}$, the selected subset, and the source's own gloss for the estimate
 neither reference in the supplied PDF prints; and `hauschild2011`, `pelikan2002survey` and
 `chen2010analysis`, the co-cited keys on four of the six statements. Only the Bengoetxea et al.
 PDF was supplied.
+
+---
+
+## `kirkpatrick1983` (ref. 52)
+
+**Source:** S. Kirkpatrick, C. D. Gelatt, Jr., M. P. Vecchi, "Optimization by Simulated
+Annealing", *Science* (New Series) 220(4598), 13 May 1983, pp. 671-680. DOI
+10.1126/science.220.4598.671.
+
+**Checked:** 2026-08-14, against the full article (JSTOR scan of the printed pages).
+
+**Bib entry: correct, no edit.** Journal, volume, issue, pages and year all match the
+article's own running head, "13 May 1983, Volume 220, Number 4598", and the page range
+671-680. Title and author order match the byline. One cosmetic difference left alone: the
+byline reads "C. D. Gelatt, Jr." and the bib omits the suffix, which is how most
+bibliographies of this paper render it, and changing it risks a name-parse change in a
+file I cannot compile locally.
+
+**Summary of the pass:** five statements checked, four confirmed as written, one edited.
+The edit removes `kirkpatrick1983` from the citation on the 80 % initial-acceptance rule,
+because that rule is in the van Laarhoven and Aarts book and not in this article. No prose
+was changed anywhere, and this also amends the earlier `vanlaarhoven1987` entry above.
+
+### Statement 1 of 5 - Implementation, Simulated Annealing (`chapters/Implementation.tex:97`)
+
+> The implementation applies the standard Metropolis acceptance rule and geometric cooling
+> introduced in Chapter~\ref{ch:metaheuristics} \citep{kirkpatrick1983}, cooling once per
+> \emph{temperature step} of $50$ candidate moves
+
+**Verdict: CONFIRMED. No edit.**
+
+Both named ingredients are the paper's own. The Metropolis rule, p. 672: "The case
+Delta-E > 0 is treated probabilistically: the probability that the configuration is
+accepted is P(Delta-E) = exp(-Delta-E/k_B T)", and the transfer out of physics on the same
+page: "Using the cost function in place of the energy and defining configurations by a set
+of parameters {x_i}, it is straightforward with the Metropolis procedure to generate a
+population of configurations of a given optimization problem at some effective
+temperature."
+
+Geometric cooling, p. 675: "For the annealing schedule we chose to start at a high
+'temperature,' T_0 = 10 [...] then cool exponentially, T_n = (T_1/T_0)^n T_0, with the
+ratio T_1/T_0 = 0.9." That is exactly T_{k+1} = alpha . T_k with alpha = 0.9, the form
+given in Chapter 4, so "introduced in Chapter 4" points at the right rule.
+
+*The 50-move temperature step is not attributed to the paper and does not need to be.* It
+is this thesis's own number. The paper's per-temperature budget is far larger but the same
+in kind, p. 675: "At each temperature enough flips are attempted that either there are ten
+accepted flips per circuit on the average (for this case, 50,000 accepted flips at each
+temperature), or the number of attempts exceeds 100 times the number of circuits."
+
+### Statement 2 of 5 - Simulated Annealing (`chapters/Metaheuristic Optimisation Methods.tex:213`)
+
+> Simulated Annealing (SA) \cite{kirkpatrick1983,cerny1985} is a single-solution search
+> method that improves one candidate step by step. It is inspired by the metallurgical
+> process of annealing
+
+**Verdict: CONFIRMED. No edit.**
+
+This is the paper being cited for being the paper, and the annealing analogy is its central
+device. p. 672: "Experiments that determine the low-temperature state of a material, for
+example, by growing a single crystal from a melt, are done by careful annealing, first
+melting the substance, then lowering the temperature slowly, and spending a long time at
+temperatures in the vicinity of the freezing point", carried into the algorithm on the same
+page: "The simulated annealing process consists of first 'melting' the system being
+optimized at a high effective temperature, then lowering the temperature by slow stages
+until the system 'freezes' and no further changes occur."
+
+Single-solution and step-by-step, p. 680: "Like most iterative improvement schemes, the
+Metropolis algorithm proceeds in small steps from one configuration to the next, but the
+temperature keeps the algorithm from getting stuck by permitting uphill moves." The
+following sentence in the thesis, that early uphill moves prevent getting permanently
+stuck, is cited to `talbi2009` but is equally this paper's, p. 673: "the procedure need not
+get stuck since transitions out of a local optimum are always possible at nonzero
+temperature."
+
+*The `cerny1985` co-citation is endorsed by this paper itself.* Note 29, p. 680: "V. Cerny
+has described an approach to the traveling salesman problem similar to ours in a manuscript
+received after this article was submitted for publication." Worth having ready if anyone
+asks why two references sit on one sentence: the joint attribution is Kirkpatrick et al.'s
+own.
+
+### Statement 3 of 5 - Working Principle (`chapters/Metaheuristic Optimisation Methods.tex:226`)
+
+> At each step, SA takes the current solution $s$ and generates a slightly modified
+> ``neighbour'' $s'$, then computes the difference in objective value
+> \cite{kirkpatrick1983}: \[\Delta E = F(s') - F(s)\]
+
+**Verdict: CONFIRMED. No edit.**
+
+p. 672: "In each step of this algorithm, an atom is given a small random displacement and
+the resulting change, Delta-E, in the energy of the system is computed." The rename from
+energy to objective value is the paper's own instruction two paragraphs later, "Using the
+cost function in place of the energy", so both the quantity and the symbol Delta-E come
+from the source.
+
+*Notation point, not an error.* The paper writes exp(-Delta-E/k_B T) with Boltzmann's
+constant and the thesis writes e^{-Delta E / T}. Dropping k_B is the standard optimisation
+convention and the paper licenses it where it defines the effective temperature, p. 672:
+"This temperature is simply a control parameter in the same units as the cost function."
+The acceptance rule itself is cited to `metropolis1953` on the next line, which is where it
+belongs.
+
+### Statement 4 of 5 - The Cooling Schedule (`chapters/Metaheuristic Optimisation Methods.tex:246`)
+
+> The temperature schedule controls how fast SA transitions from broad exploration to
+> focused local search, and SA's performance is highly sensitive to
+> it~\cite{kirkpatrick1983,talbi2009,vanlaarhoven1987}
+
+**Verdict: CONFIRMED. No edit.**
+
+The first half is stated twice. p. 673: "Gross features of the eventual state of the system
+appear at higher temperatures; fine details develop at lower temperatures." Restated in the
+conclusions, p. 680: "The temperature distinguishes classes of rearrangements, so that
+rearrangements causing large changes in the objective function occur at high temperatures,
+while the small changes are deferred until low temperatures."
+
+The sensitivity half is the paper's headline experiment rather than an aside. Annealed, the
+5000-gate partitioning problem gave two chips of 353 and 321 pins. Quenched, p. 675: "If,
+instead of slowly cooling, one were to start from a random partition and accept only flips
+that reduce the objective function (equivalent to setting T = 0 in the Metropolis rule),
+the result is chips with approximately 700 pins (several such runs led to results with 677
+to 730 pins). Rapid cooling results in a system frozen into a metastable state far from the
+optimal configuration." That is about a factor of two on the objective from the schedule
+alone. p. 673 adds the diagnostic form: a large specific heat "can be used in the
+optimization context to indicate that freezing has begun and hence that very slow cooling
+is required".
+
+*Spreadsheet note.* The tracking sheet still carries this statement in its older wording,
+"it is the most important design decision when applying the algorithm". That superlative was
+already removed under `talbi2009` (Statement 7 there) and confirmed removed under
+`vanlaarhoven1987` (Statement 2 there). The sentence in the tree is the corrected one and is
+what I checked, so there is nothing outstanding here. This paper would not have supported
+the superlative either: p. 680 lists the schedule as one of four needed ingredients and puts
+the difficulty elsewhere, "Inventing the most effective sets of moves and deciding which
+factors to incorporate into the objective function require insight into the problem being
+solved and may not be obvious."
+
+### Statement 5 of 5 - The Cooling Schedule (`chapters/Metaheuristic Optimisation Methods.tex:254`)
+
+> The starting temperature $T_{\max}$ is commonly calibrated so that typical worsening moves
+> are initially accepted around $80\,\%$ of the
+> time~\cite{~~kirkpatrick1983,~~vanlaarhoven1987}
+
+**Verdict: NOT IN THIS SOURCE. Edited, one bib key removed, prose unchanged.**
+
+The article sets no target acceptance ratio, and where it does fix an initial temperature it
+fixes a much hotter one. p. 675: "we chose to start at a high 'temperature,' T_0 = 10, where
+essentially all proposed circuit flips are accepted." Essentially all is not 80 %. The
+travelling-salesman section is qualitative in the same direction, p. 680: "The temperature
+at which segments flow about freely will be of order N^{1/2}." The summary offers only trial
+and error, p. 680: the schedule "may be developed by trial and error for a given problem, or
+may consist of just warming the system until it is obviously melted, then cooling in slow
+stages until diffusion of the components ceases." The one 0.9 on p. 675 is the cooling ratio
+T_1/T_0 and not an acceptance rate, which is a trap for a quick reader.
+
+*Why the earlier pass concluded the opposite, and why this supersedes it.* The
+`vanlaarhoven1987` entry confirmed the co-citation from the book's p. 59: "Kirkpatrick et al.
+propose the following empirical rule [...] If the acceptance ratio chi [...] is less than a
+given value chi_0 (in [KIR82] chi_0 = 0.8), double the current value of c_0." The book's key
+there is **[KIR82]**, a 1982 Kirkpatrick et al. item, not [KIR83], and neither the 0.8 nor
+the doubling procedure appears anywhere in the 1983 *Science* article. Whatever [KIR82] is,
+`kirkpatrick1983` resolves to the *Science* article and the bib entry carries its DOI, so an
+examiner who follows the citation lands on a paper that says "essentially all". The number is
+real and the credit to Kirkpatrick et al. is real, but the source that documents both is the
+book, so the book now carries the sentence alone.
+
+*What the edit costs:* nothing. `kirkpatrick1983` still carries four statements, two of them
+in this same subsection, and the 80 % figure keeps a source that provably contains it. The
+thesis's own calibration, e^{-Delta-bar/T_0} = 0.80 at `chapters/Implementation.tex:104`, is
+presented there as this work's choice and cites nobody, so it is untouched and still
+consistent with the chapter.
+
+**Not verified in this pass:** `cerny1985`, `metropolis1953`, `talbi2009`, `hajek1988` and
+`vanlaarhoven1987`, the co-cited keys on these sentences. `talbi2009` and `vanlaarhoven1987`
+have their own entries above. Only the Kirkpatrick PDF was supplied here.
+
+---
+
+## `dorigo1996` (ref. 25)
+
+**Source:** M. Dorigo, V. Maniezzo, A. Colorni, "Ant System: Optimization by a Colony of
+Cooperating Agents", *IEEE Transactions on Systems, Man, and Cybernetics, Part B: Cybernetics*,
+vol. 26, no. 1, pp. 29-41, February 1996. DOI 10.1109/3477.484436.
+
+**Checked:** 2026-08-14, against the full paper PDF.
+
+**Bib entry: correct, no change.** Author list and order match the byline (Dorigo, Maniezzo,
+Colorni). Title, journal, volume 26, number 1, pages 29-41 and year 1996 all match the running
+head and first page of the PDF.
+
+**Summary of the pass:** seven statements checked, all seven confirmed on the substance. Two
+citation-list edits made, both because a clause is carried by `dorigo2004` rather than by this
+paper: the pheromone-update equation is written in the modern evaporation-rate convention
+(line 367), and the "classic application domain" claim is a statement about eight subsequent
+years of literature (line 576). No prose changed anywhere.
+
+### Statement 1 of 7 - Metaheuristic Optimisation Methods, ACO opening (`chapters/Metaheuristic Optimisation Methods.tex:319`)
+
+> Ant Colony Optimisation (ACO) \cite{dorigo1996,dorigo2004} is a population-based method in
+> which artificial ants cooperate to build solutions by following and reinforcing promising
+> paths, mimicking the foraging behaviour of real colonies: ants deposit pheromone as they
+> walk, others preferentially follow stronger trails, and shorter paths accumulate pheromone
+> faster, so the colony converges on good routes without any individual having a global view.
+
+**Verdict: CONFIRMED. No edit.** Every clause is in Section I, most of them nearly verbatim.
+
+- Population-based. Third bullet of the Introduction: "It is a *population based approach*."
+- Deposit while walking. "A moving ant lays some pheromone (in varying quantities) on the
+  ground, thus marking the path by a trail of this substance."
+- Preferential following. "an ant encountering a previously laid trail can detect it and decide
+  with high probability to follow it, thus reinforcing the trail with its own pheromone."
+- Shorter paths accumulate faster. "This causes the quantity of pheromone on the shorter path
+  to grow faster than on the longer one."
+- Convergence without a global view. "how almost blind animals like ants could manage to
+  establish shortest route paths from their colony to feeding sources and back", and the
+  outcome, "The final result is that very quickly all ants will choose the shorter path."
+
+One point worth having ready for the defence, not an error. In the algorithm the paper settles
+on, *ant-cycle*, trail is laid after the tour is complete, not while walking: "when it completes
+a tour, it lays a substance called trail on each edge (i,j) visited". The two variants that do
+deposit step by step, *ant-density* and *ant-quantity*, are the ones Table I shows to be worse,
+because they "use local information" and their "search is not directed by any measure of the
+final result achieved". The report's sentence is safe from this because the colon scopes
+"deposit pheromone as they walk" to "the foraging behaviour of real colonies", which is exactly
+the paper's own framing of that clause, and the report's own update rule at line 366 states the
+end-of-tour timing explicitly.
+
+### Statement 2 of 7 - Metaheuristic Optimisation Methods, ACO opening (`chapters/Metaheuristic Optimisation Methods.tex:328`)
+
+> First demonstrated on the Travelling Salesman Problem \cite{dorigo1996}, ACO has become one of
+> the most widely applied metaheuristics for routing and sequencing problems \cite{dorigo2004}.
+
+**Verdict: CONFIRMED. No edit.** Abstract: "We apply the proposed methodology to the classical
+Traveling Salesman Problem (TSP), and report simulation results." Section II opens by saying so
+in the paper's own words: "We decided to use the well-known traveling salesman problem [26] as
+benchmark, in order to make the comparison with other heuristic approaches easier." The whole
+of Sections II to VI is the TSP, and the other problems in Section VII (ATSP, QAP, JSP) are
+presented as evidence of generality *after* it.
+
+Note the citation split in this sentence, which is the pattern the fix at line 576 was made to
+match: the TSP demonstration is charged to this paper, the "most widely applied" claim to
+`dorigo2004`. Only the first half is this paper's to carry.
+
+If an examiner presses on "first": the earliest AS-on-TSP results are not in this 1996 journal
+paper but in the conference and thesis work it supersedes, which it lists itself as "Preliminary
+results, obtained on small-scale problems, have been presented in [6], [7], and [12], [13]",
+that is Colorni, Dorigo and Maniezzo at ECAL 1991 and Dorigo's 1992 PhD thesis. The report's
+claim is that ACO was first demonstrated on the TSP, which is true, and it cites the paper of
+record for that demonstration. The honest answer if asked is that the 1991-92 work came first
+and this is its journal form.
+
+### Statement 3 of 7 - Metaheuristic Optimisation Methods, Solution Construction (`chapters/Metaheuristic Optimisation Methods.tex:338`)
+
+> \[ P_{ij}^{k} = \frac{\tau_{ij}^{\alpha} \cdot \eta_{ij}^{\beta}}{\sum_{l \in \mathcal{A}^{k}}
+> \tau_{il}^{\alpha} \cdot \eta_{il}^{\beta}} \]
+> where $\mathcal{A}^k$ is the set of nodes still allowed for ant $k$, $\tau_{ij}$ is the
+> pheromone level on edge $(i,j)$, and $\eta_{ij}$ is a heuristic desirability, typically
+> inverse distance $\eta_{ij} = 1 / d_{ij}$ \cite{dorigo1996}.
+
+**Verdict: CONFIRMED. No edit.** This is the paper's **Equation (4)** term for term, page 31:
+p_ij^k(t) = [tau_ij(t)]^alpha [eta_ij]^beta / sum_{k in allowed_k} [tau_ik(t)]^alpha
+[eta_ik]^beta for j in allowed_k, and 0 otherwise.
+
+- The allowed set. "where allowed_k = {N-tabu_k}", the towns not yet in the ant's tabu list.
+  The report's $\mathcal{A}^k$ is the same object under a different letter, and the report's
+  omission of the "0 otherwise" branch is not a loss, since it states that the denominator
+  "normalises over the allowed nodes, so the $P^k_{ij}$ form a probability distribution on
+  $\mathcal{A}^k$", which assigns zero mass outside it by construction.
+- Inverse distance. "We call *visibility* eta_ij the quantity 1/d_ij." Verbatim.
+- The exponents. "alpha and beta are parameters that control the relative importance of trail
+  versus visibility", which is the report's "balance learned preference against heuristic
+  knowledge". The report's gloss that high beta "prefers short edges regardless of pheromone"
+  is the paper's own limiting case: "setting alpha = 0, the trail level is no longer considered,
+  and a stochastic greedy algorithm with multiple starting points is obtained."
+
+Correction to the working notes, not to the report: the transition rule is Equation (4), not
+Equation (1). Equation (1) is the trail update quoted under Statement 4.
+
+### Statement 4 of 7 - Metaheuristic Optimisation Methods, The Pheromone Update (`chapters/Metaheuristic Optimisation Methods.tex:366`)
+
+> Once all ants have completed their tours, evaporation and deposit are combined into a single
+> update \cite{dorigo1996,dorigo2004}:
+> \[ \tau_{ij}(t+1) = (1 - \rho) \cdot \tau_{ij}(t) + \sum_{k=1}^{m} \Delta\tau_{ij}^{k} \]
+> where $\rho \in (0, 1)$ is the evaporation rate.
+
+**Verdict: CONFIRMED as mathematics, with `dorigo2004` added to the citation.** This is the one
+statement of the seven that is not a literal restatement of the source, and the reason is a
+notation convention that has flipped since 1996.
+
+The paper's **Equation (1)**, page 31, is tau_ij(t+n) = rho * tau_ij(t) + Delta tau_ij, and its
+rho is the *persistence*, not the evaporation: "where rho is a coefficient such that (1 - rho)
+represents the evaporation of trail between time t and t+n". Section IV repeats it in the
+parameter list: "rho: trail persistence, 0 <= rho < 1 (1 - rho can be interpreted as trail
+evaporation)". The report multiplies by (1 - rho) and calls rho the evaporation rate, so the
+report's rho is the paper's 1 - rho. The two equations are the same map under that substitution,
+but a reader checking the report against the 1996 paper alone would find the symbol used the
+other way round, and the report's tuned rho = 0.3 would read as heavy evaporation in one
+convention and light in the other.
+
+The form the report actually writes, with (1 - rho) and rho as the evaporation rate, is the
+convention of Dorigo and Stutzle's 2004 book, which is already cited three times in the same
+subsection and is already in the bibliography. Adding it to this citation makes the equation
+attributable exactly as written, and costs one key. **Edit applied:** `\cite{dorigo1996}` ->
+`\cite{dorigo1996,dorigo2004}` at line 367. No prose changed, and the equation is right as it
+stands, so nothing downstream moves. The code agrees with the report and not with the 1996
+symbol: `pheromone *= (1.0 - rho)` in `EV_routing/algorithms/ant_colony.py:445`, with the tuned
+rho = 0.3 stated at `chapters/Implementation.tex:182`.
+
+Two further details, both carried and neither needing an edit.
+
+- The sum over ants is the paper's **Equation (2)**, Delta tau_ij = sum_{k=1}^{m} Delta
+  tau_ij^k, with m the total number of ants.
+- "Once all ants have completed their tours" is the ant-cycle timing exactly: "After n
+  iterations all ants have completed a tour, and their tabu lists will be full; at this point
+  for each ant k the value of L_k is computed and the values Delta tau_ij^k are updated". The
+  report indexes the update by iteration, t+1, where the paper indexes by ant move, t+n, because
+  in the paper a cycle is n moves. Same event, different clock.
+
+Worth knowing for the defence: the m-ant sum in this display is the generic Ant System update,
+not the update this thesis runs. The implementation deposits from a single ant per iteration,
+alternating iteration-best and global-best, which `chapters/Implementation.tex:182` states
+plainly and which the variants paragraph at line 386 sets up. The methods chapter is describing
+the canonical rule before narrowing to the variant, which is the right order, but the question
+"your equation sums over m ants and your code deposits from one" has an answer and it is in the
+implementation chapter.
+
+### Statement 5 of 7 - Metaheuristic Optimisation Methods, The Pheromone Update (`chapters/Metaheuristic Optimisation Methods.tex:374`)
+
+> \[ \Delta\tau_{ij}^{k} = \begin{cases} \dfrac{Q}{L_k} & \text{if ant } k \text{ used edge }
+> (i,j) \text{ in its tour} \\ 0 & \text{otherwise} \end{cases} \]
+> where $L_k$ is the total cost of ant $k$'s tour, so better solutions exert a stronger influence
+> on future iterations \cite{dorigo1996}, and $Q$ is a constant scaling every deposit equally,
+> leaving the learning signal in the $1/L_k$ ratio alone (fixed at $Q = 1$ here).
+
+**Verdict: CONFIRMED. No edit.** The strongest of the seven, and the report's own gloss is the
+paper's explanation rather than an inference from the formula.
+
+The display is **Equation (3)**, page 31: Delta tau_ij^k = Q/L_k "if kth ant uses edge (i,j) in
+its tour (between time t and t+n)", 0 otherwise, "where Q is a constant and L_k is the tour
+length of the kth ant". Both branches and both symbols match.
+
+"Better solutions exert a stronger influence" is the paper's stated reason for preferring
+ant-cycle over the two rejected variants, page 33: "Ant-cycle uses global information, that is,
+its ants lay an amount of trail which is proportional to how good the solution produced was. In
+fact, ants producing shorter paths contribute a higher amount of trail than ants whose tour was
+poor."
+
+The parenthetical about Q is supported twice over, which is more than it needs. The paper's own
+parameter study dropped Q from Table I for exactly the report's reason: "Parameter Q is not
+shown because its influence was found to be negligible." And the code matches the report's
+"fixed at Q = 1 here": `delta = 1.0 / update_cost` in
+`EV_routing/algorithms/ant_colony.py:447`, with no Q factor at all, which is Q = 1.
+
+One scope note. The paper writes "tour length" where the report writes "total cost of ant k's
+tour", because in this thesis L_k is the weighted objective value rather than a distance. That
+is a deliberate generalisation to the EV objective and the surrounding text makes it explicit,
+so it is not an overstatement of the source.
+
+### Statement 6 of 7 - Metaheuristic Optimisation Methods, variants (`chapters/Metaheuristic Optimisation Methods.tex:386`)
+
+> Variants differ in how reinforcement is applied: the original Ant System \cite{dorigo1996}
+> lets all ants deposit, while Ant Colony System \cite{dorigo1997} restricts the offline deposit
+> to the best ant.
+
+**Verdict: CONFIRMED. No edit.** The half charged to this paper is Equation (2) again, the sum
+running k = 1 to m over the whole colony, and step 4 of the formal algorithm on page 32 confirms
+it procedurally: "For every edge (i,j), For k := 1 to m do", accumulating Delta tau_ij^k from
+every ant. The word "original" is right as well, since this is the paper that names the method
+Ant System.
+
+Two things to have ready, neither of which contradicts the sentence.
+
+- The paper also introduces an *elitist* variant, Section V-C, in which the best-so-far tour is
+  reinforced by an extra e * Q/L*, and the parameter set it finally recommends includes e = 8:
+  "given a good parameter setting (for instance alpha = 1, beta = 5, rho = 0.5, Q = 100, e = 8)".
+  This does not weaken "lets all ants deposit", because the elitist term is added on top of the
+  m-ant sum rather than replacing it, but "the original Ant System has no elitism" would be the
+  wrong thing to say if asked, and the report does not say it.
+- The word "offline" in the ACS half is doing real work and is correct. ACS also applies a local
+  update on each edge as it is traversed, so "restricts *deposit*" without the qualifier would
+  be too strong. That half belongs to `dorigo1997` and was not checked in this pass.
+
+### Statement 7 of 7 - Matching Algorithms to Problems (`chapters/Metaheuristic Optimisation Methods.tex:573`)
+
+> Its pheromone model is indexed by edges (the same unit in which route cost accrues), and
+> routing has been ACO's classic application domain \cite{dorigo2004} since its first
+> demonstration on the TSP \cite{dorigo1996}.
+
+**Verdict: CONFIRMED for the clause this paper carries, with `dorigo2004` added for the clause
+it does not.** The sentence makes two claims and the citation sat at the end of both.
+
+- Edge-indexed pheromone. Carried outright, and it is the paper's central data structure:
+  "Let tau_ij(t) be the *intensity of trail* on edge (i,j) at time t", deposited per edge in
+  Equation (3) and read per edge in Equation (4).
+- First demonstration on the TSP. Carried, same evidence as Statement 2.
+- "Routing has been ACO's classic application domain." Not this paper's claim to make. It is a
+  statement about what happened to the method after 1996, and if anything the 1996 paper pushes
+  the other way: Section VII is an argument for generality *beyond* routing, applying AS to the
+  quadratic assignment and job-shop scheduling problems, and the Introduction sells robustness
+  as the headline property. Dorigo and Stutzle 2004 is the source that surveys the intervening
+  literature and is already used for the identical claim at line 330.
+
+**Edit applied:** the sentence now reads "routing has been ACO's classic application domain
+\cite{dorigo2004} since its first demonstration on the TSP \cite{dorigo1996}", splitting the two
+citations at the clause boundary in the same pattern already used at lines 328-331. No wording
+changed, only the placement of one key.
+
+**Not verified in this pass:** `dorigo2004`, `dorigo1997` and `stutzle2000`, the co-cited keys
+in this subsection, and `schneider2014` on the EV-adaptation paragraph. Only the Dorigo,
+Maniezzo and Colorni 1996 PDF was supplied.
