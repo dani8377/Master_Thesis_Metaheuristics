@@ -934,3 +934,215 @@ Annealing, Mathematics of Operations Research, 13(1988)311-329", which is the th
 stronger than the sufficient-only bounds of Geman and Geman, Anily and Federgruen and
 Mitra et al. on pp. 30-33. "Guarantees the global optimum in theory" is a fair reading
 and, if anything, understates the result.
+
+---
+
+## `muhlenbein1996` (ref. 70)
+
+**Source:** H. Muhlenbein and G. Paass, "From Recombination of Genes to the Estimation of
+Distributions I. Binary Parameters", in *Parallel Problem Solving from Nature - PPSN IV*,
+Lecture Notes in Computer Science 1141, Springer, Berlin, 1996, pp. 178-187.
+DOI 10.1007/3-540-61723-X_982.
+
+**Checked:** 2026-08-14, against the full paper PDF (10 pages, Sections 1-6 plus 18
+references).
+
+**Bib entry: correct, no change.** The byline reads "H. Muhlenbein and G. Paass, GMD -
+Forschungszentrum Informationstechnik, 53754 Sankt Augustin, Germany", matching the author
+fields. The title matches exactly, including the "I. Binary Parameters" part. The Crossref
+record for the DOI returns the same title, the same two authors, container title "Parallel
+Problem Solving from Nature - PPSN IV", and pages 178-187, so venue, page range and year
+are all confirmed. Volume 1141 is the LNCS number for PPSN IV. The DOI resolves.
+
+**Summary of the pass:** eight statements checked across three chapters, all eight
+confirmed as written. No bibliographic field changed and no wording changed anywhere in
+the thesis. This key is unusually well supported: three of the eight statements are near
+verbatim restatements of the paper's own algorithm box or theorems.
+
+**Standing caveat for all eight.** The paper is binary, x_i in {0,1}, as its title says.
+The thesis uses a categorical marginal over m servers. Nowhere does the thesis attribute
+the multi-valued generalisation to this paper, and it cites `adak2026` separately for a
+multi-valued variant of the compact GA
+(`chapters/Metaheuristic Optimisation Methods.tex:498`), so the distinction is already
+drawn. If an examiner raises it, the answer is that going from Bernoulli to categorical
+marginals changes the per-variable distribution family only and leaves the
+select-estimate-sample loop untouched.
+
+### Statement 1 of 8 - Implementation, UMDA, Model estimation (`chapters/Implementation.tex:119`)
+
+> The algorithm is UMDA in its pure form: the probability matrix is re-estimated from
+> scratch each generation, with no incremental learning rate (in the PBIL view, a learning
+> rate of $1$ \citep{baluja1994,muhlenbein1996})
+
+**Verdict: CONFIRMED. No edit.**
+
+This is the strongest of the eight, because the paper draws the UMDA-versus-PBIL contrast
+itself and each citation is the correct half of it. UMDA, Section 3, samples directly from
+the selected set's frequencies with no carry-over: "STEP1: Select M <= N points according
+to a selection schedule. Compute the marginal frequencies r_{t;i}(x_i) of the selected set.
+STEP2: Generate N new points according to the distribution
+q_{t+1}(x) = prod_{i=1}^n r_{t;i}(x_i)." That is re-estimation from scratch, and it is what
+the implementation does.
+
+Section 4 then introduces the incremental variant and attributes it to Baluja and Caruana
+by name: "Independently of the theory presented in this paper a simple algorithm has been
+already proposed in [2]. In this algorithm the univariate marginal frequencies are updated
+according to p_{t+1;i}(x_i) = p_{t;i}(x_i) + lambda(r_{t;i}(x_i) - p_{t;i}(x_i))" (eq. 14),
+"where lambda is a control parameter. The resulting algorithm we call the simple univariate
+marginal distribution algorithm (SUMDA)". Reference [2] is "S. Baluja and R. Caruana.
+Removing the genetics from the standard genetic algorithm", which is the thesis's
+`baluja1994`. Setting lambda = 1 in eq. 14 collapses it to p_{t+1;i} = r_{t;i}, which is
+exactly UMDA's STEP2. The parenthetical is therefore not an analogy imported from
+elsewhere, it is arithmetic on the paper's own equation, with `baluja1994` carrying the
+PBIL update rule and `muhlenbein1996` carrying the lambda = 1 endpoint.
+
+### Statement 2 of 8 - Metaheuristic Optimisation Methods, EDAs (`chapters/Metaheuristic Optimisation Methods.tex:427`)
+
+> Estimation of Distribution Algorithms (EDAs)
+> \cite{muhlenbein1996,larranaga2001,hauschild2011} are model-based alternatives to
+> traditional GAs.
+
+**Verdict: CONFIRMED. No edit.**
+
+This is an origin citation and the paper is the origin. Its title supplies the phrase and
+the abstract states the programme: "In the last part of the paper we discuss more
+sophisticated methods, based on estimating the distribution of promising points."
+Section 3 delivers the first such algorithm, UMDA. The framing as an alternative to GA
+recombination is the paper's own: "But in evolutionary computation we have more freedom. We
+can design new recombination operators which have no counterpart in nature", and, on gene
+pool recombination, "The biologically inspired idea of restricting the recombination to the
+alleles of two parents for each offspring is abandoned."
+
+Worth knowing rather than fixing: the paper never uses the acronym "EDA", which was
+consolidated later. The two co-cites are what carry the acronym and the modern definition,
+so the triple is correctly ordered as origin plus definition.
+
+### Statement 3 of 8 - Metaheuristic Optimisation Methods, EDAs (`chapters/Metaheuristic Optimisation Methods.tex:429`)
+
+> They emerged in response to the difficulty standard GAs have with strongly interacting
+> variables, where crossover can disrupt useful structure
+> \cite{baluja1994,muhlenbein1996}
+
+**Verdict: CONFIRMED. No edit.** This one genuinely earns its co-citation, so the division
+of labour is worth having ready.
+
+`muhlenbein1996` carries the interacting-variables half, in three places. Section 6:
+"Deceptive problems have been introduced by Goldberg [9] as a challenge to genetic
+algorithm. For these functions genetic algorithms will converge to sub-optimal points."
+Section 5: "The suitability of these algorithms for solving optimization problems with
+strongly interacting genes at different loci seems limited", which is what motivates the
+move to conditional distributions in the same section. And on the messy GA, Section 6: "we
+believe that it is impossible to detect all important gene interactions by simply
+manipulating substrings".
+
+`baluja1994` carries the crossover clause. This paper does discuss crossover, but its
+complaint is analytic rather than about disruption of building blocks. Section 2: "Uniform
+crossover in genetic algorithms, which models Mendelian recombination, leads to very
+difficult systems of difference equations. The genetic population moves away from linkage
+equilibrium. This makes an analysis of the algorithm almost impossible." The sentence is
+supported as written by the pair, and if pressed on which reference supports which clause,
+the answer is the split above rather than both for both.
+
+### Statement 4 of 8 - Metaheuristic Optimisation Methods, Model Classes (`chapters/Metaheuristic Optimisation Methods.tex:457`)
+
+> This work therefore evaluates a single representative, the Univariate Marginal
+> Distribution Algorithm (UMDA) \cite{muhlenbein1996}.
+
+**Verdict: CONFIRMED. No edit.**
+
+A naming citation, and the name is coined here. Section 3, immediately after eq. 7: "The
+conceptual Univariate Marginal Distribution Algorithm (UMDA) is defined as follows",
+followed by the four-step box. Nothing beyond the name and the algorithm is claimed by the
+sentence.
+
+### Statement 5 of 8 - Metaheuristic Optimisation Methods, Working Principle of UMDA (`chapters/Metaheuristic Optimisation Methods.tex:471`)
+
+> UMDA maintains a population $P_t$ of $N$ candidates and, each generation, performs
+> \emph{evaluation}, \emph{selection}, \emph{estimation}, and \emph{sampling}
+> \cite{muhlenbein1996,larranaga2001}: $S_t = select(P_t)$, $p_t = estimate(S_t)$,
+> $P_{t+1} = sample(p_t, N)$.
+
+**Verdict: CONFIRMED. No edit.** A near verbatim restatement of the algorithm box.
+
+Step for step, Section 3: "STEP0: Set t = 1. Generate N >> 0 points randomly" gives the
+population of N; "STEP1: Select M <= N points according to a selection schedule. Compute
+the marginal frequencies r_{t;i}(x_i) of the selected set" gives select then estimate;
+"STEP2: Generate N new points according to the distribution
+q_{t+1}(x) = prod_{i=1}^n r_{t;i}(x_i)" gives sample, and STEP3 returns to STEP1. The
+thesis's factorisation p_t(x) = prod_i p_{t,i}(x_i) two lines further down is the paper's
+eq. 6, and the frequency-count estimator is its eq. 7, p_i(x_i) = sum_{x|x_i} q(x).
+
+Two incidental corroborations. The thesis writes "keeping the top mu <= N individuals", and
+the paper's STEP1 is literally "Select M <= N points", the same relation under a different
+letter. And the thesis's choice of truncation is a legitimate instantiation rather than a
+departure, because STEP1 specifies only "according to a selection schedule". The paper's
+theorems then specialise to proportionate selection for tractability, which the thesis does
+not claim to follow.
+
+### Statement 6 of 8 - Metaheuristic Optimisation Methods, Working Principle of UMDA (`chapters/Metaheuristic Optimisation Methods.tex:506`)
+
+> Three parameters govern the exploration--exploitation balance
+> \cite{muhlenbein1996,larranaga2001}: the population size $N$ [...] the selection ratio
+> $\mu / N$ [...] and a margin that keeps marginals away from the exact extremes so a value
+> absent from one generation's selection is not lost forever \cite{chen2010analysis}
+
+**Verdict: CONFIRMED. No edit.** The weakest of the eight for this key taken alone, but the
+citations are placed so that every clause has a source that carries it.
+
+N and the selection ratio are the paper's only UMDA parameters, and they are exactly the
+two free quantities in the algorithm box: N in STEP0 and M <= N in STEP1. The paper also
+treats N as governing behaviour rather than as an implementation detail: "For difficult
+multi modal fitness functions the success of SUMDA depends on the parameter lambda and N",
+and "Because the size of the population, N, is very large, the speed of convergence is
+almost independent of the size of the problem n."
+
+Three things this paper does not supply, each already sourced elsewhere in the thesis, so
+none is an over-attribution. The margin has its own citation, `chen2010analysis`, at the end
+of that clause; this paper has no margin, and its own safeguard against collapse is SUMDA's
+lambda instead. "mu = N/2 a common default" is hedged as convention and rests on
+`larranaga2001`. The word "drift" in the gloss on N rests on `shapiro2005drift`,
+`doerr2020sharp` and `witt2019upper`, cited two paragraphs earlier at line 465 where the
+concept is introduced; this paper predates that analysis and does not use the term.
+
+### Statement 7 of 8 - Metaheuristic Optimisation Methods, Encoding and Constraints (`chapters/Metaheuristic Optimisation Methods.tex:527`)
+
+> Third, the objective function of Equation~\eqref{eq:cloud_obj} is approximately additive
+> across tasks under the soft-penalty formulation, a structure favourable to univariate EDAs
+> \cite{muhlenbein1996,muhlenbein1999fda}.
+
+**Verdict: CONFIRMED. No edit.** The paper proves this rather than asserting it, which makes
+the citation stronger than the sentence needs.
+
+Theorem 4 gives the response to selection as R(t) = V_A(t)/f(t) plus a term that vanishes in
+linkage equilibrium, where V_A is the additive genetic variance of eq. 11. The corollary on
+the same page is the sharp form: "For proportionate selection the UMDA stays in equilibrium
+iff V_A = 0", glossed as "The response to selection is zero if the additive variance is
+zero. UMDA only exploits the additive genetic variance." Section 5 states the consequence
+for problem structure directly: the marginal-distribution algorithms "exploit the additive
+genetic variance mainly", and their "suitability for solving optimization problems with
+strongly interacting genes at different loci seems limited". The empirical side matches,
+with Table 1 showing SUMDA converging on the linear function ONEMAX while Sections 5 and 6
+abandon univariate models for the deceptive functions.
+
+So "favourable to univariate EDAs" is the contrapositive of a theorem in the source, not a
+soft claim. The thesis's own hedge in the next sentence, that the argument weakens when
+capacities bind tightly, is the right one, because the paper's limit case is "UMDA is not a
+global optimization method for difficult fitness functions."
+
+### Statement 8 of 8 - Related Work, EDAs on Cloud Allocation (`chapters/Related work.tex:21`)
+
+> The most widely used univariate EDA is the Univariate Marginal Distribution Algorithm
+> (UMDA)~\cite{muhlenbein1996}, which re-estimates each variable's marginal directly from
+> the selected population at every generation
+
+**Verdict: CONFIRMED. No edit.**
+
+The mechanism clause is the algorithm box again, and "directly from the selected population"
+is the precise wording, because STEP2 samples from r_{t;i}, the frequencies of the selected
+set itself, with no intermediate vector. The contrast drawn in the next sentence of the same
+paragraph is also the paper's own: PBIL "instead updates a single probability vector
+incrementally", which is eq. 14 and its attribution to reference [2], Baluja and Caruana.
+See Statement 1.
+
+"Most widely used" is a claim about the literature, not about this paper, and the citation
+sits on the algorithm's name rather than on the superlative, so it is correctly placed.
