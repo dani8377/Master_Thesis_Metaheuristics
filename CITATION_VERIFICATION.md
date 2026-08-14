@@ -1165,3 +1165,79 @@ that 90 % of ACO's evaluated candidates are feasible, so the penalty binds on th
 
 **Fix applied:** "uses the first mechanism as its primary one, falling back on the
 penalty for the residue it cannot exclude".
+
+---
+
+## `dorigo1996` — all seven instances, against the paper
+
+**Source:** M. Dorigo, V. Maniezzo, A. Colorni, "Ant System: Optimization by a Colony
+of Cooperating Agents", *IEEE Transactions on Systems, Man, and Cybernetics — Part B:
+Cybernetics*, vol. 26, no. 1, pp. 29–41, February 1996.
+
+**Checked:** 2026-08-14, against the full paper PDF.
+
+**Bib entry: correct.** Authors, title, journal, volume, issue, page range and year all
+match the article header. No change needed.
+
+### Instances 1, 2, 3, 5, 6, 7 — **CONFIRMED, no edit**
+
+| Claim | Where | Support in the paper |
+|---|---|---|
+| ACO is population-based; ants deposit, others follow stronger trails, shorter paths accumulate faster | `:317` | §I, "It is a population based approach"; §I, "an ant encountering a previously laid trail can detect it and decide with high probability to follow it"; §I, "This causes the quantity of pheromone on the shorter path to grow faster than on the longer one" |
+| First demonstrated on the TSP | `:327`, `:576` | Abstract, "We apply the proposed methodology to the classical Traveling Salesman Problem"; §II, "We decided to use the well-known traveling salesman problem as benchmark" |
+| Transition rule $\tau^\alpha\eta^\beta$ normalised over the allowed set; $\eta_{ij} = 1/d_{ij}$ | `:343` | Eq. (4), identical including the restriction to $\text{allowed}_k$; §II, "We call visibility $\eta_{ij}$ the quantity $1/d_{ij}$" |
+| Deposit $Q/L_k$ on used edges, else 0; better solutions influence more; $Q$ a constant scaling every deposit equally | `:382` | Eq. (3), identical; §IV, "ants producing shorter paths contribute a higher amount of trail than ants whose tour was poor"; §IV, "Parameter $Q$ is not shown because its influence was found to be negligible" |
+| Original Ant System lets all ants deposit | `:387` | Eq. (2), $\Delta\tau_{ij} = \sum_{k=1}^{m}\Delta\tau_{ij}^k$, summed over all $m$ ants |
+
+On the "first demonstration" claims: the earliest proposal of Ant System is really
+Dorigo's 1992 thesis and the 1991 technical report, which the 2004 book cites alongside
+this paper. Citing the 1996 article is the standard practice and is not an error, but it
+is worth knowing at the defence.
+
+### Instance 4 — `:367`, the pheromone update — **NOTATION MISMATCH, edit made**
+
+> evaporation and deposit are combined into a single update \cite{dorigo1996}:
+> $\tau_{ij}(t+1) = (1 - \rho)\tau_{ij}(t) + \sum_k \Delta\tau_{ij}^k$, where
+> $\rho \in (0,1)$ is the evaporation rate
+
+The paper's Eq. (1) is $\tau_{ij}(t+n) = \rho\,\tau_{ij}(t) + \Delta\tau_{ij}$, "where
+$\rho$ is a coefficient such that $(1-\rho)$ represents the evaporation of trail", and
+§IV lists the parameter as "$\rho$: trail persistence, $0 \le \rho < 1$". In this paper
+$\rho$ is **persistence**; in `dorigo2004` and the 2006 survey it is **evaporation**,
+written exactly as the thesis has it. The equation as printed is therefore the book's,
+not this paper's, and was cited only to this paper.
+
+**Why this matters.** The paper's recommended $\rho = 0.5$ is a persistence value. The
+thesis's tuned $\rho = 0.3$ is an evaporation value, i.e. $0.7$ persistence. Read against
+the cited paper without noticing the flip, the thesis appears to evaporate *more* than
+Dorigo when it in fact evaporates *less*.
+
+**The thesis convention is the right one and was not changed.** A full audit found
+$\rho$ used as the evaporation rate at every site, in text and in code:
+`Metaheuristic Optimisation Methods.tex:369`, `Experimental Setup.tex:295`,
+`Results and Evaluation.tex:667`, `Implementation.tex:132`, `Pseudocode.tex:194`,
+`Additional Experimental Material.tex:16`; and `ant_colony.py:445`
+(`pheromone *= (1.0 - rho)`), `ant_colony.py:372,454`
+(`tau_max = 1.0 / (rho * best_cost)`), the tuning grids in `tune.py:130` and
+`scalability_analysis.py:130`, and the tuned value `"rho": 0.3` in both
+`aco_best_params.json` and `params.json`.
+
+The decisive site is $\tau_{\max} = 1/(\rho L_{\text{greedy}})$. That is the book's MMAS
+formula and is correct only when $\rho$ is the evaporation rate; under the 1996 reading it
+would be wrong. Switching the thesis to the 1996 convention would break six text sites and
+the implementation in order to match one citation.
+
+**Fix applied:** cite `dorigo1996,dorigo2004` on the update, state that the convention is
+the book's, and record that the original paper's $\rho$ is this one's $1 - \rho$.
+
+### Note on the $\tau_0$ correction logged above
+
+The phrase "a small positive constant", removed from `:348` in the `dorigo2004` check, does
+appear in this paper: §II, "we set the intensity of trail at time 0, $\tau_{ij}(0)$, to a
+small positive constant $c$." That does not reverse the correction. The sentence was cited
+to `dorigo2004`, which says the opposite; it paired the phrase with the nearest-neighbour
+scaling, which belongs to the later variants; and the thesis implements MMAS, which
+initialises at $\tau_{\max}$, as the code does. The phrase was right for Ant System and
+wrong for the algorithm being described. Adding an explicit historical contrast
+("the original Ant System used a small positive constant") would be accurate if the space
+is judged worth it. Not done.
