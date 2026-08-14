@@ -1333,3 +1333,125 @@ below 100 cities and come under one percent above optimum on the 532-city Padber
 instance. The same pairing is separately attributed to `talbi2009` in Chapter 4 and shown
 empirically by `liu2022hybridga` in the sentence that follows this one, so the claim does not
 rest on this source alone.
+
+## `mann2015allocation` (ref. 61)
+
+**Source:** Z. A. Mann, "Allocation of Virtual Machines in Cloud Data Centers - A Survey of
+Problem Models and Optimization Algorithms", ACM Computing Surveys, volume 48, issue 1, 2015.
+DOI 10.1145/2797211.
+
+**Checked:** 2026-08-14, against the full survey PDF (28 pages, Sections 1-8 plus 124
+references).
+
+**Bib entry: correct, no change.** The byline reads "Zoltan Adam Mann, Budapest University of
+Technology and Economics" and the first-page footnote reads "Published in ACM Computing
+Surveys, volume 48, issue 1, 2015", which fixes author, journal, volume, number and year. The
+title matches word for word; the dash before "A Survey" prints as an en dash in this preprint
+and as an em dash in the ACM version, which is the form the bib uses. One field cannot be read
+off this scan: the `pages` value `11:1--11:34` is the ACM article numbering, and the preprint
+paginates 1-28 with no article number printed. It was left as is, since nothing in the PDF
+contradicts it and it is consistent with the DOI.
+
+**Summary of the pass:** four statements checked across two chapters, all confirmed as
+written. No edit to the report, and no bibliographic field changed.
+
+**Note on what this source is.** It is a survey of problem models and algorithms, so every
+instance here is a "this is how the field frames it" citation rather than an experimental
+result. That is the right use of it: the survey reports no experiments of its own, and the
+thesis never attributes a measured number to it.
+
+### Statement 1 of 4 - Problem Specification, Sets and Parameters (`chapters/Problem Specification.tex:92`)
+
+> CPU usage is assumed to be linearly additive across tasks and perfectly divisible across
+> cores, a standard abstraction in the cloud scheduling
+> literature~\cite{beloglazov2012energy,mann2015allocation} that ignores non-linear effects
+> such as cache contention but preserves the essential property that aggregate demand must
+> not exceed aggregate capacity.
+
+**Verdict: CONFIRMED. No edit.**
+
+The citation is shared with `beloglazov2012energy`, which supplies an instance of the
+abstraction. Mann is what carries the word "standard", and the survey supports all three parts
+of the sentence separately.
+
+Divisible across cores, Section 4.2: "Beloglazov and Buyya model a multi-core CPU by means of
+a single-core CPU with capacity equal to the sum of the capacities of the cores of the
+original multi-core CPU". That summing of core capacities into one pool is exactly the
+assumption the sentence names. Section 4.1.3 records how common it is, "In this
+often-investigated special case, only the computational demands and computational capacities
+are considered, and no other resources. Moreover, the CPU is taken to be single-core, making
+the problem truly one-dimensional", and Section 7.1 lists the gap among the field's open
+problems: "The existing problem formulations in the literature either do not model multi-core
+CPUs at all, or model them in a very simplistic way."
+
+Additive, and the capacity property that survives, Section 7.1: "When deciding to place a set
+of VMs on a PM, many works only check that the total size of the VMs does not exceed the PM's
+capacity." Total size against capacity is the aggregate-demand test the sentence says the
+abstraction preserves.
+
+Cache contention as the named casualty, Section 3.3: "current virtualization technologies do
+not ensure isolation of the cache usage of individual VMs accommodated by the same PM, leading
+to contention between them". The same Section 7.1 paragraph puts this on the deficit list
+under "co-location interference" and the "noisy neighbor" effect, so the survey agrees both
+that the abstraction is standard and that this is what it costs.
+
+### Statement 2 of 4 - Related Work, Cloud Resource Allocation (`chapters/Related work.tex:8`)
+
+> The cloud resource allocation problem studied in this thesis is usually framed as Virtual
+> Machine Placement (VMP)~\cite{mann2015allocation}.
+
+**Verdict: CONFIRMED. No edit.**
+
+The survey is that framing. Its keyword list is "Cloud computing, data center, virtual
+machine, live migration, VM placement, VM consolidation, green computing", and the abstract
+states the object of study as "a careful allocation of VMs to hosts". Section 7.1 gives the
+usual-case wording the thesis sentence needs: "In the Single-DC problem, the usual formulation
+is about mapping VMs to PMs." Section 5.2 then uses "the VM placement problem" as the standing
+name throughout. Mann treats "VM allocation" and "VM placement" as the same problem, so the
+thesis naming it VMP is faithful rather than a narrowing.
+
+### Statement 3 of 4 - Related Work, Cloud Resource Allocation (`chapters/Related work.tex:8`)
+
+> The problem is NP-hard~\cite{mann2015allocation}, and the scale of modern data centres rules
+> out exhaustive search in practice.
+
+**Verdict: CONFIRMED. No edit.**
+
+Section 7.2 states it and gives the argument: "Since the VM placement problem contains the
+bin-packing problem as special case, which is NP-hard in the strong sense [77], there is no
+hope for an exact algorithm with polynomial or even pseudo-polynomial runtime." The reduction
+is by containment, with the bin-packing hardness itself credited to Martello and Toth, which
+is the standard route and is also how Chapter 2 of the thesis reaches the same conclusion.
+Section 6.3 carries an independent NP-hardness proof for one variant, Meng et al. "prove its
+NP-hardness by reduction from Balanced Minimum k-Cut".
+
+The second clause is supported by the same section: "the fact that those solvers took a long
+time to solve even mid-sized problem instances", and Section 5.1, "its worst-case runtime is
+exponential with respect to the size of the input, so that solving large-scale problem
+instances takes much too long. Most researchers turned to heuristics for this reason."
+
+### Statement 4 of 4 - Related Work, Heuristics and Metaheuristics on Cloud Allocation (`chapters/Related work.tex:14`)
+
+> Comprehensive surveys are given by Mann~\cite{mann2015allocation} and, with a focus on
+> bin-packing-style approaches, by Kumaraswamy and Nair~\cite{kumaraswamy2019binpacking}.
+
+**Verdict: CONFIRMED. No edit.**
+
+"Comprehensive" is fair and the survey says so itself, "we tried to show a representative
+selection of the most important works", covering 124 references, two problem-model tables and
+a full algorithm review split into exact methods (Section 5.1), Single-DC heuristics (5.2),
+Multi-IaaS heuristics (5.3) and evaluation practice (5.5).
+
+The sentence sits under a heading about heuristics and metaheuristics, and the survey covers
+both, which is what the paragraph goes on to use it for: the bin-packing family in Section
+5.2, "the usage of FF has been suggested [16], just like BF [10], WF [56, 71, 107], FFD [111,
+113] and BFD [8, 7, 46]", and the metaheuristics in the next paragraph, "simulated annealing
+[52], genetic algorithms [44], and ant colony optimization [41]". The lead-in sentence, that
+the practical literature relies on heuristics, is the survey's own position: "Although the
+majority of the proposed algorithms are heuristics, also some exact algorithms have been
+proposed".
+
+Scope note, not an error. Mann's coverage is wider than the subsection heading, since it
+includes exact methods too. The sentence claims only that he gives a comprehensive survey, not
+that the survey is confined to heuristics, so the placement is correct. The narrower framing
+belongs to `kumaraswamy2019binpacking`, and the thesis already says so in the same sentence.
