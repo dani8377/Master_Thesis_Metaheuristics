@@ -765,3 +765,61 @@ calibrating the coefficients is the book's, p. 50: "a good compromise for the
 initialization of the coefficient factors wi must be found. Indeed, if wi is too
 small, final solutions may be infeasible. If the coefficient factor wi is too high, we
 may converge toward nonoptimal feasible solutions."
+
+---
+
+## `vanlaarhoven1987` (ref. 92)
+
+**Source:** P. J. M. van Laarhoven and E. H. L. Aarts, *Simulated Annealing: Theory and
+Applications*, Reidel, Dordrecht, 1987. DOI 10.1007/978-94-015-7744-1.
+
+**Checked:** 2026-08-14, against a book *review* of the source, not against the source.
+The PDF supplied for this pass is the "Book Reviews" page of an Elsevier journal
+(p. 200, PII S0378-4754(88)90140-1), whose first item is a twelve-line review of this
+book. It settles what the book is and roughly what it covers. It contains none of the
+technical material the four statements cite, so it cannot confirm any of them.
+
+**Bib entry:** author, title and year confirmed against the review's header line,
+"P.J.M. Van Laarhoven and E.H.L. Aarts: Simulated Annealing: Theory and Applications.
+Reidel, Dordrecht, Netherlands, 1987, xi + 186 pages, ISBN 90-277-2513-6". One nuance,
+not an error: the 1987 imprint was D. Reidel, whereas the bib entry says Kluwer
+Academic Publishers. Kluwer absorbed Reidel shortly after publication, the DOI resolves
+to the Kluwer/Springer record, and Kluwer is the form most of the literature uses for
+this book. Left as is.
+
+### Statement 1 of 4 - Simulated Annealing, Working Principle (`chapters/Metaheuristic Optimisation Methods.tex:239`)
+
+> In practice SA is structured with an inner loop: a fixed number of moves $L$ (the
+> epoch length) is attempted at each temperature level before cooling, so that the
+> neighbourhood is adequately sampled before the search commits to a colder
+> regime~\cite{vanlaarhoven1987,talbi2009}
+
+**Verdict: CLAIM ALREADY SOURCED BY THE CO-CITATION. This key not verified. No edit.**
+
+The sentence itself is safe, because it carries two keys and the other one is verified
+at page level higher up in this log. Statement 6 of 10 under `talbi2009` quotes
+Algorithm 2.3, p. 128, whose inner loop is annotated exactly as the thesis describes it
+("At a fixed temperature [...] Until Equilibrium condition / e.g. a given number of
+iterations executed at each temperature T"), Section 2.4.2.2, p. 131, for the
+adequate-sampling rationale, and the same page for the symbol L. So the claim in the
+report is supported as written, and nothing in the text depends on the van Laarhoven
+half.
+
+What the supplied review does support is the book's scope, not this claim: "This book
+is a complete presentation of this method, its convergence behaviour, its relations
+with statistical physics, its implementation and its performances." Under the standing
+rule for this log, scope is not evidence that a source makes a particular statement,
+which is why the verdict above is "not verified" rather than "confirmed".
+
+**Where to look when the book itself is available.** The chapter on finite-time
+behaviour, where a cooling schedule is specified by the initial value of the control
+parameter, the decrement rule, the number of transitions generated at each value of the
+control parameter, and the stopping criterion. That third item is the epoch length,
+written L_k in the book's notation, and it is the standard reason this book is cited
+for the claim. Recorded as the expectation from the secondary literature, not as a
+check.
+
+**No edit made,** since nothing here is shown to be wrong. If the book does not turn up
+before hand-in, the zero-risk fallback is to delete `vanlaarhoven1987` from this one
+sentence and leave `talbi2009`, which is verified. That is a one-key deletion inside an
+existing `\cite`, with no wording change and no effect on the other three statements.
