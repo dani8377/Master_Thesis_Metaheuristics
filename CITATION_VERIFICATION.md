@@ -113,3 +113,208 @@ matheuristics and approximation error. Those were not checked here and are worth
 pass of their own. The Froger instance-set finding above rests on the publisher
 abstract plus the Montoya testbed description, not on a full read of the paper's
 experimental section.
+
+---
+
+## `nie2022aco-evrpcc` (ref. 71)
+
+**Source:** Z.-H. Nie, Q. Yang, E. Zhang, D. Liu, J. Zhang, "Ant Colony Optimization
+for Electric Vehicle Routing Problem with Capacity and Charging Time Constraints",
+2022 IEEE International Conference on Systems, Man, and Cybernetics (SMC),
+pp. 480-485. DOI 10.1109/SMC53654.2022.9945248.
+
+**Checked:** 2026-08-14, against the full paper PDF.
+
+**Bib entry: correct, no change needed.** Author list and order match the PDF byline
+exactly (Nie Zi-Hao, Yang Qiang, Zhang En, Liu Dong, Zhang Jun). Title, venue and
+year match. Page range 480-485 matches the printed page numbers. DOI matches the
+one printed in the IEEE Xplore sidebar on p. 1. Note the fifth author is **Zhang**,
+Jun (Hanyang University), not "Zhan" as the tracking sheet has it; the .bib is the
+one that is right.
+
+### Statement 1 of 2 — Related Work, ACO on EVRP (`chapters/Related work.tex:56`)
+
+> A later study by Nie et al.~\cite{nie2022aco-evrpcc} compared five classical ACO
+> variants, Ant System (AS), Rank-Based Ant System (Rank-AS), Elitist Ant System
+> (EAS), MMAS, and Ant Colony System (ACS), on an EVRP variant with capacity and
+> charging-time constraints, and found Rank-AS to be the strongest performer overall.
+
+**Verdict: CONFIRMED on every checkable detail. One framing word edited.**
+
+Each component checks out against the paper:
+
+1. *Five classical ACO variants, and exactly those five.* Contribution 3 in
+   Section I: "This paper embeds the devised solution construction method into five
+   classical ACO algorithms, namely Ant System (AS) [16], Elite Ant System (EAS)
+   [17], Rank-based Ant System (Rank-AS) [18], Max-Min Ant System (MMAS) [19] and
+   Ant Colony System (ACS) [20]". Section III treats them one per subsection
+   (III-A to III-E). The naming difference, the paper writes "Elite Ant System"
+   where the thesis writes "Elitist Ant System", is not an error: "elitist ant
+   system" is the standard name in the ACO literature and the acronym EAS is
+   identical.
+2. *An EVRP variant with capacity and charging-time constraints.* This is the
+   paper's own contribution, EVRP-CC, defined in Section II. The capacity
+   constraint is Eqs. (2)-(3), the electricity constraint Eqs. (4)-(6), and the new
+   charging-time constraint is Eq. (7), sum_ij x_ij <= CT, which caps each EV at CT
+   full charges.
+3. *Rank-AS strongest overall.* Stated by the authors twice in their own words.
+   Abstract: "Rank-AS with the proposed solution construction method achieves the
+   best overall performance in solving EVRP-CC". Section V, closing paragraph:
+   "Rank-AS obtains the best overall performance among the five ACO variants in
+   solving the seven EVRP-CC instances". Conclusion repeats it.
+
+Table 2 (p. 484) supports the claim on the numbers as well, over 30 independent
+runs on seven instances (n22-n101, CT = 1):
+
+| | best mean | best single run |
+|---|---|---|
+| Rank-AS | 3 instances (n33, n76, n101) | 4 instances (n22, n33, n76, n101) |
+| AS | 2 instances (n22, n23) | 3 instances (n23, n30, n51) |
+| EAS | 2 instances (n30, n51) | 0 |
+| MMAS | 0 | 0 |
+| ACS | 0 (worst throughout) | 0 |
+
+**Edit made, and the reason:** "A follow-up study by Nie et al." became "A later
+study by Nie et al." The preceding sentence is about Mavrovouniotis et al. (2018),
+so "follow-up" asserted a lineage that does not exist. Nie et al. are a different
+group (Henan Normal / NUIST / Hanyang, versus KIOS in Cyprus) and their reference
+list does not contain the 2018 MMAS look-ahead paper at all; their ACO-on-EVRP
+citations are Jia, Mei and Zhang's bilevel ACO [6] and Shi et al.'s memory-based
+ACS [14]. The only genuine link is that their instances are "generated from the
+widely used EVRP benchmark set", i.e. the WCCI-2020 competition set of
+Mavrovouniotis et al. [21], which is the same group but a different artefact.
+"Later" is true, costs one word, and leaves the sentence otherwise untouched.
+
+Two points to have ready for the defence, neither of which is an error in the text:
+
+1. The five variants are not compared as off-the-shelf algorithms. All five are run
+   with the paper's own two-stage solution construction method bolted on (Section
+   IV), so what actually differs between them is the pheromone-update rule, with
+   the constraint-handling held constant. The thesis sentence does not claim
+   otherwise, but "compared five classical ACO variants" is worth being able to
+   qualify if asked.
+2. "Strongest performer overall" rests on a plurality, not a majority, and on no
+   statistical test. Rank-AS wins 3 of 7 mean comparisons; AS and EAS take 2 each,
+   and the standard deviations in Table 2 (50-120) are large next to several of the
+   gaps between means. The claim is the authors' own summary and is reported as
+   such, but it is weaker evidence than a Wilcoxon-backed result would be. Useful
+   contrast for our own protocol, which does run the tests.
+
+### Statement 2 of 2 — Related Work, Cross-Paradigm Benchmarking (`chapters/Related work.tex:65`)
+
+> Within-paradigm benchmarks are relatively common, for example the five-variant ACO
+> comparison of Nie et al.~\cite{nie2022aco-evrpcc} on the EVRP [...]
+
+**Verdict: CONFIRMED. No edit.**
+
+The paper is used here only as an example of a benchmark that stays inside one
+paradigm, and it is a clean one. All five algorithms compared are ACO variants, no
+non-ACO method appears anywhere in the experiments, and Section V compares them
+against each other rather than against any external baseline. That is precisely the
+within-paradigm design the sentence contrasts with the thesis's cross-paradigm one.
+
+"On the EVRP" is family-level shorthand: the experiments are on EVRP-CC, the
+capacity-and-charging-time variant the same paper introduces. That is accurate at
+the level of precision the sentence operates at, the exact variant is already
+spelled out at line 56, and the surrounding sentence names EVRP for two other
+studies as well.
+
+---
+
+## `tahami2020exact` (ref. 87)
+
+**Source:** H. Tahami, G. Rabadi, M. Haouari, "Exact approaches for routing
+capacitated electric vehicles", Transportation Research Part E: Logistics and
+Transportation Review, vol. 144, art. 102126, 2020.
+DOI 10.1016/j.tre.2020.102126.
+
+**Checked:** 2026-08-14, against the full paper PDF.
+
+**Bib entry:** correct. Author list and order match the byline (Tahami, Rabadi,
+Haouari), the journal, volume 144, article number 102126 and year all match the
+running head on every page. The published title is lower-case after the first word
+("Exact approaches for routing capacitated electric vehicles"); the bib entry uses
+title case, which the bibliography style normalises anyway. No change needed.
+
+### Statement 1 of 2 - Related Work, Exact Methods (`chapters/Related work.tex:38`)
+
+> The EVRP is usually formulated as a mixed-integer linear programme (MILP) and
+> solved either with commercial solvers~\cite{mavrovouniotis2020benchmark} or with
+> specialised exact techniques originally developed for the classical VRP and later
+> adapted to the EVRP, including branch-and-cut~\cite{tahami2020exact} [...]
+
+**Verdict: CONFIRMED. No edit.**
+
+Every element of what the citation is asked to carry is in the paper.
+
+1. *MILP.* Section 2.1 gives a nonlinear compact formulation, Sections 2.2 and 2.3
+   linearise the capacity and energy constraints with the Reformulation-Linearization
+   Technique of Sherali and Adams, and Section 2.4 states the result outright: "we
+   formulated the ECVRP as a mixed-integer linear program having O(|C|^2|R|) binary
+   variables".
+2. *Branch-and-cut.* Section 3.1 is titled "Solving (F2) by branch-and-cut" and
+   describes the algorithm; Section 6.2 reports it running under CPLEX 12.8 with the
+   USERCUT callback generating rounded capacity inequalities at each node. The
+   abstract calls it "a branch-and-cut algorithm" in the list of contributions.
+3. *Originally developed for the classical VRP, later adapted.* This is the paper's
+   own framing. The cuts it separates are the rounded capacity constraints, and
+   Section 3 says they "were first introduced by Laporte and Nobert (1983) in the
+   context of the Capacitated Vehicle Routing Problem, and that they play a central
+   role in branch-and-cut algorithms for solving this latter problem". The whole
+   paper is an adaptation of the CVRP to the electric case, which it names the
+   ECVRP.
+
+Point for the defence, not an error: the paper's exact object is the ECVRP, the
+capacitated EVRP with no time windows, which the authors present as the electric
+variant of the classical CVRP. The sentence says "the EVRP" at family level, which
+is the same level of precision it uses for the other two citations in the list.
+
+### Statement 2 of 2 - Related Work, Exact Methods (`chapters/Related work.tex:38`)
+
+> Tahami et al.~\cite{tahami2020exact} report that their compact formulation reliably
+> solves instances with up to 30 customers in moderate CPU time, and that their
+> hybrid approach reaches 100 customers on some instances, but fails on the tightly
+> constrained large-scale ones.
+
+**Verdict: CONFIRMED after one edit.** Both scale numbers are right; one clause
+about the failure mode was not.
+
+*The 30-customer figure is exact.* Abstract: the polynomial-sized formulation "can
+consistently solve instances having up to 30 customer nodes and 21 charging
+stations". Section 6.1: "All instances having up to 30 nodes were optimally
+solved". Table 1 gives 12/12 optimal at |C| = 10, 20 and 30, with average total
+times of 0.40 s, 14.61 s and 72.28 s. "Moderate CPU time" is the paper's own words:
+"(F1) made it feasible to solve medium-sized instances in a moderate CPU time".
+
+*Customers, not nodes.* Worth noting that the thesis is the more precise of the two
+here. The paper's body text says "30 nodes" in places, but its tables label the
+column |C| and pair |C| = 30 with |R| = 21 charging stations plus a depot, so the
+30 counts customers only. The thesis says "30 customers", which matches the
+abstract and the tables.
+
+*The 100-customer figure is exact.* Abstract: "the hybrid algorithm solves some
+instances having up to 100 customer nodes and 21 charging stations". Table 3 shows
+6/12 solved at |C| = 100, and Table D.9 lists those six by name (c202, c208, r202,
+r209, rc202, rc204). "On some instances" is the correct hedge: the rate falls off
+from 12/12 at 60 customers to 8/12, 8/12, 7/12 and 6/12 at 70, 80, 90 and 100.
+
+**Edit made, and the reason:** "but struggles on larger or tightly constrained ones"
+became "but fails on the tightly constrained large-scale ones". Two problems with
+the old clause. First, "larger" claims something the paper never tested: its testbed
+stops at 100 customers, so there is no evidence in it about anything above that
+size. Second, "struggles" understates what happened. Section 6.3 reports that on
+large instances derived from c103, r102 and rc103 the hybrid approach "failed to
+solve these instances (or even provide feasible solutions) after spending 3 h CPU
+time", and the abstract records the same limitation as a limitation, not a
+slowdown.
+
+The replacement is also the sharper claim, because the two failure modes are not
+independent in this paper: the instances that go unsolved at 70 to 100 customers
+are exactly the tightly constrained ones. At |C| = 70 the four missing from Table
+D.6 are r102, r105, rc103 and rc108, all with Q = 200 and Emax of 62.14 or 79.69,
+while all eight solved instances have either Q = 700 or Q = 1000. Section 6.2 makes
+the same association at the level of integrality gaps: the instances with gaps
+above 2 per cent "correspond to very tightly constrained instances having both
+reduced capacity (Q = 200) and very reduced battery range (Emax = 79.69 or 62.14)".
+Tightness, not raw size, is what defeats the method, and the edited sentence now
+says so.
