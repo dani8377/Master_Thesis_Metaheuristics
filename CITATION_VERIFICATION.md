@@ -823,3 +823,117 @@ check.
 before hand-in, the zero-risk fallback is to delete `vanlaarhoven1987` from this one
 sentence and leave `talbi2009`, which is verified. That is a one-key deletion inside an
 existing `\cite`, with no wording change and no effect on the other three statements.
+
+---
+
+## ACO chain: `dorigo1996`, `dorigo1997`, `dorigo2004`, `stutzle2000`, `gutjahr2000`, `stutzle2002convergence`
+
+**Source used:** M. Dorigo, M. Birattari, T. Stützle, "Ant Colony Optimization:
+Artificial Ants as a Computational Intelligence Technique", *IEEE Computational
+Intelligence Magazine*, vol. 1, no. 4, pp. 28–39, November 2006.
+
+**Checked:** 2026-08-14, against the full article PDF.
+
+**Standing of this check.** The article is not any of the six cited works. It is a
+survey by the same authors that restates Ant System, MAX–MIN Ant System and Ant
+Colony System with their defining equations, and its reference list maps one-to-one
+onto the six bib keys ([8] = `dorigo1996`, [11] = `dorigo1997`, [15] = `stutzle2000`,
+[34] = `dorigo2004`, [36] = `gutjahr2000`, [38] = `stutzle2002convergence`). For
+claims about what these algorithms *are*, this is strong evidence: the authors are
+describing their own methods. For claims about what a specific paper argues, it is
+indicative rather than conclusive. Two claims below could not be settled from it at
+all and are marked as such.
+
+**Bib entries: all six correct.** Authors, titles, journals, volumes, issues, page
+ranges and years match the survey's reference list exactly. No change needed.
+
+### Statements 1–11 — CONFIRMED, no edit
+
+| Claim | Where | Support in the survey |
+|---|---|---|
+| ACO is a population-based method; ants deposit pheromone, others follow stronger trails, shorter paths accumulate faster | `Metaheuristic Optimisation Methods.tex:316` | p. 28 and p. 30, "In ACO, a number of artificial ants build solutions"; §I on the double-bridge experiment |
+| First demonstrated on the TSP | `:325` | p. 30, "Ant System is the first ACO algorithm proposed in the literature [6]–[8]"; Table 2 lists TSP under Dorigo et al. 1991, 1996 |
+| ACO widely applied to routing and sequencing | `:326` | p. 34, "tested on probably more than one hundred different NP-hard problems"; p. 35 names sequential ordering and VRP variants as state-of-the-art |
+| Transition rule $\tau^\alpha\eta^\beta$ normalised over allowed nodes | `:343` | Eq. (4), p. 32, identical including the restriction to $N(s^p)$ |
+| $\eta_{ij} = 1/d_{ij}$ | `:343` | Eq. (5), p. 32 |
+| Update $\tau(t+1) = (1-\rho)\tau(t) + \sum_k \Delta\tau^k$ | `:365` | Eq. (2), p. 32, identical |
+| Deposit $Q/L_k$ if the edge was used, else 0; $Q$ a constant | `:380` | Eq. (3), p. 32, identical |
+| Ant System lets all ants deposit | `:385` | p. 32, "the pheromone values are updated by *all* the $m$ ants that have built a solution" |
+| MMAS bounds pheromone within $[\tau_{\min}, \tau_{\max}]$ | `:388`, `Implementation.tex:172` | p. 32, "the value of the pheromone is bound"; Eq. (6)–(7) |
+| Pseudo-random-proportional rule: with probability $q_0$ move greedily to the most attractive allowed node, else sample | `:390`, `Implementation.tex:180` | p. 33, verbatim, including $\arg\max$ over $N(s^p)$ |
+| Convergence results hold only in a limit that does not bind under a finite budget | `:401` | p. 33, "all these convergence results do not allow one to predict how quickly optimal solutions can be found" |
+
+### Statement 12 — `gutjahr2000` — **MISATTRIBUTED, edit needed**
+
+> For pheromone-bounded variants, convergence in value to the global optimum has been
+> proven \cite{gutjahr2000,stutzle2002convergence}
+
+The survey draws the opposite line, p. 33:
+
+- "The first convergence proofs were presented by Gutjahr for an ACO algorithm called
+  graph-based ant system (GBAS)."
+- "**GBAS is a rather peculiar ACO algorithm and the above mentioned results do not
+  directly extend to other ACO algorithms. In particular, they do not extend to ACO
+  algorithms that are commonly adopted in applications.**"
+- "Nonetheless, for two of the top performing ACO algorithms, ACS and MMAS,
+  convergence has been proved [34], [38]."
+
+`gutjahr2000` proves convergence for GBAS, which is not a pheromone-bounded variant,
+and the survey explicitly denies the extension. Only `stutzle2002convergence` (and the
+2004 book) covers ACS and MMAS. The sentence as written attributes to Gutjahr a result
+the survey says is not his.
+
+**Fix:** drop `gutjahr2000` from this `\cite`, leaving `stutzle2002convergence`. A
+one-key deletion, no wording change, no length change.
+
+### Statement 13 — ACS deposit — **IMPRECISE, one-word fix advisable**
+
+> the original Ant System \cite{dorigo1996} lets all ants deposit, while Ant Colony
+> System \cite{dorigo1997} restricts deposit to the best ant
+
+True of the *offline* update: p. 33, "The offline pheromone update, similarly to
+MMAS, is applied at the end of each iteration by only one ant". But ACS also has a
+local update applied by **all** ants after every construction step (Eq. (9)), which
+the survey calls ACS's "most interesting contribution". Unqualified, the sentence
+reads as though ACS removed per-ant deposit altogether.
+
+**Fix:** "restricts the *offline* deposit to the best ant." One word.
+
+### Statement 14 — the $\alpha$ exponent in the greedy branch — **DEVIATION, disclosure advisable**
+
+> With probability $q_0 = 0.95$ the ant moves to the node maximising
+> $\tau_{ij}^{\alpha} \cdot \eta_{ij}^{\beta}$ (`Implementation.tex:180`)
+
+The survey's ACS rule, p. 33, is $j = \arg\max\{\tau_{il}\,\eta_{il}^{\beta}\}$ —
+**no exponent on $\tau$**. ACS fixes the pheromone exponent at 1. This thesis tuned
+$\alpha = 0.5$ and applies it in the greedy branch too, so the implemented rule is a
+generalisation of Dorigo and Gambardella's, not that rule itself. Defensible, and the
+probabilistic branch is unaffected, but currently undisclosed.
+
+**Fix:** say the rule is applied with the pheromone exponent carried through, so it
+generalises the ACS form. Roughly one clause.
+
+### Statements 15–16 — **NOT VERIFIABLE from this source**
+
+- "no edge is ever completely abandoned and premature stagnation is resisted"
+  (`:388`, cited to `dorigo2004`). The survey states the bounds but gives no
+  stagnation rationale; it says only that $\tau_{\min}$ and $\tau_{\max}$ are
+  "typically obtained empirically and tuned on the specific problem". The rationale is
+  standard MMAS motivation and belongs to `stutzle2000` or the book. Needs one of those.
+- "Pheromone is initialised to a small positive constant $\tau_0$, commonly scaled
+  from a greedy nearest-neighbour tour" (`:349`, cited to `dorigo2004`). The survey
+  mentions $\tau_0$ only as the initial value in the ACS local update. Needs the book.
+
+Both are unverified, not wrong. No edit made.
+
+### Statement 17 — construction-time exclusion — **PARTIALLY CONFIRMED**
+
+> infeasible moves can be excluded from $\mathcal{A}^k$ [...] which guarantees feasible
+> tours but can limit exploration when the feasible region is small (`:406`)
+
+The exclusion mechanism is confirmed, p. 31: $N(s^p)$ is "the set of components that
+can be added to the current partial solution $s^p$ without violating any of the
+constraints in $\Omega$". The exploration cost is not stated. The nearest support the
+survey offers is Merkle and Middendorf's result, p. 33, that "constraints on the
+feasibility of solutions introduce what they called *selection bias* in the solution
+construction process" — adjacent but a different claim. No edit made.
