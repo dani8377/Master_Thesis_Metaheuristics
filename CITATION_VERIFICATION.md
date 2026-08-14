@@ -941,6 +941,401 @@ Annealing, Mathematics of Operations Research, 13(1988)311-329", which is the th
 stronger than the sufficient-only bounds of Geman and Geman, Anily and Federgruen and
 Mitra et al. on pp. 30-33. "Guarantees the global optimum in theory" is a fair reading
 and, if anything, understates the result.
+---
+
+## ACO chain: `dorigo1996`, `dorigo1997`, `dorigo2004`, `stutzle2000`, `gutjahr2000`, `stutzle2002convergence`
+
+**Source used:** M. Dorigo, M. Birattari, T. Stützle, "Ant Colony Optimization:
+Artificial Ants as a Computational Intelligence Technique", *IEEE Computational
+Intelligence Magazine*, vol. 1, no. 4, pp. 28–39, November 2006.
+
+**Checked:** 2026-08-14, against the full article PDF.
+
+**Standing of this check.** The article is not any of the six cited works. It is a
+survey by the same authors that restates Ant System, MAX–MIN Ant System and Ant
+Colony System with their defining equations, and its reference list maps one-to-one
+onto the six bib keys ([8] = `dorigo1996`, [11] = `dorigo1997`, [15] = `stutzle2000`,
+[34] = `dorigo2004`, [36] = `gutjahr2000`, [38] = `stutzle2002convergence`). For
+claims about what these algorithms *are*, this is strong evidence: the authors are
+describing their own methods. For claims about what a specific paper argues, it is
+indicative rather than conclusive. Two claims below could not be settled from it at
+all and are marked as such.
+
+**Bib entries: all six correct.** Authors, titles, journals, volumes, issues, page
+ranges and years match the survey's reference list exactly. No change needed.
+
+### Statements 1–11 — CONFIRMED, no edit
+
+| Claim | Where | Support in the survey |
+|---|---|---|
+| ACO is a population-based method; ants deposit pheromone, others follow stronger trails, shorter paths accumulate faster | `Metaheuristic Optimisation Methods.tex:316` | p. 28 and p. 30, "In ACO, a number of artificial ants build solutions"; §I on the double-bridge experiment |
+| First demonstrated on the TSP | `:325` | p. 30, "Ant System is the first ACO algorithm proposed in the literature [6]–[8]"; Table 2 lists TSP under Dorigo et al. 1991, 1996 |
+| ACO widely applied to routing and sequencing | `:326` | p. 34, "tested on probably more than one hundred different NP-hard problems"; p. 35 names sequential ordering and VRP variants as state-of-the-art |
+| Transition rule $\tau^\alpha\eta^\beta$ normalised over allowed nodes | `:343` | Eq. (4), p. 32, identical including the restriction to $N(s^p)$ |
+| $\eta_{ij} = 1/d_{ij}$ | `:343` | Eq. (5), p. 32 |
+| Update $\tau(t+1) = (1-\rho)\tau(t) + \sum_k \Delta\tau^k$ | `:365` | Eq. (2), p. 32, identical |
+| Deposit $Q/L_k$ if the edge was used, else 0; $Q$ a constant | `:380` | Eq. (3), p. 32, identical |
+| Ant System lets all ants deposit | `:385` | p. 32, "the pheromone values are updated by *all* the $m$ ants that have built a solution" |
+| MMAS bounds pheromone within $[\tau_{\min}, \tau_{\max}]$ | `:388`, `Implementation.tex:172` | p. 32, "the value of the pheromone is bound"; Eq. (6)–(7) |
+| Pseudo-random-proportional rule: with probability $q_0$ move greedily to the most attractive allowed node, else sample | `:390`, `Implementation.tex:180` | p. 33, verbatim, including $\arg\max$ over $N(s^p)$ |
+| Convergence results hold only in a limit that does not bind under a finite budget | `:401` | p. 33, "all these convergence results do not allow one to predict how quickly optimal solutions can be found" |
+
+### Statement 12 — `gutjahr2000` — **MISATTRIBUTED, edit needed**
+
+> For pheromone-bounded variants, convergence in value to the global optimum has been
+> proven \cite{gutjahr2000,stutzle2002convergence}
+
+The survey draws the opposite line, p. 33:
+
+- "The first convergence proofs were presented by Gutjahr for an ACO algorithm called
+  graph-based ant system (GBAS)."
+- "**GBAS is a rather peculiar ACO algorithm and the above mentioned results do not
+  directly extend to other ACO algorithms. In particular, they do not extend to ACO
+  algorithms that are commonly adopted in applications.**"
+- "Nonetheless, for two of the top performing ACO algorithms, ACS and MMAS,
+  convergence has been proved [34], [38]."
+
+`gutjahr2000` proves convergence for GBAS, which is not a pheromone-bounded variant,
+and the survey explicitly denies the extension. Only `stutzle2002convergence` (and the
+2004 book) covers ACS and MMAS. The sentence as written attributes to Gutjahr a result
+the survey says is not his.
+
+**Fix:** drop `gutjahr2000` from this `\cite`, leaving `stutzle2002convergence`. A
+one-key deletion, no wording change, no length change.
+
+### Statement 13 — ACS deposit — **IMPRECISE, one-word fix advisable**
+
+> the original Ant System \cite{dorigo1996} lets all ants deposit, while Ant Colony
+> System \cite{dorigo1997} restricts deposit to the best ant
+
+True of the *offline* update: p. 33, "The offline pheromone update, similarly to
+MMAS, is applied at the end of each iteration by only one ant". But ACS also has a
+local update applied by **all** ants after every construction step (Eq. (9)), which
+the survey calls ACS's "most interesting contribution". Unqualified, the sentence
+reads as though ACS removed per-ant deposit altogether.
+
+**Fix:** "restricts the *offline* deposit to the best ant." One word.
+
+### Statement 14 — the $\alpha$ exponent in the greedy branch — **DEVIATION, disclosure advisable**
+
+> With probability $q_0 = 0.95$ the ant moves to the node maximising
+> $\tau_{ij}^{\alpha} \cdot \eta_{ij}^{\beta}$ (`Implementation.tex:180`)
+
+The survey's ACS rule, p. 33, is $j = \arg\max\{\tau_{il}\,\eta_{il}^{\beta}\}$ —
+**no exponent on $\tau$**. ACS fixes the pheromone exponent at 1. This thesis tuned
+$\alpha = 0.5$ and applies it in the greedy branch too, so the implemented rule is a
+generalisation of Dorigo and Gambardella's, not that rule itself. Defensible, and the
+probabilistic branch is unaffected, but currently undisclosed.
+
+**Fix:** say the rule is applied with the pheromone exponent carried through, so it
+generalises the ACS form. Roughly one clause.
+
+### Statements 15–16 — **NOT VERIFIABLE from this source**
+
+- "no edge is ever completely abandoned and premature stagnation is resisted"
+  (`:388`, cited to `dorigo2004`). The survey states the bounds but gives no
+  stagnation rationale; it says only that $\tau_{\min}$ and $\tau_{\max}$ are
+  "typically obtained empirically and tuned on the specific problem". The rationale is
+  standard MMAS motivation and belongs to `stutzle2000` or the book. Needs one of those.
+- "Pheromone is initialised to a small positive constant $\tau_0$, commonly scaled
+  from a greedy nearest-neighbour tour" (`:349`, cited to `dorigo2004`). The survey
+  mentions $\tau_0$ only as the initial value in the ACS local update. Needs the book.
+
+Both are unverified, not wrong. No edit made.
+
+### Statement 17 — construction-time exclusion — **PARTIALLY CONFIRMED**
+
+> infeasible moves can be excluded from $\mathcal{A}^k$ [...] which guarantees feasible
+> tours but can limit exploration when the feasible region is small (`:406`)
+
+The exclusion mechanism is confirmed, p. 31: $N(s^p)$ is "the set of components that
+can be added to the current partial solution $s^p$ without violating any of the
+constraints in $\Omega$". The exploration cost is not stated. The nearest support the
+survey offers is Merkle and Middendorf's result, p. 33, that "constraints on the
+feasibility of solutions introduce what they called *selection bias* in the solution
+construction process" — adjacent but a different claim. No edit made.
+
+---
+
+## `dorigo2004` — all five instances, against the book itself
+
+**Source:** M. Dorigo and T. Stützle, *Ant Colony Optimization*, MIT Press, Cambridge,
+MA, 2004.
+
+**Checked:** 2026-08-14, against Chapters 1–7 and the appendix.
+
+**Standing of this check.** This supersedes the partial verdicts recorded above under
+the ACO chain, which were reached from the 2006 survey rather than the book. Three
+statements the survey could not settle (15, 16, 17) are settled here: two are
+confirmed, one is wrong.
+
+**Bib entry: correct.** Authors, title, publisher, address and year all match, and are
+consistent with the survey's reference list entry [34]. No change needed.
+
+### Instance 1 of 5 — `:317` — **CONFIRMED. No edit.**
+
+> ACO [...] is a population-based method in which artificial ants cooperate to build
+> solutions [...] ants deposit pheromone as they walk, others preferentially follow
+> stronger trails, and shorter paths accumulate pheromone faster
+
+Chapter 1, §1.1: ants "tend to choose, probabilistically, paths marked by strong
+pheromone concentrations". The double bridge gives the third clause directly: "the ants
+choosing the short branch are the first to reach the food [...] pheromone starts to
+accumulate faster on the short branch", which the book names the *differential path
+length* effect. Chapter 2, §2.2 covers the population and cooperation framing.
+
+### Instance 2 of 5 — `:329` — **CONFIRMED. No edit.**
+
+> ACO has become one of the most widely applied metaheuristics for routing and
+> sequencing problems
+
+Chapter 5, §5.1 is a full section on routing problems (SOP, VRP). Chapter 7, §7.1.2
+names the sequential ordering problem and the VRP with time window constraints among
+those for which ACO is state-of-the-art. Table 2.1 lists the application spread.
+
+### Instance 3 of 5 — `:348` — **WRONG, edit made**
+
+> Pheromone is initialised to a small positive constant $\tau_0$, commonly scaled from
+> a greedy nearest-neighbour tour
+
+The second half is right; the first half inverts the book.
+
+- Chapter 3, §3.3.1 warns against exactly this for AS: "if the initial pheromone values
+  $\tau_0$'s are too low, then the search is quickly biased by the first tours generated
+  by the ants, which in general leads toward the exploration of inferior zones of the
+  search space". AS sets $\tau_0$ *slightly higher* than one iteration's deposit.
+- Chapter 3, §3.3.4, on MMAS — which is what this thesis implements: "the pheromone
+  trails are initialized to the upper pheromone trail limit, which, together with a small
+  pheromone evaporation rate, increases the exploration of tours at the start of the
+  search." Box 3.1 gives MMAS $\tau_0 = 1/\rho C^{nn}$, which is $\tau_{\max}$.
+- Only ACS uses a genuinely small $\tau_0$ ($1/nC^{nn}$), and there it is small so that
+  the local update can decay trails down toward it.
+
+The scaling half is confirmed: every $\tau_0$ in Box 3.1 is scaled by $C^{nn}$, the
+nearest-neighbour tour length.
+
+**The code sides with the book.** `EV_routing/algorithms/ant_colony.py:372-374` sets
+`tau_max = 1.0 / (rho * best_cost)` with `best_cost` the greedy solution's cost, then
+`pheromone = np.full((n_nodes, n_nodes), tau_max)` — the book's MMAS $\tau_0$ exactly,
+initialised at the maximum. So the sentence contradicted both the source and the
+implementation.
+
+**Fix applied:** "initialised uniformly to a value $\tau_0$ scaled from a greedy
+nearest-neighbour tour, which in MAX--MIN Ant System is the upper bound $\tau_{\max}$
+itself, so that the early search is broadly explorative."
+
+### Instance 4 of 5 — `:390` — **CONFIRMED. No edit.**
+
+> bounds pheromone within $[\tau_{\min}, \tau_{\max}]$ so that no edge is ever completely
+> abandoned and premature stagnation is resisted
+
+Logged above as statement 15, "not verifiable from the survey". The book settles it,
+nearly verbatim. Chapter 4, §4.2: "MMAS puts limits on the minimum value of pheromone
+trails. With this modification, the probability of generating any particular solution is
+kept above some positive threshold, which helps prevent search stagnation and premature
+convergence to suboptimal solutions." Chapter 3, §3.3.4 supplies the mechanism: the
+bounds hold the selection probability in $[p_{\min}, p_{\max}]$ with $0 < p_{\min}$.
+Chapter 5, §5.7.3 restates it as a guaranteed minimal level of exploration.
+
+Attributing the bounding mechanism to `stutzle2000` and the rationale to `dorigo2004`
+is the right split.
+
+### Instance 5 of 5 — `:410` — **CONFIRMED. No edit to the citation.**
+
+> infeasible moves can be excluded from $\mathcal{A}^k$ [...] which guarantees feasible
+> tours but can limit exploration when the feasible region is small
+
+Logged above as statement 17, "partially confirmed": the survey gave the exclusion
+mechanism but not the exploration cost. The book gives both.
+
+- Chapter 2, §2.2.1 frames the hard/soft choice: constraints may be implemented "in a
+  hard way, allowing the ants to build only feasible solutions, or in a soft way, in
+  which case the ants can build infeasible solutions [...] penalized as a function of
+  their degree of infeasibility."
+- Chapter 4, §4.2 gives the concrete cost of the hard route: on a dead end "the
+  AntSolutionConstruction procedure is aborted and the current state $x_h$ is discarded",
+  and the book's own remedy is the soft penalty.
+- Chapter 5, §5.4.2 makes the exploration point explicit: relaxing the penalty means "it
+  becomes easier to build infeasible solutions and, therefore, to move to different
+  regions of the search space containing feasible solutions."
+
+### Adjacent finding — `:416`, code and report disagree — **edit made**
+
+> The implementation in this thesis uses the first mechanism
+
+Not accurate. The ants use hard exclusion first, but on a dead end
+`ant_colony.py` breaks, appends the missed customers through a safety net, runs up to
+five repair passes, and then, per the comment at `ant_colony.py:232-234`, "remaining
+infeasibility is handled by the objective penalty". `Implementation.tex` already reports
+that 90 % of ACO's evaluated candidates are feasible, so the penalty binds on the other
+10 %. Both mechanisms are live.
+
+**Fix applied:** "uses the first mechanism as its primary one, falling back on the
+penalty for the residue it cannot exclude".
+
+---
+
+## `dorigo1996` — all seven instances, against the paper
+
+**Source:** M. Dorigo, V. Maniezzo, A. Colorni, "Ant System: Optimization by a Colony
+of Cooperating Agents", *IEEE Transactions on Systems, Man, and Cybernetics — Part B:
+Cybernetics*, vol. 26, no. 1, pp. 29–41, February 1996.
+
+**Checked:** 2026-08-14, against the full paper PDF.
+
+**Bib entry: correct.** Authors, title, journal, volume, issue, page range and year all
+match the article header. No change needed.
+
+### Instances 1, 2, 3, 5, 6, 7 — **CONFIRMED, no edit**
+
+| Claim | Where | Support in the paper |
+|---|---|---|
+| ACO is population-based; ants deposit, others follow stronger trails, shorter paths accumulate faster | `:317` | §I, "It is a population based approach"; §I, "an ant encountering a previously laid trail can detect it and decide with high probability to follow it"; §I, "This causes the quantity of pheromone on the shorter path to grow faster than on the longer one" |
+| First demonstrated on the TSP | `:327`, `:576` | Abstract, "We apply the proposed methodology to the classical Traveling Salesman Problem"; §II, "We decided to use the well-known traveling salesman problem as benchmark" |
+| Transition rule $\tau^\alpha\eta^\beta$ normalised over the allowed set; $\eta_{ij} = 1/d_{ij}$ | `:343` | Eq. (4), identical including the restriction to $\text{allowed}_k$; §II, "We call visibility $\eta_{ij}$ the quantity $1/d_{ij}$" |
+| Deposit $Q/L_k$ on used edges, else 0; better solutions influence more; $Q$ a constant scaling every deposit equally | `:382` | Eq. (3), identical; §IV, "ants producing shorter paths contribute a higher amount of trail than ants whose tour was poor"; §IV, "Parameter $Q$ is not shown because its influence was found to be negligible" |
+| Original Ant System lets all ants deposit | `:387` | Eq. (2), $\Delta\tau_{ij} = \sum_{k=1}^{m}\Delta\tau_{ij}^k$, summed over all $m$ ants |
+
+On the "first demonstration" claims: the earliest proposal of Ant System is really
+Dorigo's 1992 thesis and the 1991 technical report, which the 2004 book cites alongside
+this paper. Citing the 1996 article is the standard practice and is not an error, but it
+is worth knowing at the defence.
+
+### Instance 4 — `:367`, the pheromone update — **NOTATION MISMATCH, edit made**
+
+> evaporation and deposit are combined into a single update \cite{dorigo1996}:
+> $\tau_{ij}(t+1) = (1 - \rho)\tau_{ij}(t) + \sum_k \Delta\tau_{ij}^k$, where
+> $\rho \in (0,1)$ is the evaporation rate
+
+The paper's Eq. (1) is $\tau_{ij}(t+n) = \rho\,\tau_{ij}(t) + \Delta\tau_{ij}$, "where
+$\rho$ is a coefficient such that $(1-\rho)$ represents the evaporation of trail", and
+§IV lists the parameter as "$\rho$: trail persistence, $0 \le \rho < 1$". In this paper
+$\rho$ is **persistence**; in `dorigo2004` and the 2006 survey it is **evaporation**,
+written exactly as the thesis has it. The equation as printed is therefore the book's,
+not this paper's, and was cited only to this paper.
+
+**Why this matters.** The paper's recommended $\rho = 0.5$ is a persistence value. The
+thesis's tuned $\rho = 0.3$ is an evaporation value, i.e. $0.7$ persistence. Read against
+the cited paper without noticing the flip, the thesis appears to evaporate *more* than
+Dorigo when it in fact evaporates *less*.
+
+**The thesis convention is the right one and was not changed.** A full audit found
+$\rho$ used as the evaporation rate at every site, in text and in code:
+`Metaheuristic Optimisation Methods.tex:369`, `Experimental Setup.tex:295`,
+`Results and Evaluation.tex:667`, `Implementation.tex:132`, `Pseudocode.tex:194`,
+`Additional Experimental Material.tex:16`; and `ant_colony.py:445`
+(`pheromone *= (1.0 - rho)`), `ant_colony.py:372,454`
+(`tau_max = 1.0 / (rho * best_cost)`), the tuning grids in `tune.py:130` and
+`scalability_analysis.py:130`, and the tuned value `"rho": 0.3` in both
+`aco_best_params.json` and `params.json`.
+
+The decisive site is $\tau_{\max} = 1/(\rho L_{\text{greedy}})$. That is the book's MMAS
+formula and is correct only when $\rho$ is the evaporation rate; under the 1996 reading it
+would be wrong. Switching the thesis to the 1996 convention would break six text sites and
+the implementation in order to match one citation.
+
+**Fix applied:** cite `dorigo1996,dorigo2004` on the update, state that the convention is
+the book's, and record that the original paper's $\rho$ is this one's $1 - \rho$.
+
+### Note on the $\tau_0$ correction logged above
+
+The phrase "a small positive constant", removed from `:348` in the `dorigo2004` check, does
+appear in this paper: §II, "we set the intensity of trail at time 0, $\tau_{ij}(0)$, to a
+small positive constant $c$." That does not reverse the correction. The sentence was cited
+to `dorigo2004`, which says the opposite; it paired the phrase with the nearest-neighbour
+scaling, which belongs to the later variants; and the thesis implements MMAS, which
+initialises at $\tau_{\max}$, as the code does. The phrase was right for Ant System and
+wrong for the algorithm being described. Adding an explicit historical contrast
+("the original Ant System used a small positive constant") would be accurate if the space
+is judged worth it. Not done.
+
+---
+
+## `schneider2014` — all four instances, against the paper
+
+**Source:** M. Schneider, A. Stenger, D. Goeke, "The Electric Vehicle-Routing Problem with
+Time Windows and Recharging Stations", *Transportation Science*, vol. 48, no. 4,
+pp. 500–520, November 2014. DOI 10.1287/trsc.2013.0490.
+
+**Checked:** 2026-08-14, against the full paper PDF.
+
+**Bib entry: correct.** Authors, title, journal, volume, issue, page range, year and DOI
+all match the article header. No change needed.
+
+### Instances 1 and 2 — **CONFIRMED, no edit**
+
+| Claim | Where | Support in the paper |
+|---|---|---|
+| E-VRPTW introduced by Schneider et al., solved with a VNS/TS hybrid; they introduced the benchmark instances | `Related work.tex:45` | Abstract, "We introduce the electric vehicle-routing problem with time windows and recharging stations (E-VRPTW) [...] we present a hybrid heuristic that combines a variable neighborhood search algorithm with a tabu search heuristic"; §5.2, "we are the first to study E-VRPTW"; §5.2.1, 56 large instances (100 customers, 21 stations) and 36 small ones |
+| Dedicated operators insert, remove, or relocate charging stations | `Metaheuristic Optimisation Methods.tex:295` | §4.4: `stationInRe` "performs insertions and removals of recharging stations"; "Relocate is also defined for recharging stations"; 2-opt* allows "the removal and insertion of arcs, including recharging stations" |
+
+Two notes for the defence, neither an error. The "widely used testbeds" half of the first
+claim is about the later literature, not something this paper can attest; `froger2022exact`
+is cited alongside and covers it. And the VNS/TS acceptance criterion is itself SA-based
+(§4.3), so the method is a three-component hybrid; "VNS and Tabu Search" is the authors'
+own name for it (VNS/TS) and is fine as written.
+
+### Instance 3 — `:359` — **WRONG causal clause, edit made**
+
+> the allowed set $\mathcal{A}^k$ must account for the vehicle's battery state, since
+> energy consumption depends on the entire sequence of decisions made so far
+
+The conclusion is right; the reason inverts the model. In Schneider, per-arc consumption is
+$h \cdot d_{ij}$, a constant charge consumption rate times distance (§3, Table 1). That is
+arc-local and carries no sequence dependence. What accumulates over the sequence is the
+battery *level* $y_i$, through constraints (10)–(11).
+
+**The same is true of this thesis.** `Problem Specification.tex:382` defines $e_{ij}$ as the
+energy "computed from $e_{\text{base}}$, $d_{ij}$, and the grade and speed multipliers",
+indexed by the arc; `data_loader.py:73` computes
+`energy[i,j] = d_km * energy_consumption_kwh_per_km * grade_mult * speed_mult`, and
+`ant_colony.py:187` accumulates it with `battery -= energy_array[ci, ni]`. Arc-local
+consumption, path-dependent battery level.
+
+**The report already says this correctly elsewhere**, which makes `:359` the lone outlier:
+`Problem Analysis and Success Criteria.tex:9` ("the battery state is coupled along the whole
+route, so whether a stop is reachable depends on the entire prefix of decisions preceding
+it"), `Comparative Discussion.tex:17` ("alters the energy trajectory of every later node"),
+`Metaheuristic Optimisation Methods.tex:586` ("path-dependent feasibility"), and the
+construction-rule paragraph of `Implementation.tex` (the charging terms "depend on the
+station visited and the battery level on arrival rather than on the arc").
+
+**Fix applied:** "Each arc's consumption is fixed by the arc itself, but the charge remaining
+accumulates over the decisions taken since the last recharge, so whether a node is reachable
+depends on the whole prefix of the route." This matches the phrasing already used in
+`Problem Analysis and Success Criteria.tex:9`.
+
+Worth knowing: this thesis's energy model is richer than Schneider's, which explicitly
+assumes "a flat terrain, i.e., no grades are considered" (§3), whereas this one applies a
+grade multiplier from node elevations. Schneider is therefore the wrong source to lean on
+for anything about energy-model structure.
+
+### Instance 4 — `Implementation.tex:176` — **MISATTRIBUTED, edit made**
+
+> insertion is triggered dynamically by the battery state, the standard reserve-threshold
+> treatment of proactive charging in energy-constrained routing \citep{schneider2014}
+
+Schneider has no reserve threshold. Stations enter solutions two ways: the `stationInRe`
+neighbourhood operator applied to generator arcs (§4.4), and the $P_{\text{batt}}$ term of
+the generalized cost function (17), which lets the search carry infeasible solutions and
+repair them under a dynamically updated penalty. The initial construction inserts customers
+"until a violation of capacity or battery capacity occurs" (§4.1) — a violation trigger, and
+computed "under the assumption that no recharging possibility exists". Nothing in the paper
+resembles a battery-percentage reserve.
+
+The threshold is this thesis's own tuned design choice, and the project says so consistently
+everywhere except in this sentence: the grid `"battery_threshold_frac": [0.2, 0.4]` in
+`tune.py:140` and `scalability_analysis.py:132`, the matching grid in
+`Additional Experimental Material.tex:16`, "battery threshold 0.4, tuned" in
+`Experimental Setup.tex:297`, and "stations enter the candidate list once charge drops below
+$40\,\%$" in `Results and Evaluation.tex:726`. Only the word "standard" and the citation
+claimed a provenance the source does not have. Same failure mode as the `deb2000`
+normalisation estimator corrected earlier.
+
+**Fix applied:** keep Schneider for what it does support — that recharging must be planned
+into the route rather than left until the charge is critical — record that it enforces this
+by penalising battery violations rather than by a threshold, and state that the reserve
+threshold is this thesis's own mechanism. No value changed, so no other site is affected.
 
 ---
 
