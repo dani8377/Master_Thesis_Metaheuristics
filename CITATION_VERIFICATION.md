@@ -1455,3 +1455,85 @@ Scope note, not an error. Mann's coverage is wider than the subsection heading, 
 includes exact methods too. The sentence claims only that he gives a comprehensive survey, not
 that the survey is confined to heuristics, so the placement is correct. The narrower framing
 belongs to `kumaraswamy2019binpacking`, and the thesis already says so in the same sentence.
+
+## `witt2019upper` (ref. 98)
+
+**Source:** C. Witt, "Upper Bounds on the Running Time of the Univariate Marginal Distribution
+Algorithm on OneMax", Algorithmica, volume 81, issue 2, pages 632-667, 2019.
+DOI 10.1007/s00453-018-0463-0.
+
+**Checked:** 2026-08-14, against the full paper PDF (36 pages, Sections 1-6 plus the appendix
+proof of the drift theorem).
+
+**Bib entry: correct, no change.** Author, title, journal, volume, pages and year match the
+running head "Algorithmica (2019) 81:632-667" and the DOI printed on page 1. The issue number
+is the one field the PDF never prints; Crossref gives issue 2, print date February 2019, which
+is what the entry already has.
+
+### Statement 1 of 1 - Metaheuristic Optimisation Methods, Model Classes (`chapters/Metaheuristic Optimisation Methods.tex:463`)
+
+> Theoretical analyses show the population must be sized generously relative to $n$ to prevent
+> \emph{genetic drift}, in which a marginal moves toward its extremes through finite-sample
+> noise rather than genuine selection pressure
+> \cite{shapiro2005drift,doerr2020sharp,witt2019upper}.
+
+**Verdict: CONFIRMED. No edit.** Every clause is carried, and the paper uses the term itself
+rather than leaving it to be inferred.
+
+**The term.** Section 1 says Wu et al. "use concentration bounds such as Chernoff bounds to
+bound the effect of so-called genetic drift, which is also considered in the present paper".
+Section 3 fixes the meaning: "there are random fluctuations (referred to as genetic drift in
+[26]) of frequencies that may lead to undesired decreases towards 0". Reference [26] is
+Sudholt and Witt, GECCO 2016, where the name is coined.
+
+**Noise rather than selection pressure.** Section 2.2 gives the mechanism exactly as the report
+glosses it. Strip selection and "the frequency describes a random walk that is a martingale,
+i.e., in expectation it does not change"; keep selection and "since only the accumulated number
+of 1-bits per individual matters for selection, a single frequency may still decrease even if
+the step leads to an increase of the best-so-far seen OneMax value".
+
+**The extremes are absorbing.** Section 2: "If a frequency is either 0 or 1, it cannot change
+anymore since then all values at this position will be either 0 or 1." Same passage supports
+the later sentence at line 516 that a drifted marginal cannot recover without a mutation
+operator.
+
+**Sized relative to n.** This is the paper's phase transition. Section 1: "Around
+mu = Theta(sqrt(n) log n), there is a phase transition in the behavior of the algorithm. With
+smaller mu, the stochastic movement of the frequencies is more chaotic and many frequencies
+will hit the lowest possible value during the optimization." Above the threshold, Lemma 11
+proves that for mu >= c sqrt(n) log n a frequency does not fall to 1/4 within n^Theta(c)
+generations, which subsumes any polynomial number of steps for c large enough, and Theorem 10
+turns that into the O(lambda sqrt(n)) running-time bound. Section 5 matches empirically: for
+n = 2000 the number of hits of the lower border decreases exponentially in lambda and the
+transition sits "somewhere between 250 and 300", the same order as sqrt(n) ln n, about 340
+(my arithmetic, not the paper's).
+
+Three things worth having ready for the defence, none of them an error in the report.
+
+**1. The paper proves sufficiency; necessity is quoted from elsewhere.** Lemma 11 shows a large
+population prevents drift. The converse, that a small one causes it, is Krejca and Witt, FOGA
+2017, restated in Section 4: "with high probability n^Omega(1) frequencies will walk to the
+lower border before the optimum is found, resulting in a coupon collector effect". The report
+says "theoretical analyses show", plural, across three sources, and this paper states the
+two-sided threshold in its own introduction, so the "must" is carried. If pressed, quote the
+phase-transition sentence, not Lemma 11.
+
+**2. Drift is not failure, and that is the paper's headline.** With the borders [1/n, 1-1/n] in
+place, Theorem 12 gives expected time O(lambda n) for mu >= c log n, far below the drift
+threshold, and the conclusion extracts O(n log n) at mu = c' log n. Only the border-free
+variant breaks: "For UMDA*, it is infinite with high probability if mu < c' sqrt(n) log n". The
+report's sentence survives this because it claims a large population is needed to prevent
+drift, not to make UMDA work at all. The margin paragraph at lines 510-518 is the counterpart
+the UMDA/UMDA* split calls for, and it is also the answer if the examiner asks why this thesis
+does not simply scale N with n: it uses Laplace smoothing, which is the border, so it sits on
+the UMDA rather than the UMDA* side of that result.
+
+**3. Scope.** All of this is binary UMDA on OneMax; this thesis runs a multi-valued UMDA over m
+servers on a penalised objective. The mechanism transfers, since a marginal estimated from mu
+samples carries sampling noise whatever its arity, but the threshold constant does not. That is
+the reason not to sharpen "sized generously relative to $n$" into "of order sqrt(n) log n": the
+figure belongs to this benchmark, and quoting it would claim more transfer than the sources
+support. The wording stays qualitative on purpose.
+
+**Not verified in this pass:** `shapiro2005drift` and `doerr2020sharp`, the other two citations
+on the same sentence. Only the Witt PDF was supplied.
