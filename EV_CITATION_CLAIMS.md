@@ -347,7 +347,7 @@ Already verified and re-listed here for completeness: `mavrovouniotis2020benchma
 
 - [x] **3.** `Metaheuristic Optimisation Methods.tex:190` — Metaheuristics › Bio-inspired & Heuristic-Based Metaheuristics › Memetic Algorithms *(edited: gene clause narrowed)*
 
-  > Genes are not improved by the individual that carries them, whereas memes usually are, just as each offspring here is locally refined before it enters the population [moscato1989].} In this thesis the MA extends the Genetic Algorithm of the previous section.
+  > Unlike a gene, a meme is usually improved by its carrier before being passed on, which is what local search does to each offspring [moscato1989].} In this thesis the MA extends the Genetic Algorithm of the previous section.
 
 - [x] **4.** `Related work.tex:53` — Related Work › Electric Vehicle Routing › Heuristics and Metaheuristics on EVRP
 

@@ -1283,13 +1283,24 @@ sentence:
 - before: "Genes are passed on unchanged, whereas memes are typically improved by their
   carrier before being propagated, just as each offspring here is locally refined before it
   enters the population"
-- after: "Genes are not improved by the individual that carries them, whereas memes usually
-  are, just as each offspring here is locally refined before it enters the population"
+- after: "Unlike a gene, a meme is usually improved by its carrier before being passed on,
+  which is what local search does to each offspring"
 
 That is the contrast the report actually draws, the absence in biology of any feedback from
 what the individual learns back into what it transmits, against the meme that its carrier
-refines first. It is also the contrast the analogy needs, since local search is exactly that
-feedback. Nothing else in the footnote or the paragraph changed.
+refines first. It is also the contrast the analogy needs, since local search is that
+feedback. "Usually" carries the report's own hedge, "almost all modifications give
+improvements rather than create a disorder".
+
+The replacement is also shorter than the original, 24 words against 34. The first draft of
+this fix kept the original three-clause shape and read "Genes are not improved by the
+individual that carries them, whereas memes usually are, just as each offspring here is
+locally refined before it enters the population". Two things were wrong with it against the
+supervisor's style rules. "Whereas memes usually are" leaves the verb phrase elliptical,
+where "unlike a gene" states the contrast directly. And the closing clause repeated what the
+body sentence had just said two lines earlier, that the population evolves over locally
+optimised solutions rather than raw offspring. Nothing else in the footnote or the paragraph
+changed.
 
 ### Statement 4 of 4 - Related Work, Heuristics and Metaheuristics on EVRP (`chapters/Related work.tex:53`)
 
