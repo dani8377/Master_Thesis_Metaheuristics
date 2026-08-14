@@ -116,7 +116,8 @@ def sample_stations(sf_stations: pd.DataFrame, n: int) -> pd.DataFrame:
 
 def generate_customers(sf_stations: pd.DataFrame, land_geom, n_customers: int) -> pd.DataFrame:
     """
-    Place customers near real charging stations with Gaussian scatter (σ ≈ 900 m).
+    Place customers near the (synthetic) charging stations with Gaussian
+    scatter (σ ≈ 900 m).
     Candidates that fall in water are rejected and resampled.
     Customers are generated in a fixed RNG order so that the first n customers
     are always the same, regardless of the target size — ensuring nested instances.

@@ -151,11 +151,17 @@ def load_synthetic_problem_data(
     """
     Generate a synthetic cloud scheduling instance with n_tasks tasks.
 
-    Task attributes (CPU, memory, energy, latency) are sampled from truncated
-    normal distributions fit to the full real dataset, so synthetic instances
-    share the same statistical character as real data regardless of size.
+    Task attributes (CPU, memory, energy, latency) are sampled from normal
+    distributions matched to each column's mean and standard deviation over the
+    full dataset, then clipped to that column's 5th-95th percentile range.
     Priority classes are drawn from the empirical frequency distribution.
     This allows generating instances larger than the 6 345-row dataset limit.
+
+    Note that the generated tasks match the dataset in location and scale but
+    not in shape: the source columns are close to uniform, so clipping a fitted
+    normal leaves point masses at the two percentile bounds.  Used for the
+    scalability axis, where algorithms are compared against each other on a
+    common instance at each size, not for the main experiment.
 
     Parameters
     ----------

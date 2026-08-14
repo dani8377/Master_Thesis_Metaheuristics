@@ -192,8 +192,8 @@ tuning:
 scalability:
   # ---------------------------------------------------------------------------
   # Axis 1 — Horizontal: synthetic tasks at increasing scale
-  # Synthetic tasks are drawn from the empirical distribution of the real dataset
-  # so instances remain statistically comparable across sizes.
+  # Synthetic tasks are drawn from normals matched to the dataset columns
+  # (clipped to the 5th-95th percentiles) so instances stay comparable across sizes.
   # n_servers = max(4, n_tasks // server_ratio)  — keeps utilisation constant at ~50%.
   # ---------------------------------------------------------------------------
   horizontal:
@@ -202,7 +202,8 @@ scalability:
     n_seeds: 8
 
   # ---------------------------------------------------------------------------
-  # Axis 2 — Vertical / constraint tightness: fixed real 50-task instance,
+  # Axis 2 — Vertical / constraint tightness: fixed 50-task instance read
+  # straight from the dataset,
   # server count varied from loose (20) to near-critical (6).
   # CPU utilisation rises from ~25% at m=20 to ~80%+ at m=6.
   # Shows how quality and feasibility degrade as the packing problem gets harder.
