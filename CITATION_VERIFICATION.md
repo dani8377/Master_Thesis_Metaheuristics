@@ -901,6 +901,13 @@ which is what the thesis sentence says. Both readings sit on p. 59 and both use 
 the sentence is supported as written; if pressed, the answer is that the thesis quotes
 the calibration in its worsening-move form, which is the form an implementation uses.
 
+*Partly superseded, 2026-08-14.* The last clause of the first paragraph above, "so the
+co-citation to `kirkpatrick1983` is correctly placed too", no longer holds. The
+`kirkpatrick1983` pass checked the 1983 *Science* article itself and the 0.8 rule is not
+in it. The book's key for the number is [KIR82], not [KIR83]. `kirkpatrick1983` has been
+removed from that one citation; see Statement 5 under `kirkpatrick1983` below. The
+book's own support for the sentence is unaffected and still stands.
+
 ### Statement 4 of 4 - Simulated Annealing, The Cooling Schedule (`chapters/Metaheuristic Optimisation Methods.tex:261`)
 
 > A logarithmically slow schedule guarantees the global optimum in
@@ -1537,3 +1544,165 @@ support. The wording stays qualitative on purpose.
 
 **Not verified in this pass:** `shapiro2005drift` and `doerr2020sharp`, the other two citations
 on the same sentence. Only the Witt PDF was supplied.
+
+---
+
+## `larranaga2001` (ref. 55)
+
+**Source:** P. Larranaga and J. A. Lozano (editors), *Estimation of Distribution Algorithms:
+A New Tool for Evolutionary Computation*, Genetic Algorithms and Evolutionary Computation
+series, Kluwer Academic Publishers, Boston, MA, 2001. DOI 10.1007/978-1-4615-1539-5.
+
+**Checked:** 2026-08-14.
+
+**Read the caveat first: this pass is by proxy, not against the book.** The PDF supplied was
+not the Kluwer book. It was E. Bengoetxea, P. Larranaga, I. Bloch and A. Perchant,
+"Estimation of Distribution Algorithms: A New Evolutionary Computation Approach for Graph
+Matching Problems", in *EMMCVPR 2001*, Lecture Notes in Computer Science 2134, Springer,
+pages 454-469. That paper is a legitimate proxy and an unusually good one, for three reasons.
+Larranaga is its second author. It is the same year as the book. And its Section 2, pages
+455-460, is a self-contained tutorial exposition of the EDA framework which cites the book as
+its own reference [16] on the opening line of Section 2.1, that is, the paper's summary of
+EDAs is presented as a summary *of* the book, by one of the book's editors. Every one of the
+six thesis statements below is matched against that Section 2. What this pass therefore
+establishes is that the six claims are true of the EDA framework as the book's own editor set
+it out in the same year, not that a specific page of the book says so. If an examiner asks for
+page numbers in the book itself, that has not been done and the honest answer is to say so.
+
+**Bib entry: correct, no change.** The one thing the supplied PDF verifies directly, and
+verifies twice, is the bibliographic record. Reference [16] on page 467 reads
+"P. Larranaga and J. A. Lozano. Estimation of Distribution Algorithms. A New Tool for
+Evolutionary Computation. Kluwer Academic Publishers, 2001", confirming both names, the title
+including the subtitle, the publisher and the year. Reference [35] on page 468 confirms
+independently that the two are *editors* rather than sole authors, and so that `@book` with an
+`editor` field is the right form: "In P. Larranaga and J. A. Lozano, editors, Estimation of
+Distribution Algorithms. A new tool for Evolutionary Computation. Kluwer Academic Publishers,
+2001". Reference [35] is itself a chapter in that book by the authors of the supplied paper,
+which is also why the paper's Section 2 tracks the book so closely. The `series`, `address`
+and `doi` fields are not printed in either reference and were not checked in this pass.
+
+**Summary of the pass:** six statements checked across two chapters, all six confirmed as
+written. No bibliographic field changed and no wording changed anywhere in the thesis. Four of
+the six are near verbatim restatements of the source's own sentences or of its Figure 1
+pseudocode.
+
+### Statement 1 of 6 - Metaheuristic Optimisation Methods, model-based section (`chapters/Metaheuristic Optimisation Methods.tex:423`)
+
+> Probabilistic Model-Based Metaheuristics replace the heuristic variation operators with an
+> explicit probabilistic model fitted to the currently best solutions, and generate new
+> candidates by sampling from that model \cite{larranaga2001,hauschild2011,pelikan2002survey}.
+
+**Verdict: CONFIRMED. No edit.** The source states this as the defining property, and states
+both halves of it, the fitting and the replacement, in consecutive sentences. Section 2.1,
+page 455: "the characteristic that most differentiates EDAs from other evolutionary search
+strategies such as GAs is that the evolution from a generation to the next one is done by
+estimating the probability distribution of the fittest individuals, and afterwards by sampling
+the induced model. This avoids the use of crossing or mutation operators." "The fittest
+individuals" is the report's "the currently best solutions", and "avoids the use of crossing
+or mutation operators" is the report's "replace the heuristic variation operators".
+
+### Statement 2 of 6 - Metaheuristic Optimisation Methods, EDAs (`chapters/Metaheuristic Optimisation Methods.tex:427`)
+
+> Estimation of Distribution Algorithms (EDAs)
+> \cite{muhlenbein1996,larranaga2001,hauschild2011} are model-based alternatives to
+> traditional GAs.
+
+**Verdict: CONFIRMED. No edit.** This is a bare framing sentence and the source frames them
+the same way. Section 2.1, page 455, places EDAs inside evolutionary computation, "EDAs
+[16,17,18] are non-deterministic, stochastic heuristic search strategies that form part of the
+evolutionary computation approaches", and then separates them from GAs by the model, in the
+sentence quoted under Statement 1. The reference marker [16] on that first line is the book
+itself, so the citation points at the work the source points at.
+
+### Statement 3 of 6 - Metaheuristic Optimisation Methods, Model Classes (`chapters/Metaheuristic Optimisation Methods.tex:445`)
+
+> EDAs are classified by the complexity of the fitted model
+> \cite{pelikan2002survey,hauschild2011,larranaga2001}.
+
+**Verdict: CONFIRMED. No edit.** The source not only states the classification principle but
+organises its own Section 2.2 by it, and the three tiers it uses are the report's three tiers.
+Page 457: "All the EDAs are classified depending on the maximum number of dependencies between
+variables that they accept (maximum number of parents that a variable $X_i$ can have in the
+probabilistic graphical model)." Maximum number of dependencies is the report's "complexity of
+the fitted model". The subheadings that follow are "Without Interdependencies", with UMDA as
+the example; "Pairwise Dependencies", with MIMIC as the example and reference [21] being
+De Bonet, Isbell and Viola 1997, which is the thesis's `debonet1997`; and "Multiple
+Interdependencies", with EBNA and a learned Bayesian network. That maps onto the report's
+univariate, bivariate and multivariate tiers item for item, including the choice of MIMIC as
+the bivariate representative.
+
+### Statement 4 of 6 - Metaheuristic Optimisation Methods, Working Principle of UMDA (`chapters/Metaheuristic Optimisation Methods.tex:471`)
+
+> UMDA maintains a population $P_t$ of $N$ candidates and, each generation, performs
+> \emph{evaluation}, \emph{selection}, \emph{estimation}, and \emph{sampling}
+> \cite{muhlenbein1996,larranaga2001}: [select, estimate, sample display]
+
+**Verdict: CONFIRMED. No edit.** The strongest of the six. The report's three-operator display
+is the source's Figure 1 pseudocode line for line, page 456: "$D_0$ <- Generate $N$ individuals
+(the initial population) randomly. Repeat for $l = 1, 2, \ldots$ until a stopping criterion is
+met: $D^{Se}_{l-1}$ <- Select $Se \leq N$ individuals from $D_{l-1}$ according to a selection
+method; $\rho_l(x) = \rho(x|D^{Se}_{l-1})$ <- Estimate the probability distribution of an
+individual being among the selected individuals; $D_l$ <- Sample $N$ individuals (the new
+population) from $\rho_l(x)$." The population size is $N$ and the selected count satisfies
+$Se \leq N$, which is the report's $\mu \leq N$ under a different letter.
+
+Two details further down carry the rest of the paragraph. The univariate factorisation
+$p_t(x) = \prod_i p_{t,i}(x_i)$ is equation (4) on page 458,
+$p_l(x; \theta^l) = \prod_{i=1}^{n} p_l(x_i; \theta_i)$. The maximum-likelihood frequency
+estimate is the sentence immediately after it: "$\theta^l$ is recalculated every generation by
+its maximum likelihood estimation, i.e. $\hat\theta^l_{ijk} = N^{l-1}_{ijk} / N^{l-1}_{ij}$", a
+count of cases divided by a total, which is the report's
+$p_{t,i}(s) = \frac{1}{\mu}\sum_{x \in S_t}\mathds{1}[x_i = s]$ in the parent-free case.
+"Recalculated every generation" is the report's re-estimation from scratch.
+
+### Statement 5 of 6 - Metaheuristic Optimisation Methods, UMDA parameters (`chapters/Metaheuristic Optimisation Methods.tex:507`)
+
+> Three parameters govern the exploration--exploitation balance
+> \cite{muhlenbein1996,larranaga2001}: the population size $N$ (estimate accuracy and drift
+> resistance), the selection ratio $\mu / N$ (selection pressure, with $\mu = N/2$ a common
+> default), and a margin that keeps marginals away from the exact extremes so a value absent
+> from one generation's selection is not lost forever \cite{chen2010analysis} [...]
+
+**Verdict: CONFIRMED. No edit.** Read the citation brackets carefully before judging this one,
+because the sentence does three things and only two of them are charged to this key. The margin
+is cited to `chen2010analysis`, separately, at the clause where it appears. `larranaga2001`
+carries $N$ and the selection ratio.
+
+$N$ and $\mu/N$ are both parameters of the source's own experiment, Section 4.2, page 463: "a
+population of 2000 individuals ($N = 2000$), from which a subset of the best 1000 are selected
+($S_e = 1000$) to estimate the probability, and the elitist approach was chosen". That is
+$\mu/N = 1/2$ exactly, which is the report's "$\mu = N/2$ a common default", corroborated by
+use rather than by prescription, but corroborated in a paper by the book's own editor, which is
+about as good as "common default" claims get. The same sentence supports "keeping the top $\mu$
+individuals by fitness" as truncation ("the best 1000 are selected") and the report's elitism
+sentence four lines later ("always the best individual is included for the next population and
+1999 individuals are simulated").
+
+Worth noting rather than fixing: the parenthetical "(estimate accuracy and drift resistance)"
+is not supported by the supplied PDF, which never discusses drift. It does not need to be. The
+drift claim is made and cited in full two paragraphs earlier at line 463, to
+`shapiro2005drift`, `doerr2020sharp` and `witt2019upper`, and the parenthetical is a
+back-reference to it, not a fresh claim. The one sentence in the supplied PDF that gestures at
+the margin idea is on page 457, "We assume that every $\theta_{ijk}$ is greater than zero", the
+positivity condition that Laplace smoothing enforces, but it is stated there as a modelling
+assumption on Bayesian network parameters, not as a tunable parameter, so it is not strong
+enough to carry the margin clause and the clause does not lean on it.
+
+### Statement 6 of 6 - Related Work, EDAs on Cloud Allocation (`chapters/Related work.tex:21`)
+
+> Estimation of Distribution Algorithms (EDAs) replace the crossover and mutation operators of
+> evolutionary algorithms with a probabilistic model that is fitted to selected individuals
+> from the current population and then sampled to generate new candidate
+> solutions~\cite{hauschild2011, larranaga2001}.
+
+**Verdict: CONFIRMED. No edit.** Same support as Statement 1, and here the match is closer
+still because the report names the two operators the source names. Section 2.1, page 455:
+"This avoids the use of crossing or mutation operators." Crossing is crossover. "Fitted to
+selected individuals from the current population" is Figure 1's estimate step, whose object is
+$D^{Se}_{l-1}$, the selected subset, and the source's own gloss for the estimated quantity is
+"the probability distribution of an individual being among the selected individuals".
+
+**Not verified in this pass:** the `series`, `address` and `doi` fields of the bib entry, which
+neither reference in the supplied PDF prints; and `hauschild2011`, `pelikan2002survey` and
+`chen2010analysis`, the co-cited keys on four of the six statements. Only the Bengoetxea et al.
+PDF was supplied.
