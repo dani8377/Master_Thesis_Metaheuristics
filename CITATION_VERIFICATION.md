@@ -1043,6 +1043,19 @@ equilibrium. This makes an analysis of the algorithm almost impossible." The sen
 supported as written by the pair, and if pressed on which reference supports which clause,
 the answer is the split above rather than both for both.
 
+The sharpest form of the objection, worth pre-empting, is about "emerged in response to".
+The paper's *own* stated motivation is neither of the two clauses but a third thing,
+namely analytical tractability of the breeder-GA theory. The abstract: "The Breeder Genetic
+Algorithm (BGA) is based on the equation for the response to selection. In order to use
+this equation for prediction, the variance of the fitness of the population has to be
+estimated. For the usual sexual recombination the computation can be difficult." So the
+thesis sentence states the standard retrospective account of why the EDA line of work
+arose, which `larranaga2001` and `hauschild2011` give in exactly those terms one paragraph
+earlier, rather than paraphrasing this paper's introduction. That is a normal use of an
+origin paper and not an over-claim, because the thesis does not write "Muhlenbein and Paass
+argue that". The interacting-variables thread genuinely is in the paper, in Sections 5 and
+6, as quoted above; it is simply not what its abstract leads with.
+
 ### Statement 4 of 8 - Metaheuristic Optimisation Methods, Model Classes (`chapters/Metaheuristic Optimisation Methods.tex:457`)
 
 > This work therefore evaluates a single representative, the Univariate Marginal
