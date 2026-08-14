@@ -9,17 +9,14 @@ Energy Optimisation in Scheduling and Routing"_.
   Mathematics and Computer Science
 - **Submitted:** August 2026
 
-The repository contains two independent experiment modules and the thesis
-sources. Each module has its own entry point, its own parameter files and its
-own results directory, and neither imports from the other.
+The repository contains two independent experiment modules. Each has its own
+entry point, its own parameter files and its own results directory, and neither
+imports from the other.
 
 | Module | Directory | Algorithms implemented |
 |---|---|---|
 | Cloud resource scheduling (50 tasks, 10 servers) | [`Cloud_scheduling/`](Cloud_scheduling/) | SA, GA, UMDA, Branch & Bound, greedy BFD / round-robin / random baselines |
 | Electric-vehicle routing (75 customers, 30 charging stations) | [`EV_routing/`](EV_routing/) | SA, GA, MA, ACO, greedy nearest-neighbour baseline, ACO→SA hybrid |
-
-The thesis LaTeX lives in [`report/`](report/), a git submodule tracking the
-Overleaf project. If it is empty after cloning, run `git submodule update --init`.
 
 All results, figures, tuned parameters and run manifests committed here were
 produced by the code in this repository; nothing in `results/` is hand-edited.
@@ -121,7 +118,6 @@ Master_Thesis_Metaheuristics/
 │
 ├── run.py                              ← launcher for both modules
 ├── Makefile                            ← make cloud / make ev / make
-├── report/                             ← thesis LaTeX (git submodule → Overleaf)
 │
 ├── Cloud_scheduling/
 │   ├── main.py                         ← entry point: experiment, sweeps, tuning
@@ -385,8 +381,8 @@ All are run from the project root with `PYTHONPATH=EV_routing`.
 | `sa_reheat_ablation.py` | Reruns SA with reheating disabled over the same 20 seeds for comparison against `results_summary.csv`. | console |
 | `energy_decomposition.py` | Splits arc energy into its distance, grade and speed components over sample tours. | console |
 | `make_route_map.py` | Greedy route against SA's best route on an OpenStreetMap basemap. Needs the network extras. | `results/sf_75/figures/route_comparison_map.png` |
-| `make_instance_map.py` | Redraws the `sf_75` instance map from the frozen instance data. Needs the network extras. | `report/graphics/sf75_instance_map.png` |
-| `make_cover_graphic.py` | Title-page graphic for the thesis. | `report/graphics/`, preview in `results/sf_75/figures/` |
+| `make_instance_map.py` | Redraws the `sf_75` instance map from the frozen instance data. Needs the network extras. | `report/graphics/sf75_instance_map.png`, created on demand |
+| `make_cover_graphic.py` | Two-panel schematic of the scheduling and routing problems. Its PDF target directory is not created automatically. | `report/graphics/cover_dual_problems.pdf`, preview PNG in `results/sf_75/figures/` |
 | `regen_fixed_plots.py`, `regen_scalability_plots.py` | Redraw figures from saved CSVs without re-running any algorithm. | overwrite the corresponding PNGs |
 
 ---
