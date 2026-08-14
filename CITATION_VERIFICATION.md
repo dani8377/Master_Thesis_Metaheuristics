@@ -771,21 +771,25 @@ may converge toward nonoptimal feasible solutions."
 ## `vanlaarhoven1987` (ref. 92)
 
 **Source:** P. J. M. van Laarhoven and E. H. L. Aarts, *Simulated Annealing: Theory and
-Applications*, Reidel, Dordrecht, 1987. DOI 10.1007/978-94-015-7744-1.
+Applications*, D. Reidel, Dordrecht, 1987. DOI 10.1007/978-94-015-7744-1.
 
-**Checked:** 2026-08-14, against a book *review* of the source, not against the source.
-The PDF supplied for this pass is the "Book Reviews" page of an Elsevier journal
-(p. 200, PII S0378-4754(88)90140-1), whose first item is a twelve-line review of this
-book. It settles what the book is and roughly what it covers. It contains none of the
-technical material the four statements cite, so it cannot confirm any of them.
+**Checked:** 2026-08-14, against the full book PDF. An earlier draft of this entry was
+written against a journal book *review* of the book, which was supplied first by
+mistake and could confirm nothing; it is superseded by what follows.
 
-**Bib entry:** author, title and year confirmed against the review's header line,
-"P.J.M. Van Laarhoven and E.H.L. Aarts: Simulated Annealing: Theory and Applications.
-Reidel, Dordrecht, Netherlands, 1987, xi + 186 pages, ISBN 90-277-2513-6". One nuance,
-not an error: the 1987 imprint was D. Reidel, whereas the bib entry says Kluwer
-Academic Publishers. Kluwer absorbed Reidel shortly after publication, the DOI resolves
-to the Kluwer/Springer record, and Kluwer is the form most of the literature uses for
-this book. Left as is.
+**Bib entry: corrected.** Authors, title, year and address match the title page ("by
+P. J. M. van Laarhoven and E. H. L. Aarts, Philips Research Laboratories, Eindhoven,
+The Netherlands") and the Library of Congress data on the copyright page. The publisher
+did not. The copyright page reads "(c) 1987 by Springer Science+Business Media
+Dordrecht / Originally published by D. Reidel Publishing Company, Dordrecht, Holland in
+1987", and the series line names "Mathematics and its applications (D. Reidel
+Publishing Company)". Kluwer appears nowhere in the book. **Edit made:** `publisher =
+{Kluwer Academic Publishers}` to `publisher = {D. Reidel}`, one field, nothing else
+touched. Kluwer absorbed Reidel after publication, which is where the common miscitation
+comes from, but the 1987 imprint is Reidel and that is what the book itself says.
+
+**Summary of the pass:** four statements checked, all four confirmed as written. One
+bibliographic field corrected. No wording change anywhere in the thesis.
 
 ### Statement 1 of 4 - Simulated Annealing, Working Principle (`chapters/Metaheuristic Optimisation Methods.tex:239`)
 
@@ -794,32 +798,139 @@ this book. Left as is.
 > neighbourhood is adequately sampled before the search commits to a colder
 > regime~\cite{vanlaarhoven1987,talbi2009}
 
-**Verdict: CLAIM ALREADY SOURCED BY THE CO-CITATION. This key not verified. No edit.**
+**Verdict: CONFIRMED. No edit.**
 
-The sentence itself is safe, because it carries two keys and the other one is verified
-at page level higher up in this log. Statement 6 of 10 under `talbi2009` quotes
-Algorithm 2.3, p. 128, whose inner loop is annotated exactly as the thesis describes it
-("At a fixed temperature [...] Until Equilibrium condition / e.g. a given number of
-iterations executed at each temperature T"), Section 2.4.2.2, p. 131, for the
-adequate-sampling rationale, and the same page for the symbol L. So the claim in the
-report is supported as written, and nothing in the text depends on the van Laarhoven
-half.
+The inner loop is the book's own pseudocode. Figure 2.1, p. 10, "Description of the
+annealing algorithm in pseudo-PASCAL", is two nested `repeat` loops: the inner one does
+PERTURB, the Metropolis test and UPDATE and runs "until equilibrium is approached
+sufficiently closely", after which the outer loop cools, "c_{M+1} := f(c_M)", and
+repeats "until stop criterion = true (system is 'frozen')". That is the structure the
+sentence describes, in the order it describes it.
 
-What the supplied review does support is the book's scope, not this claim: "This book
-is a complete presentation of this method, its convergence behaviour, its relations
-with statistical physics, its implementation and its performances." Under the standing
-rule for this log, scope is not evidence that a source makes a particular statement,
-which is why the verdict above is "not verified" rather than "confirmed".
+*The quantity and its symbol.* Section 5.1, p. 57, lists what an implementation must
+fix: "1. initial value of the control parameter, c_0; 2. final value of the control
+parameter, c_f (stop criterion); 3. length of Markov chains; 4. a rule for changing the
+current value of the control parameter, c_k, into the next one, c_{k+1}", and calls the
+four together "a cooling schedule". The same page introduces the symbol: "if L_k is the
+length of the k-th Markov chain, then the annealing algorithm is said to be in
+quasi-equilibrium at c_k". The thesis's L is the book's L_k.
 
-**Where to look when the book itself is available.** The chapter on finite-time
-behaviour, where a cooling schedule is specified by the initial value of the control
-parameter, the decrement rule, the number of transitions generated at each value of the
-control parameter, and the stopping criterion. That third item is the epoch length,
-written L_k in the book's notation, and it is the standard reason this book is cited
-for the claim. Recorded as the expectation from the secondary literature, not as a
-check.
+*That it is fixed.* Section 5.2, p. 60: "The simplest choice for L_k, the length of the
+k-th Markov chain, is a value depending (polynomially) on the size of the problem.
+Thus, L_k is independent of k." The book then sorts every schedule into two families,
+p. 71: "Class A: a variable Markov chain length and a fixed decrement of the control
+parameter" and "Class B: a fixed Markov chain length and a variable decrement of the
+control parameter". This thesis fixes L and decrements geometrically, so the sentence
+describes a choice the book documents rather than claiming it is the only one.
 
-**No edit made,** since nothing here is shown to be wrong. If the book does not turn up
-before hand-in, the zero-risk fallback is to delete `vanlaarhoven1987` from this one
-sentence and leave `talbi2009`, which is verified. That is a one-key deletion inside an
-existing `\cite`, with no wording change and no effect on the other three statements.
+*Adequate sampling of the neighbourhood.* This is the book's own sizing rule. Table
+5.1, p. 72, gives the chain length for the Aarts and Van Laarhoven schedule as
+"R = |R_i|", the size of the neighbourhood, and p. 61 reports the same convention in
+others: Kirkpatrick et al. use "L = n, the number of variables of the problem to solve",
+Johnson et al. "L = m . R, a multiple of the size of the neighbourhoods". Why it must
+happen before cooling is the physical analogy the book opens with, p. 8: "if the cooling
+is too rapid, i.e. if the solid is not allowed to reach thermal equilibrium for each
+temperature value, defects can be 'frozen' into the solid", carried into the algorithm
+on p. 9: "The control parameter is then lowered in steps, with the system being allowed
+to approach equilibrium for each step".
+
+*Terminology note, not an error.* The book does use the word "epoch", but for a
+different construct: p. 61, "define an epoch as a number of transitions with a fixed
+number of acceptances" (Skiscim and Golden's variable-length rule). The thesis defines
+"epoch length" inline as the fixed move count L, which is standard current usage and is
+what `talbi2009` supports at p. 131, so nothing needs changing. Worth knowing if anyone
+reads the two side by side.
+
+### Statement 2 of 4 - Simulated Annealing, The Cooling Schedule (`chapters/Metaheuristic Optimisation Methods.tex:246`)
+
+> The temperature schedule controls how fast SA transitions from broad exploration to
+> focused local search, and SA's performance is highly sensitive to
+> it~\cite{kirkpatrick1983,talbi2009,vanlaarhoven1987}
+
+**Verdict: CONFIRMED. No edit, and the earlier softening of this sentence is vindicated.**
+
+The sensitivity claim is one of the book's headline conclusions, stated twice. Chapter
+6, p. 98: "the performance of the simulated annealing algorithm depends strongly on the
+chosen cooling schedule; this is especially true for the quality of the solution
+obtained by the algorithm". Chapter 9, p. 154: "the performance of the algorithm is
+strongly dependent on the chosen cooling schedule, especially as far as the quality of
+solution is concerned. Indeed, it is shown that the performance of the algorithm
+deteriorates severely if the cooling schedule employed belongs to the class of simple
+schedules mentioned before." "Highly sensitive" is the right strength for that.
+
+The exploration-to-local-search half is the book's two limits. High c, p. 58: "For
+c_k -> infinity, the stationary distribution is given by the uniform distribution on the
+set of configurations R [...] choosing the initial value of c, c_0, such that virtually
+all transitions are accepted". Low c, p. 10: "the situation where the control parameter
+in the simulated annealing algorithm is set to 0 corresponds to a version of iterative
+improvement", and p. 65, in Huang et al.'s stop rule, "c is set to 0 and the
+optimization is concluded with a local search (iterative improvement)".
+
+*On the Statement 7 edit under `talbi2009`.* That pass replaced "it is the most
+important design decision when applying the algorithm" with the present wording. This
+book confirms the change was right in both directions: it says performance depends
+strongly on the schedule, and it nowhere ranks the schedule above SA's other design
+choices. p. 96 adds the empirical form of the same point: "The large difference between
+these numbers and the average results shown in table 6.1 is another indication for the
+importance of choosing a more elaborate cooling schedule."
+
+### Statement 3 of 4 - Simulated Annealing, The Cooling Schedule (`chapters/Metaheuristic Optimisation Methods.tex:254`)
+
+> The starting temperature $T_{\max}$ is commonly calibrated so that typical worsening
+> moves are initially accepted around $80\,\%$ of the
+> time~\cite{kirkpatrick1983,vanlaarhoven1987}
+
+**Verdict: CONFIRMED. No edit.**
+
+The number and its attribution are both on p. 59: "Kirkpatrick et al. propose the
+following empirical rule: choose a large value for c_0 and perform a number of
+transitions. If the acceptance ratio chi, defined as the number of accepted transitions
+divided by the number of proposed transitions, is less than a given value chi_0 (in
+[KIR82] chi_0 = 0.8), double the current value of c_0. Continue this procedure until the
+observed acceptance ratio exceeds chi_0." That is the 80 % rule, and the book credits it
+to Kirkpatrick et al., so the co-citation to `kirkpatrick1983` is correctly placed too.
+
+*Precision point worth having ready.* "Worsening moves" matches the refinement on the
+same page rather than Kirkpatrick's raw ratio. Kirkpatrick's chi counts all accepted
+transitions over all proposed ones, which includes improving moves that are accepted
+unconditionally. Johnson et al., quoted immediately after, "determine c_0 by calculating
+the average increase in cost, dC(+), for a number of random transitions and solve c_0
+from chi_0 = exp(-dC(+)/c_0)", giving eq. 5.7, c_0 = dC(+) / ln(chi_0^-1). There chi_0
+is exactly the Metropolis acceptance probability of a move of average cost increase,
+which is what the thesis sentence says. Both readings sit on p. 59 and both use 0.8, so
+the sentence is supported as written; if pressed, the answer is that the thesis quotes
+the calibration in its worsening-move form, which is the form an implementation uses.
+
+### Statement 4 of 4 - Simulated Annealing, The Cooling Schedule (`chapters/Metaheuristic Optimisation Methods.tex:261`)
+
+> A logarithmically slow schedule guarantees the global optimum in
+> theory~\cite{hajek1988} but is far too slow to be useful in practice, so performance
+> within a fixed budget depends heavily on the tuned schedule~\cite{vanlaarhoven1987}
+
+**Verdict: CONFIRMED. No edit.**
+
+The clause carrying `vanlaarhoven1987` is the impracticality, and the book makes it
+directly. Section 5.1, p. 56, on why the convergence theory gives no usable schedule:
+the equilibrium condition "implies that the length of the Markov chains should at least
+be exponential in the problem size, which is, in the light of the discussion in chapter
+1, highly undesirable", and the logarithmic decrement rule "requires knowledge about the
+value of the constant Gamma. Usually, however, it is extremely difficult to determine
+such a value [...] One resorts to conservative estimates, like Gamma = dC_max, which
+leads, however, to unnecessarily slow convergence of the algorithm". Section 6.2, p. 81,
+quantifies it: "This bound is rather poor, however, in the sense that if one works it
+out for a particular problem one typically finds that the time required for good
+accuracy is larger than the number of configurations (for the n-city travelling salesman
+problem, for example, one finds that k is O(e^-n^(2n+1)) [...] whereas the number of
+configurations is O(n!))." The closing clause about the tuned schedule is the same
+conclusion quoted under Statement 2.
+
+*Incidental check of the neighbouring key.* The `hajek1988` attribution is corroborated
+here. Section 3.2.3, Theorem 6, p. 36, is stated as "(Hajek, [HAJ88])" and gives the
+necessary and sufficient condition for convergence, with "If c_k is of the form
+c_k = Gamma/log k [...] then Hajek's result clearly implies that eq. 3.96 holds if and
+only if Gamma >= D." The book's [HAJ88] is "Hajek, B., Cooling Schedules for Optimal
+Annealing, Mathematics of Operations Research, 13(1988)311-329", which is the thesis's
+`hajek1988`. Note the strength: Hajek's condition is necessary *and* sufficient,
+stronger than the sufficient-only bounds of Geman and Geman, Anily and Federgruen and
+Mitra et al. on pp. 30-33. "Guarantees the global optimum in theory" is a fair reading
+and, if anything, understates the result.
