@@ -318,3 +318,95 @@ above 2 per cent "correspond to very tightly constrained instances having both
 reduced capacity (Q = 200) and very reduced battery range (Emax = 79.69 or 62.14)".
 Tightness, not raw size, is what defeats the method, and the edited sentence now
 says so.
+
+---
+
+## `adak2026` (ref. 1)
+
+**Source:** S. Adak, C. Witt, "Mathematical runtime analysis of a multi-Valued
+estimation of distribution algorithm", Artificial Intelligence 353 (2026) 104501.
+DOI 10.1016/j.artint.2026.104501. Open access, CC BY.
+
+**Checked:** 2026-08-14, against the full paper PDF.
+
+**Bib entry: correct, no change needed.** Every field matches the PDF. Byline is
+"Sumit Adak, Carsten Witt", both DTU Compute, Technical University of Denmark.
+Title, journal, publisher (Elsevier) and year all match. The running footer reads
+"Artificial Intelligence 353 (2026) 104501", so volume 353 and article number
+104501 are confirmed, and the DOI line in the PDF header matches the bib DOI
+character for character. This closes out the volume correction (327 to 353) made
+in the 2026-07-15 metadata pass, which was right.
+
+### Statement 1 of 1 - Metaheuristic Optimisation Methods, EDAs (`chapters/Metaheuristic Optimisation Methods.tex:495`)
+
+> UMDA is chosen over PBIL~\cite{baluja1994} and the compact
+> GA~\cite{harik1999cga}, including its multi-valued variant
+> \cite{adak2026}, because it re-estimates its marginals from
+> scratch each generation, mirroring the population structure of GA.
+
+**Verdict: CONFIRMED. No edit.**
+
+This is the only place in the thesis that cites `adak2026`, so one statement is
+the whole exposure.
+
+*The multi-valued variant exists and is analysed here.* This is the paper's entire
+subject. The abstract: "recent developments have introduced multi-valued EDAs to
+tackle problems with variables taking more than two values [...] we provide
+theoretical analyses of the multi-valued compact genetic algorithm (r-cGA)".
+Section 2.1 states the relationship the thesis clause asserts, that the multi-valued
+algorithm is a variant of the compact GA and not a separate lineage: "An extended
+version of the cGA is the r-valued compact genetic algorithm (r-cGA) [...] it
+enhances the original cGA by supporting multi-valued variables rather than the
+binary representation used in the classic version." Algorithm 1 is headed
+"r-valued Compact Genetic Algorithm (r-cGA) for the maximization of
+f : {0,...,r-1}^n -> R".
+
+*Same model class as the thesis UMDA.* Section 2.1: "The probabilistic model of the
+r-cGA is defined by a (n x r)-matrix (the frequency matrix), where each row
+i in {1,...,n} forms a vector p_i := (p^(t)_{i,j})_{j in {0,...,r-1}}", each
+frequency initialised to 1/r and each row summing to 1. That is one categorical
+distribution per decision variable over r values, which is the model the thesis
+builds over m servers for each of n tasks (lines 484 to 494). The comparison the
+sentence sets up is therefore between two algorithms with the same model class and
+different update rules, which is the honest form of the comparison.
+
+*The stated reason for preferring UMDA is accurate.* The cGA is incremental where
+the thesis UMDA re-estimates. Section 2.1: "During each iteration of the cGA, two
+solutions are generated independently. Then, based on the fitness comparison
+between the two solutions, each frequency is updated by 1/K, either increasing or
+decreasing." Algorithm 1, line 9, gives the rule
+p^(t+1)_{i,j} <- p^(t)_{i,j} + (1/K)(1{x_i = j} - 1{y_i = j}). The model persists
+across iterations and is nudged by one step, never rebuilt, which is the exact
+complement of the maximum-likelihood re-estimate over the mu selected individuals
+in Equation (line 485).
+
+*"Mirroring the population structure of GA" is also supported, and more sharply
+than the sentence claims.* The cGA has no population at all. Section 2.1 calls K
+"the hypothetical population size", a simulated quantity, and the algorithm samples
+exactly two individuals per iteration. So the contrast is not that the cGA has a
+differently managed population, it is that UMDA has one and the cGA does not. The
+thesis phrasing is the weaker and therefore safe claim.
+
+**Note for the defence, not an error: the paper is not the origin of the r-cGA.**
+Section 2.1 attributes it elsewhere, "the r-valued compact genetic algorithm
+(r-cGA), first introduced in [19]", where [19] is Ben Jedidia, Doerr and Krejca,
+Theor. Comput. Sci. 1003 (2024) 114622. The paper's own introduction is looser,
+listing "the multi-valued compact genetic algorithm (r-cGA) [20]" against its
+authors' earlier PPSN 2024 paper and crediting [20] and Hamano et al. [21] with the
+first runtime analysis of it. The thesis clause claims neither invention nor
+priority, only that the variant exists and is studied, so `adak2026` supports it as
+written and no edit follows. Flagging it because the sentence would need a different
+citation if it were ever rewritten as "introduced by", in which case the correct
+key would be Ben Jedidia et al. (2024), which is not currently in the bibliography.
+
+**Incidental check of the two neighbouring keys in the same sentence.** This paper's
+reference list gives independent records for both, and both match the thesis bib.
+Ref. [29] is "G.R. Harik, F.G. Lobo, D.E. Goldberg, The compact genetic algorithm,
+IEEE Trans. Evol. Comput. 3 (4) (1999) 287-297", matching `harik1999cga` on authors,
+title, venue, volume, number, pages and year. Ref. [28] is "S. Baluja,
+Population-based incremental learning: A method for integrating genetic search based
+function optimization and competitive learning, School of Computer Science, Carnegie
+Mellon University Pittsburgh, PA, 1994", matching `baluja1994` on author, title,
+institution, address and year. The report number CMU-CS-94-163 in the thesis entry
+is not carried by this paper's reference list and was not re-checked here, having
+been confirmed in the 2026-07-15 metadata pass.
