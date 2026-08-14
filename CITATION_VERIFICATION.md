@@ -1047,3 +1047,121 @@ constraints in $\Omega$". The exploration cost is not stated. The nearest suppor
 survey offers is Merkle and Middendorf's result, p. 33, that "constraints on the
 feasibility of solutions introduce what they called *selection bias* in the solution
 construction process" — adjacent but a different claim. No edit made.
+
+---
+
+## `dorigo2004` — all five instances, against the book itself
+
+**Source:** M. Dorigo and T. Stützle, *Ant Colony Optimization*, MIT Press, Cambridge,
+MA, 2004.
+
+**Checked:** 2026-08-14, against Chapters 1–7 and the appendix.
+
+**Standing of this check.** This supersedes the partial verdicts recorded above under
+the ACO chain, which were reached from the 2006 survey rather than the book. Three
+statements the survey could not settle (15, 16, 17) are settled here: two are
+confirmed, one is wrong.
+
+**Bib entry: correct.** Authors, title, publisher, address and year all match, and are
+consistent with the survey's reference list entry [34]. No change needed.
+
+### Instance 1 of 5 — `:317` — **CONFIRMED. No edit.**
+
+> ACO [...] is a population-based method in which artificial ants cooperate to build
+> solutions [...] ants deposit pheromone as they walk, others preferentially follow
+> stronger trails, and shorter paths accumulate pheromone faster
+
+Chapter 1, §1.1: ants "tend to choose, probabilistically, paths marked by strong
+pheromone concentrations". The double bridge gives the third clause directly: "the ants
+choosing the short branch are the first to reach the food [...] pheromone starts to
+accumulate faster on the short branch", which the book names the *differential path
+length* effect. Chapter 2, §2.2 covers the population and cooperation framing.
+
+### Instance 2 of 5 — `:329` — **CONFIRMED. No edit.**
+
+> ACO has become one of the most widely applied metaheuristics for routing and
+> sequencing problems
+
+Chapter 5, §5.1 is a full section on routing problems (SOP, VRP). Chapter 7, §7.1.2
+names the sequential ordering problem and the VRP with time window constraints among
+those for which ACO is state-of-the-art. Table 2.1 lists the application spread.
+
+### Instance 3 of 5 — `:348` — **WRONG, edit made**
+
+> Pheromone is initialised to a small positive constant $\tau_0$, commonly scaled from
+> a greedy nearest-neighbour tour
+
+The second half is right; the first half inverts the book.
+
+- Chapter 3, §3.3.1 warns against exactly this for AS: "if the initial pheromone values
+  $\tau_0$'s are too low, then the search is quickly biased by the first tours generated
+  by the ants, which in general leads toward the exploration of inferior zones of the
+  search space". AS sets $\tau_0$ *slightly higher* than one iteration's deposit.
+- Chapter 3, §3.3.4, on MMAS — which is what this thesis implements: "the pheromone
+  trails are initialized to the upper pheromone trail limit, which, together with a small
+  pheromone evaporation rate, increases the exploration of tours at the start of the
+  search." Box 3.1 gives MMAS $\tau_0 = 1/\rho C^{nn}$, which is $\tau_{\max}$.
+- Only ACS uses a genuinely small $\tau_0$ ($1/nC^{nn}$), and there it is small so that
+  the local update can decay trails down toward it.
+
+The scaling half is confirmed: every $\tau_0$ in Box 3.1 is scaled by $C^{nn}$, the
+nearest-neighbour tour length.
+
+**The code sides with the book.** `EV_routing/algorithms/ant_colony.py:372-374` sets
+`tau_max = 1.0 / (rho * best_cost)` with `best_cost` the greedy solution's cost, then
+`pheromone = np.full((n_nodes, n_nodes), tau_max)` — the book's MMAS $\tau_0$ exactly,
+initialised at the maximum. So the sentence contradicted both the source and the
+implementation.
+
+**Fix applied:** "initialised uniformly to a value $\tau_0$ scaled from a greedy
+nearest-neighbour tour, which in MAX--MIN Ant System is the upper bound $\tau_{\max}$
+itself, so that the early search is broadly explorative."
+
+### Instance 4 of 5 — `:390` — **CONFIRMED. No edit.**
+
+> bounds pheromone within $[\tau_{\min}, \tau_{\max}]$ so that no edge is ever completely
+> abandoned and premature stagnation is resisted
+
+Logged above as statement 15, "not verifiable from the survey". The book settles it,
+nearly verbatim. Chapter 4, §4.2: "MMAS puts limits on the minimum value of pheromone
+trails. With this modification, the probability of generating any particular solution is
+kept above some positive threshold, which helps prevent search stagnation and premature
+convergence to suboptimal solutions." Chapter 3, §3.3.4 supplies the mechanism: the
+bounds hold the selection probability in $[p_{\min}, p_{\max}]$ with $0 < p_{\min}$.
+Chapter 5, §5.7.3 restates it as a guaranteed minimal level of exploration.
+
+Attributing the bounding mechanism to `stutzle2000` and the rationale to `dorigo2004`
+is the right split.
+
+### Instance 5 of 5 — `:410` — **CONFIRMED. No edit to the citation.**
+
+> infeasible moves can be excluded from $\mathcal{A}^k$ [...] which guarantees feasible
+> tours but can limit exploration when the feasible region is small
+
+Logged above as statement 17, "partially confirmed": the survey gave the exclusion
+mechanism but not the exploration cost. The book gives both.
+
+- Chapter 2, §2.2.1 frames the hard/soft choice: constraints may be implemented "in a
+  hard way, allowing the ants to build only feasible solutions, or in a soft way, in
+  which case the ants can build infeasible solutions [...] penalized as a function of
+  their degree of infeasibility."
+- Chapter 4, §4.2 gives the concrete cost of the hard route: on a dead end "the
+  AntSolutionConstruction procedure is aborted and the current state $x_h$ is discarded",
+  and the book's own remedy is the soft penalty.
+- Chapter 5, §5.4.2 makes the exploration point explicit: relaxing the penalty means "it
+  becomes easier to build infeasible solutions and, therefore, to move to different
+  regions of the search space containing feasible solutions."
+
+### Adjacent finding — `:416`, code and report disagree — **edit made**
+
+> The implementation in this thesis uses the first mechanism
+
+Not accurate. The ants use hard exclusion first, but on a dead end
+`ant_colony.py` breaks, appends the missed customers through a safety net, runs up to
+five repair passes, and then, per the comment at `ant_colony.py:232-234`, "remaining
+infeasibility is handled by the objective penalty". `Implementation.tex` already reports
+that 90 % of ACO's evaluated candidates are feasible, so the penalty binds on the other
+10 %. Both mechanisms are live.
+
+**Fix applied:** "uses the first mechanism as its primary one, falling back on the
+penalty for the residue it cannot exclude".
