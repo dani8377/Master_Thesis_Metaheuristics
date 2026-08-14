@@ -410,3 +410,358 @@ Mellon University Pittsburgh, PA, 1994", matching `baluja1994` on author, title,
 institution, address and year. The report number CMU-CS-94-163 in the thesis entry
 is not carried by this paper's reference list and was not re-checked here, having
 been confirmed in the 2026-07-15 metadata pass.
+
+---
+
+## `talbi2009` (ref. 88)
+
+**Source:** E.-G. Talbi, *Metaheuristics: From Design to Implementation*, John Wiley
+& Sons, Hoboken, NJ, 2009. DOI 10.1002/9780470496916.
+
+**Checked:** 2026-08-14, against the full book PDF (Wiley Online Library copy).
+
+**Bib entry:** correct. Title page reads "METAHEURISTICS: FROM DESIGN TO
+IMPLEMENTATION / El-Ghazali Talbi, University of Lille - CNRS - INRIA"; copyright
+page reads "Copyright 2009 by John Wiley & Sons, Inc." and "Published by John Wiley
+& Sons, Inc., Hoboken, New Jersey". Author, title, publisher, address and year all
+match. No change needed.
+
+**Summary of the pass:** ten statements checked. Six confirmed as written. Four
+edited: one factual miscount (Statement 3), one superlative the book does not make
+(Statement 7), one where the citation covered thesis-specific mechanism the book does
+not describe (Statement 8), and one where the book says close to the opposite of the
+claim as scoped (Statement 9). All four edits are wording-only; no algorithm, result
+or number is affected.
+
+### Statement 1 of 10 - Metaheuristics for Combinatorial Optimisation (`chapters/Metaheuristic Optimisation Methods.tex:6`)
+
+> the thesis uses \emph{metaheuristics}: general-purpose search methods that combine
+> randomness with problem-specific logic to find good, if not perfect, solutions
+> within a reasonable runtime~\cite{talbi2009,eiben2015}
+
+**Verdict: CONFIRMED. No edit.**
+
+Every element of the definition is in the book, and mostly on its opening page.
+Chapter 1, p. 1: "Metaheuristics represent a family of approximate optimization
+techniques [...] Metaheuristics provide 'acceptable' solutions in a reasonable time
+for solving hard and complex problems in science and engineering. Unlike exact
+optimization algorithms, metaheuristics do not guarantee the optimality of the
+obtained solutions." That covers "good, if not perfect" and "within a reasonable
+runtime" almost word for word.
+
+*General-purpose plus problem-specific logic.* Section 1.3.2, p. 21: "Metaheuristics
+are general-purpose algorithms that can be applied to solve almost any optimization
+problem. They may be viewed as upper level general methodologies that can be used as
+a guiding strategy in designing underlying heuristics to solve specific optimization
+problems." The two halves of the thesis phrase, general-purpose and problem-specific,
+are the two halves of that sentence.
+
+*Randomness.* Section 1.4.1, p. 25: "Deterministic versus stochastic [...] In
+stochastic metaheuristics, some random rules are applied during the search", with the
+consequence that "different final solutions may be obtained" from the same starting
+point. The thesis relies on exactly that property when it runs multiple seeds per
+configuration.
+
+### Statement 2 of 10 - Genetic Algorithms (`chapters/Metaheuristic Optimisation Methods.tex:112`)
+
+> Because a GA requires only the ability to evaluate the objective function, it
+> applies as a \emph{black-box} optimiser to both problems in this thesis: on the
+> Cloud Resource Allocation problem, recombination can exploit partial structure
+> across many candidate task-to-server assignments in parallel~\cite{talbi2009}
+
+**Verdict: CONFIRMED. No edit.**
+
+*Black box.* Section 1.4.1, pp. 31-32, gives the formal definition the sentence uses:
+"A function f : X -> R is called a black box function iff the domain X is known, it
+is possible to know f for each point of X according to a simulation, and no other
+information is available for the function f." Figure 1.14 is captioned "Black box
+scenario for the objective function" and draws precisely the thesis arrangement, a
+box labelled "Metaheuristic" feeding x into a black box that returns f(x). The same
+page states why this matters: "Unlike mathematical programming, the main advantage of
+using metaheuristics is a restrictive assumption in formulating the model", that is,
+only the ability to evaluate is required.
+
+*Recombination exploiting partial structure.* Section 3.3.2.2 ("Recombination or
+Crossover"), pp. 213-214: "The role of crossover operators is to inherit some
+characteristics of the two parents to generate the offsprings", and, under
+Heritability, "A crossover operator Ox is respectful if the common decisions in both
+parents are preserved". "Common decisions preserved" is what the thesis calls partial
+structure; on the cloud encoding a decision is one task-to-server assignment, so the
+mapping is direct.
+
+*"In parallel".* Section 1.4.1, p. 25: "in population-based algorithms (e.g.,
+particle swarm, evolutionary algorithms) a whole population of solutions is evolved
+[...] Population-based metaheuristics are exploration oriented; they allow a better
+diversification in the whole search space." The thesis's "in parallel" is a paraphrase
+of a whole population being evolved at once, not a claim about parallel hardware, and
+the surrounding text does not read it that way.
+
+### Statement 3 of 10 - Genetic Algorithms, Handling Constraints (`chapters/Metaheuristic Optimisation Methods.tex:168`)
+
+> Of the ~~three~~ standard strategies (penalty functions, repair, and
+> feasibility-preserving operators~\cite{michalewicz1996,talbi2009}), the
+> \emph{penalty} approach is applied [...]
+
+**Verdict: NOT SUPPORTED AS WRITTEN. Edited.**
+
+The list of three is right, the word "three" is not. Section 1.5, p. 48, enumerates
+**five**: "In this section, constraint handling strategies, which mainly act on the
+representation of solutions or the objective function, are presented. They can be
+classified as reject strategies, penalizing strategies, repairing strategies,
+decoding strategies, and preserving strategies." Section 1.5 then gives each its own
+subsection (1.5.1 Reject through 1.5.5 Preserving), and the Chapter 1 summary, p. 77,
+repeats the five: "Most of the constraint handling strategies act on the
+representation of solutions or the objective function (e.g., reject, penalizing,
+repairing, decoding, and preserving strategies)."
+
+The second cited source does not rescue the count either: Michalewicz's taxonomy
+likewise runs to more than three categories (preserving feasibility, penalty
+functions, distinguishing feasible from infeasible solutions, decoders, hybrids). So
+no cited source supports "the three standard strategies", and an examiner opening
+either book at the constraint-handling chapter would see a list of five.
+
+**Edit made:** deleted "three" and added ", among others", so the sentence now reads
+"Of the standard strategies (penalty functions, repair, and feasibility-preserving
+operators, among others [...])". The three named are still the three the paragraph
+goes on to weigh, and the sentence no longer misreports the taxonomy. Nothing else in
+the paragraph changes.
+
+### Statement 4 of 10 - Memetic Algorithms (`chapters/Metaheuristic Optimisation Methods.tex:197`)
+
+> the order-based crossover that the GA relies on frequently breaks up good sub-tours,
+> and interleaving a local-search step repairs this disruption, a pairing long
+> established for routing problems~\cite{talbi2009}
+
+**Verdict: CONFIRMED. No edit.**
+
+The citation sits on the final clause, "a pairing long established", which is what the
+book supports. Section 5.1.1, under LTH (low-level teamwork hybrid), pp. 388-389:
+"most efficient P-metaheuristics have been coupled with S-metaheuristics such as local
+search, simulated annealing, and tabu search, which are powerful optimization methods
+in terms of exploitation. The two classes of algorithms have complementary strengths
+and weaknesses [...] This class of hybrid algorithms is very popular and has been
+applied successfully to many optimization problems. Most of the state-of-the-art
+P-metaheuristics integrate into S-metaheuristics." Footnote 1 on the same page ties it
+to the thesis's term: "This class of hybrid metaheuristics includes memetic
+algorithms." Example 5.2, p. 389, then describes the thesis's exact scheme: "When an
+evolutionary algorithm is used as a global optimizer, its standard operators may be
+augmented with the ability to perform local search [...] a heuristic operator that
+considers an individual as the origin of its search applies itself, and finally
+replaces the original individual by the enhanced one", which the book labels
+Lamarckian, and which is what the thesis does when each offspring is refined before
+entering the population.
+
+*On "for routing problems".* The book's routing instances of the hybrid idea are
+present but illustrative rather than central: p. 388 works the TSP case of embedding
+2-opt local search, and p. 390 reports that heuristic crossover was "shown to improve
+EAs results when applied to job-shop scheduling, set covering, and traveling salesman
+problems". So "long established" is well supported and "for routing problems" is
+supported by example. No overclaim, so the sentence stands.
+
+*Scope note, not an error.* The first clause, that order-based crossover breaks up
+good sub-tours, is the thesis's own reasoning and is not attributed to Talbi. That is
+the correct placement: the book gives the general machinery for judging such a
+mismatch (heritability and the "respectful" property, p. 214; locality, p. 92) but
+does not make this claim about order-based crossover on the EVRP. The MA's origin is
+separately and correctly credited to `moscato1989` two sentences earlier.
+
+### Statement 5 of 10 - Simulated Annealing (`chapters/Metaheuristic Optimisation Methods.tex:216`)
+
+> The analogy to optimisation is that occasional uphill moves early in the search
+> prevent the algorithm from getting permanently stuck in a poor solution, while a
+> gradually decreasing temperature parameter makes the search increasingly
+> selective~\cite{talbi2009}
+
+**Verdict: CONFIRMED. No edit.**
+
+Section 2.4, pp. 126-127, states both halves. Uphill moves and their purpose: "SA is a
+stochastic algorithm that enables under some conditions the degradation of a solution.
+The objective is to escape from local optima and so to delay the convergence."
+Increasing selectivity: "It uses a control parameter, called temperature, to determine
+the probability of accepting nonimproving solutions [...] As the algorithm progresses,
+the probability that such moves are accepted decreases", reinforced by Section 2.4.1,
+p. 130: "At high temperatures, the probability of accepting worse moves is high. If T
+= infinity, all moves are accepted, which corresponds to a random local walk in the
+landscape [...] If T = 0, no worse moves are accepted and the search is equivalent to
+local search (i.e., hill climbing)." Figure 2.25 is captioned "Simulated annealing
+escaping from local optima. The higher the temperature, the more significant the
+probability of accepting a worst move."
+
+The physical analogy the sentence opens with is Table 2.4, p. 127, "Analogy Between
+the Physical System and the Optimization Problem", which maps energy to objective
+function, ground state to global optimum, and metastable state to local optimum.
+
+### Statement 6 of 10 - Simulated Annealing, Working Principle (`chapters/Metaheuristic Optimisation Methods.tex:238`)
+
+> In practice SA is structured with an inner loop: a fixed number of moves $L$ (the
+> epoch length) is attempted at each temperature level before cooling, so that the
+> neighbourhood is adequately sampled before the search commits to a colder
+> regime~\cite{vanlaarhoven1987,talbi2009}
+
+**Verdict: CONFIRMED. No edit.**
+
+Algorithm 2.3, p. 128, is the template, and its inner loop is annotated exactly as the
+thesis describes it: "Repeat / At a fixed temperature / [...] Until Equilibrium
+condition / e.g. a given number of iterations executed at each temperature T /".
+Section 2.4.2.2 ("Equilibrium State"), p. 131, supplies the rationale about adequate
+sampling: "To reach an equilibrium state at each temperature, a number of sufficient
+transitions (moves) must be applied [...] The number of iterations must be set
+according to the size of the problem instance and particularly proportional to the
+neighborhood size |N(s)|", and under the static strategy, "a given proportion y of the
+neighborhood N(s) is explored [...] The more significant the ratio y, the higher the
+computational cost and the better the results."
+
+Incidental confirmation of notation: the book also writes L for this quantity on
+p. 131 ("The next number of transitions L is defined as follows"), so the thesis's L
+is the book's L rather than a clashing symbol.
+
+### Statement 7 of 10 - Simulated Annealing, The Cooling Schedule (`chapters/Metaheuristic Optimisation Methods.tex:245`)
+
+> The temperature schedule controls how fast SA transitions from broad exploration to
+> focused local search, and ~~it is the most important design decision when applying
+> the algorithm~~ **SA's performance is highly sensitive to
+> it**~\cite{kirkpatrick1983,talbi2009,vanlaarhoven1987}
+
+**Verdict: OVERSTATED. Edited.**
+
+The substance is supported, the superlative is not. Section 2.4.2, p. 130: "The
+cooling schedule defines for each step of the algorithm i the temperature Ti. It has a
+great impact on the success of the SA optimization algorithm. Indeed, the performance
+of SA is very sensitive to the choice of the cooling schedule." The book says great
+impact and very sensitive; it does not rank the schedule above SA's other design
+decisions, and in fact Section 2.4 introduces the acceptance probability function and
+the cooling schedule side by side as the two things needing practical guidance:
+"The following sections present a practical guideline in the definition of the
+acceptance probability function and the cooling schedule in SA." Ranking the schedule
+first is the thesis's own judgement dressed as the source's.
+
+The first half of the sentence is fine independently: Section 2.4.2.1, p. 130, "If the
+starting temperature is very high, the search will be more or less a random local
+search. Otherwise, if the initial temperature is very low, the search will be more or
+less a first improving local search algorithm", which is the exploration-to-local-
+search transition the thesis describes.
+
+**Edit made:** replaced "it is the most important design decision when applying the
+algorithm" with "SA's performance is highly sensitive to it", which is what the cited
+sources actually support. This also removes a superlative of the kind flagged in the
+earlier voice pass. The claim still does the work the section needs, since the whole
+point of the following paragraphs is that the schedule must be tuned.
+
+### Statement 8 of 10 - Simulated Annealing, The Cooling Schedule (`chapters/Metaheuristic Optimisation Methods.tex:264`)
+
+> A common extension, used in this thesis, is \emph{reheating}: **a nonmonotonic
+> schedule in which the temperature is raised again to renew
+> diversification**~\cite{talbi2009}. **Here it is triggered by stagnation, raising**
+> the temperature back to a fraction of its initial value to escape deep local optima,
+> while the best solution found so far is retained separately.
+
+**Verdict: PARTIALLY SUPPORTED. Edited.**
+
+The book supports the idea, not the implementation. Section 2.4.2.3, pp. 132-133,
+lists it among the cooling functions: "Nonmonotonic: Typical cooling schedules use
+monotone temperatures. Some nonmonotone scheduling schemes where the temperature is
+increased again may be suggested. This will encourage the diversification in the
+search space. For some types of search landscapes, the optimal schedule is
+nonmonotone." That is raising the temperature again, and its purpose, and nothing
+more.
+
+What the book does **not** say, but the old sentence attributed to it: the name
+"reheating", the stagnation trigger ("if the search stagnates for a number of steps"),
+and the amount ("a fraction of its initial value"). Those are the thesis's own design
+choices. The one remaining clause is supported elsewhere, Section 2.4, p. 128: "In
+addition to the current solution, the best solution found since the beginning of the
+search is stored." Talbi does treat stagnation as a recognised signal, but as a
+stopping criterion rather than a reheat trigger, Section 2.4.2.4, p. 133: "Achieving a
+predetermined number of iterations without improvement of the best found solution."
+
+**Edit made:** split into two sentences so the citation lands on the concept the book
+gives (a nonmonotonic schedule that raises the temperature again to renew
+diversification) and the specific trigger and amount are presented as this thesis's
+instantiation. No parameter values or behaviour change, and the implementation
+chapter's description of the reheat rule is unaffected.
+
+### Statement 9 of 10 - Simulated Annealing, Defining the Neighbourhood (`chapters/Metaheuristic Optimisation Methods.tex:281`)
+
+> 2-opt segment reversal (a special case of the k-opt framework of~\cite{lin1973}),
+> swapping two customers, and relocating a customer [...] all standard moves for
+> permutation-based ~~routing~~ **representations**~\cite{talbi2009}
+
+**Verdict: CONTRADICTED AS SCOPED. Edited. This is the one to know about.**
+
+Scoped to routing, the book says close to the opposite for two of the three moves.
+Example 2.2, p. 93, introduces the insertion operator (the thesis's relocate: "an
+element at one position is removed and put at another position") and the exchange
+operator (the thesis's swap: "arbitrarily selected two elements are swapped"), and
+then closes: "**Those operators are largely used in scheduling problems and seldom for
+routing problems such as the TSP for efficiency reasons.**" The same example opens by
+ruling out the other family for scheduling: "For permutations representing sequencing
+and scheduling problems, the k-opt family of operators is not well suited."
+
+Only 2-opt survives the original wording. Page 92: "in scheduling problems,
+permutations represent a priority queue. Then, the relative order in the sequence is
+very important, whereas in the TSP it is the adjacency of the elements that is
+important. For scheduling problems, the 2-opt operator will generate a very large
+variation (weak locality), whereas for routing problems such as the TSP, it is a very
+efficient operator because the variation is much smaller (strong locality)."
+
+Scoped to permutations generally, all three are supported, twice over. Section 2.1.1,
+p. 87: "For permutation-based representations, a usual neighborhood is based on the
+swap operator." Section 3.3.2.1, p. 209: "Mutation in permutations: Mutation in
+order-based representations are generally based on the swapping, inversion, or the
+insertion operators." Figures 2.7 and 2.8 draw the insertion and exchange operators on
+a permutation.
+
+**Edit made:** one word, "routing" to "representations". The sentence now claims what
+the book states and no longer claims what it denies. The move set itself is unchanged,
+and the justification for using it here is already in the paragraph's closing sentence
+("These operators change either the visiting order or the placement of charging
+stations, which are the two decisions the EV routing problem contains").
+
+**For the defence, if pressed on why we use moves Talbi calls inefficient for
+routing.** His remark is about the *pure* TSP, where the objective depends only on
+adjacency, so relocate and swap disturb many edges for little gain while 2-opt
+disturbs two. The EVRP here is not that problem: capacity, battery state and station
+placement all depend on a customer's *position along* the route, not only on its
+neighbours, so relocating one customer changes the feasibility profile of the whole
+remainder of the tour in a way 2-opt cannot reproduce. That is why the VRP literature
+treats relocate and exchange as standard alongside 2-opt. The answer is a one-sentence
+point about problem structure, not a retreat.
+
+*Incidental check of the neighbouring key.* The k-opt attribution to `lin1973` is
+corroborated here: p. 87, "Another widely used operator is the k-opt operator, where k
+edges are removed", footnote 3 "Also called k-exchange operator", and "The
+neighborhood for the 2-opt operator is represented by all the permutations obtained by
+removing two edges", which is the "special case" relation the thesis asserts.
+
+### Statement 10 of 10 - Simulated Annealing, Handling Constraints (`chapters/Metaheuristic Optimisation Methods.tex:298`)
+
+> SA accommodates constraints through the same penalty formulation as the other
+> methods~\cite{talbi2009}: capacity violations are penalised via the coefficients
+> $\lambda_{\text{cpu}}$ and $\lambda_{\text{mem}}$ [...] and battery or visit
+> violations via $\lambda_{\text{bat}}$ and $\lambda_{\text{vis}}$
+
+**Verdict: CONFIRMED. No edit.**
+
+Section 1.5.2 ("Penalizing Strategies"), p. 50, states the approach and its standing:
+"The unconstrained objective function is extended by a penalty function that will
+penalize infeasible solutions. **This is the most popular approach.**" The linear form
+given there, f'(s) = f(s) + lambda * c(s) where "c(s) represents the cost of the
+constraint violation and lambda the aggregation weights", is the thesis's formulation
+with lambda renamed per constraint type.
+
+The thesis penalises by violation magnitude rather than by counting violations, which
+is the variant the book prefers. Same section, p. 50: a count of violated constraints
+uses "no information [...] on how close the solution is to the feasible region", and
+"For a problem with few and tight constraints, this strategy is useless"; whereas
+under "Amount of infeasibility or repairing cost", "more efficient approaches consist
+in including a distance to feasibility for each constraint", giving fp(x) = f(x) +
+sum_i wi * di^k. The thesis's lambda-weighted CPU, memory, battery and visit
+violations are exactly that di form.
+
+Two further points in the same section back the surrounding sentences. That the same
+formulation serves every method is why it appears in Chapter 1, "Common Concepts for
+Metaheuristics", rather than in the SA chapter. And the paragraph's caution about
+calibrating the coefficients is the book's, p. 50: "a good compromise for the
+initialization of the coefficient factors wi must be found. Indeed, if wi is too
+small, final solutions may be infeasible. If the coefficient factor wi is too high, we
+may converge toward nonoptimal feasible solutions."
