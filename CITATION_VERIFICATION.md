@@ -2116,3 +2116,212 @@ changed, only the placement of one key.
 **Not verified in this pass:** `dorigo2004`, `dorigo1997` and `stutzle2000`, the co-cited keys
 in this subsection, and `schneider2014` on the EV-adaptation paragraph. Only the Dorigo,
 Maniezzo and Colorni 1996 PDF was supplied.
+
+---
+
+## `eiben2015` (ref. 27)
+
+**Source:** A. E. Eiben, J. E. Smith, *Introduction to Evolutionary Computing*, 2nd edition,
+Natural Computing Series, Springer, Berlin Heidelberg, 2015. DOI 10.1007/978-3-662-44874-8.
+
+**Checked:** 2026-08-14, against the full book PDF.
+
+**Bib entry: correct, no edit.** Author order, title, edition, series, publisher, place, year
+and DOI all match the copyright page: "A.E. Eiben, J.E. Smith, Introduction to Evolutionary
+Computing, Second Edition", "Natural Computing Series", "Springer-Verlag Berlin Heidelberg
+2003, 2015", "DOI 10.1007/978-3-662-44874-8".
+
+**Summary of the pass:** six statements checked, four confirmed as written, two edited. Both
+edits concern attribution rather than fact, both are one clause, and no citation was added or
+removed. The first stopped the thesis from crediting the exploration-exploitation balance to
+the two variation operators alone, which is not how this book divides the forces. The second
+replaced "scale-invariant" with the property the book actually names, which is also the
+property that makes a minimised objective work.
+
+### Statement 1 of 6 - Experimental Setup, Hyperparameter Tuning (`chapters/Experimental Setup.tex:98`)
+
+> Two parameters are tuned per algorithm, a common compromise for keeping grid search
+> tractable \citep{eiben2015,hutter2009}
+
+**Verdict: CONFIRMED. No edit.** Both halves are in Chapter 7, and the book supplies the
+practice and the reason for it in the same place.
+
+That a small hand-built grid is what people actually do, Sect. 7.4 p. 123: "The common way to
+solve the tuning problem is based on conventions ('mutation rate should be low'), ad hoc
+choices ('why not use population size 100') and limited experimentation with different values,
+for example, considering four parameters and five values for each of them." Sect. 7.6 p. 129
+names the same thing as the best known method of its category: "the frequently used parameter
+'optimisation' through a systematic comparison of a few combinations of parameter values,
+e.g., four mutation rates, four crossover rates, two values for tournament size, and four
+values for population size."
+
+The tractability reason is the book's own arithmetic on p. 123: "Trying all different
+combinations systematically is extremely time consuming. Testing five different values for
+four parameters leads to 5^4 = 625 different setups. Performing 100 independent EA runs with
+each setup implies 62,500 runs with the EA before we can even start the 'real' run."
+
+One nuance worth knowing rather than fixing. The book reports this practice in order to argue
+against it, and Sect. 7.6 recommends automated tuners instead (SPO, F-Race, REVAC). The thesis
+sentence claims only that the practice is common and says why, which is what the book asserts,
+and it calls it a compromise rather than best practice. The wording survives the source's own
+scepticism.
+
+### Statement 2 of 6 - Metaheuristic Optimisation Methods, Metaheuristics for Combinatorial Optimisation (`chapters/Metaheuristic Optimisation Methods.tex:6`)
+
+> the thesis uses \emph{metaheuristics}: general-purpose search methods that combine
+> randomness with problem-specific logic to find good, if not perfect, solutions within a
+> reasonable runtime \cite{talbi2009,eiben2015}
+
+**Verdict: CONFIRMED. No edit.**
+
+The definition is near verbatim from Sect. 2.4 p. 21: "there is a need for algorithms that are
+applicable to a wide range of problems, do not need much tailoring for specific problems, and
+deliver good (not necessarily optimal) solutions within acceptable time." That covers
+general-purpose, good rather than perfect, and reasonable runtime in one sentence. The
+NP-hardness premise in the first half of the thesis sentence is Sect. 1.4 p. 12: "if we wish
+to be able to create acceptable solutions for any instance of such a problem, we must turn to
+the use of approximation and metaheuristics and abandon the idea of definitely finding a
+solution which is provably the best." Randomness is Sect. 3.1 p. 27, in the list of features
+placing EAs among generate-and-test methods: "EAs are stochastic."
+
+"Problem-specific logic" is the clause this book carries least. Its emphasis in Sect. 2.4 runs
+the other way, that such algorithms "do not need much tailoring", and problem knowledge only
+enters later, in Chapter 10 on memetic algorithms and in Sect. 16.10 p. 244: "For a given
+problem we can circumvent the NFL theorem by incorporating problem-specific knowledge." The
+co-cited `talbi2009` is the source that defines metaheuristics in those terms and is listed
+first, so the pairing carries the sentence as it stands.
+
+### Statement 3 of 6 - Metaheuristic Optimisation Methods, Genetic Algorithms (`chapters/Metaheuristic Optimisation Methods.tex:108`)
+
+> New candidates are produced by recombining existing solutions (\emph{crossover}) and
+> perturbing them (\emph{mutation}), which together balance exploration of new regions against
+> exploitation of known good solutions \cite{eiben2015,back1997}
+
+**Verdict: ATTRIBUTED TO THE WRONG FORCE. Edited, one clause.**
+
+The two definitions are the book's, close to verbatim, Sect. 3.5 p. 42: "exploration is the
+generation of new individuals in as-yet untested regions of the search space, while
+exploitation means the concentration of the search in the vicinity of known good solutions.
+Evolutionary search processes are often referred to in terms of a trade-off between
+exploration and exploitation." So the vocabulary and the trade-off framing are sourced.
+
+What is not sourced is putting both sides of that trade-off on crossover and mutation. The
+book splits the forces the other way, Sect. 3.1 p. 26: "Variation operators (recombination and
+mutation) create the necessary diversity within the population, and thereby facilitate
+novelty. Selection acts as a force increasing the mean quality of solutions in the
+population." Exploitation in this book is what selection does, so a sentence that names only
+the two variation operators and then claims they balance exploration against exploitation does
+not match its own citation. The book also warns that the terms are loose, p. 41: "there is no
+universally accepted rigorous definition of the terms exploration and exploitation".
+
+Rewritten to the book's division:
+
+> New candidates are produced by recombining existing solutions (\emph{crossover}) and
+> perturbing them (\emph{mutation}). These variation operators generate the novelty that
+> drives exploration of new regions, while selection concentrates the search on known good
+> solutions \cite{eiben2015,back1997}.
+
+Cost of the edit: nothing. Same length, same vocabulary, and it removes a collision with the
+finer operator-level split two paragraphs later at line 137, where crossover exploits existing
+structure and mutation re-injects diversity, cited to `holland1992`. That sentence is about
+what each operator does with the material already in the population and is untouched.
+
+### Statement 4 of 6 - Metaheuristic Optimisation Methods, Genetic Algorithms (`chapters/Metaheuristic Optimisation Methods.tex:138`)
+
+> It is scale-invariant, so it handles a minimised objective without any fitness
+> transformation, and the tournament size $k$ gives direct control over selection pressure
+> \cite{goldberg1989,eiben2015}
+
+**Verdict: SECOND HALF CONFIRMED, FIRST HALF IMPRECISE. Edited, one clause.**
+
+The tournament-size half is exact. Sect. 5.2.4 p. 86: "the probability of selecting a
+high-fitness member increases, and that of selecting a low-fitness member decreases, as k is
+increased. Hence we say that increasing k increases the selection pressure", closing with "the
+selection pressure is easy to control by varying the tournament size k". The mechanism in the
+thesis sentence, draw k at random and keep the best, is the pseudocode of Fig. 5.3.
+
+The first half names the wrong property. What the book identifies is ordering, p. 85:
+"Tournament selection is an operator with the useful property that it does not require any
+global knowledge of the population, nor a quantifiable measure of quality. Instead it only
+relies on an ordering relation that can compare and rank any two individuals", and "Because
+tournament selection looks at relative rather than absolute fitness, it has the same
+properties as ranking schemes in terms of invariance to translation and transposition of the
+fitness function." Translation and transposition, not scale.
+
+The distinction is not pedantic, because scale invariance would not deliver what the sentence
+claims: multiplying an objective by -1 is a scaling, and it reverses the ordering. Ordering is
+what lets a minimised objective be used without transformation. Edited to:
+
+> It uses only the relative ordering of the candidates, so it handles a minimised objective
+> without any fitness transformation
+
+### Statement 5 of 6 - Metaheuristic Optimisation Methods, Genetic Algorithms (`chapters/Metaheuristic Optimisation Methods.tex:145`)
+
+> The dominant failure mode is \emph{premature convergence}: once the population homogenises
+> on a suboptimal region, crossover cannot recover the lost diversity and mutation alone is
+> slow to do so \cite{eiben2015}
+
+**Verdict: CONFIRMED. No edit.** One clause rests on an inference, flagged below.
+
+The failure mode and its name, Sect. 3.5 p. 42: "Premature convergence is the well-known
+effect of losing population diversity too quickly, and getting trapped in a local optimum.
+This danger is generally present in evolutionary algorithms, and techniques to prevent it are
+discussed in Chap. 5." The thesis's "suboptimal region" is the book's own wording elsewhere,
+Sect. 10.5 p. 179: "The problem of premature convergence, whereby the population converges
+around some suboptimal point". The homogenising mechanism is Sect. 5.5.1 p. 91-92, genetic
+drift under panmictic mixing driving the population onto a single optimum.
+
+"Crossover cannot recover the lost diversity" is the closest match of the whole pass,
+Sect. 4.4.3 p. 65: "This has the disadvantage (shared with all of the recombination operators
+described above) that only mutation can insert new values into the population, since
+recombination only gives us new combinations of existing values." The parenthetical makes it
+general rather than specific to one representation.
+
+"Mutation alone is slow to do so" is not stated for diversity recovery. The nearest statement
+is about fine-tuning, Sect. 10.1 p. 168: "the process of mutation finding the last few bits to
+change can be slow, since the choice of which genes are mutated is random." Chapter 5 exists
+because mutation on its own is not the answer, so the clause is consistent with the book, but
+it is an inference and not a quotation. Left as written, because it is hedged by "alone" and
+is uncontroversial. If it ever needs to be airtight, the p. 65 mechanism can carry the
+sentence on its own.
+
+"Dominant failure mode" is the thesis's own ranking. The book says "well-known" and "generally
+present", not most common. The citation sits on the mechanism rather than on the superlative,
+which is where it belongs.
+
+### Statement 6 of 6 - Metaheuristic Optimisation Methods, Genetic Algorithms (`chapters/Metaheuristic Optimisation Methods.tex:161`)
+
+> Four parameters govern the exploration--exploitation balance
+> \cite{goldberg1989,eiben2015,back1997}: the population size $N$ (diversity versus cost per
+> generation), the crossover probability $p_c$ (typically $0.6$--$0.9$), the mutation
+> probability $p_m$ (a common heuristic is $p_m \approx 1/L$ for representation length $L$
+> \cite{back1997}), and the selection pressure via the tournament size $k$ (typically
+> $2$--$5$)
+
+**Verdict: CONFIRMED, with one number this book states more narrowly. No edit.**
+
+Sect. 6.1 p. 100 gives three of the four in one sentence: "Recommendations were for mutation
+rates between 1/l and 1/mu, crossover probabilities around 0.6-0.8, and population sizes in
+the fifties or low hundreds, although to some extent these values reflect the computing power
+available in the 1980s and 1990s."
+
+- $p_m \approx 1/L$ is the lower end of that interval, l being the representation length.
+  Confirmed twice more by worked examples: the knapsack GA's "Mutation probability $p_m$ | 1/n"
+  in Table 3.5, and p. 41, "a mutation rate of $p_m$ = 1/n, i.e., that will on average change
+  one value in every offspring".
+- $N$ as diversity against cost per generation, p. 100 plus Sect. 3.2.3 on the population as
+  the unit of evolution and the source of the limited resource that creates competition.
+- $k$ as the selection-pressure knob, as quoted in statement 4.
+- $p_c$: this book says 0.6-0.8. The 0.9 upper bound is not from it. It is the range the code
+  comment attributes to De Jong (`Cloud_scheduling/config.yaml:105`), the tuning grid
+  deliberately spans 0.6 to 1.0, and the applied value is 0.8, inside both ranges. Left
+  unchanged, because two other sources are cited on the sentence and the grid is wider than
+  either range by design. If the sentence should be exactly this book's, it reads 0.6-0.8.
+- $k$ typically 2-5: no explicit recommendation in the book. Its two worked EAs happen to
+  bracket the range, eight-queens with "Best 2 out of random 5" (Table 3.4) and the knapsack GA
+  with "Best out of random 2" (Table 3.5), so the book demonstrates the range rather than
+  stating it, and the co-citations carry the number.
+
+**Not verified in this pass:** `hutter2009`, `dejong1975`, `birattari2009`, `goldberg1989`,
+`back1997`, `holland1992` and `syswerda1989`, the co-cited keys on these sentences.
+`talbi2009` has its own entry above. Only the Eiben and Smith PDF was supplied here.
