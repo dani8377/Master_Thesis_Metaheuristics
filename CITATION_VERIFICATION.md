@@ -901,6 +901,13 @@ which is what the thesis sentence says. Both readings sit on p. 59 and both use 
 the sentence is supported as written; if pressed, the answer is that the thesis quotes
 the calibration in its worsening-move form, which is the form an implementation uses.
 
+*Partly superseded, 2026-08-14.* The last clause of the first paragraph above, "so the
+co-citation to `kirkpatrick1983` is correctly placed too", no longer holds. The
+`kirkpatrick1983` pass checked the 1983 *Science* article itself and the 0.8 rule is not
+in it. The book's key for the number is [KIR82], not [KIR83]. `kirkpatrick1983` has been
+removed from that one citation; see Statement 5 under `kirkpatrick1983` below. The
+book's own support for the sentence is unaffected and still stands.
+
 ### Statement 4 of 4 - Simulated Annealing, The Cooling Schedule (`chapters/Metaheuristic Optimisation Methods.tex:261`)
 
 > A logarithmically slow schedule guarantees the global optimum in
@@ -1329,3 +1336,1387 @@ normalisation estimator corrected earlier.
 into the route rather than left until the charge is critical — record that it enforces this
 by penalising battery violations rather than by a threshold, and state that the reserve
 threshold is this thesis's own mechanism. No value changed, so no other site is affected.
+
+---
+
+## `muhlenbein1996` (ref. 70)
+
+**Source:** H. Muhlenbein and G. Paass, "From Recombination of Genes to the Estimation of
+Distributions I. Binary Parameters", in *Parallel Problem Solving from Nature - PPSN IV*,
+Lecture Notes in Computer Science 1141, Springer, Berlin, 1996, pp. 178-187.
+DOI 10.1007/3-540-61723-X_982.
+
+**Checked:** 2026-08-14, against the full paper PDF (10 pages, Sections 1-6 plus 18
+references).
+
+**Bib entry: correct, no change.** The byline reads "H. Muhlenbein and G. Paass, GMD -
+Forschungszentrum Informationstechnik, 53754 Sankt Augustin, Germany", matching the author
+fields. The title matches exactly, including the "I. Binary Parameters" part. The Crossref
+record for the DOI returns the same title, the same two authors, container title "Parallel
+Problem Solving from Nature - PPSN IV", and pages 178-187, so venue, page range and year
+are all confirmed. Volume 1141 is the LNCS number for PPSN IV. The DOI resolves.
+
+**Summary of the pass:** eight statements checked across three chapters, all eight
+confirmed as written. No bibliographic field changed and no wording changed anywhere in
+the thesis. This key is unusually well supported: three of the eight statements are near
+verbatim restatements of the paper's own algorithm box or theorems.
+
+**Standing caveat for all eight.** The paper is binary, x_i in {0,1}, as its title says.
+The thesis uses a categorical marginal over m servers. Nowhere does the thesis attribute
+the multi-valued generalisation to this paper, and it cites `adak2026` separately for a
+multi-valued variant of the compact GA
+(`chapters/Metaheuristic Optimisation Methods.tex:498`), so the distinction is already
+drawn. If an examiner raises it, the answer is that going from Bernoulli to categorical
+marginals changes the per-variable distribution family only and leaves the
+select-estimate-sample loop untouched.
+
+### Statement 1 of 8 - Implementation, UMDA, Model estimation (`chapters/Implementation.tex:119`)
+
+> The algorithm is UMDA in its pure form: the probability matrix is re-estimated from
+> scratch each generation, with no incremental learning rate (in the PBIL view, a learning
+> rate of $1$ \citep{baluja1994,muhlenbein1996})
+
+**Verdict: CONFIRMED. No edit.**
+
+This is the strongest of the eight, because the paper draws the UMDA-versus-PBIL contrast
+itself and each citation is the correct half of it. UMDA, Section 3, samples directly from
+the selected set's frequencies with no carry-over: "STEP1: Select M <= N points according
+to a selection schedule. Compute the marginal frequencies r_{t;i}(x_i) of the selected set.
+STEP2: Generate N new points according to the distribution
+q_{t+1}(x) = prod_{i=1}^n r_{t;i}(x_i)." That is re-estimation from scratch, and it is what
+the implementation does.
+
+Section 4 then introduces the incremental variant and attributes it to Baluja and Caruana
+by name: "Independently of the theory presented in this paper a simple algorithm has been
+already proposed in [2]. In this algorithm the univariate marginal frequencies are updated
+according to p_{t+1;i}(x_i) = p_{t;i}(x_i) + lambda(r_{t;i}(x_i) - p_{t;i}(x_i))" (eq. 14),
+"where lambda is a control parameter. The resulting algorithm we call the simple univariate
+marginal distribution algorithm (SUMDA)". Reference [2] is "S. Baluja and R. Caruana.
+Removing the genetics from the standard genetic algorithm", which is the thesis's
+`baluja1994`. Setting lambda = 1 in eq. 14 collapses it to p_{t+1;i} = r_{t;i}, which is
+exactly UMDA's STEP2. The parenthetical is therefore not an analogy imported from
+elsewhere, it is arithmetic on the paper's own equation, with `baluja1994` carrying the
+PBIL update rule and `muhlenbein1996` carrying the lambda = 1 endpoint.
+
+### Statement 2 of 8 - Metaheuristic Optimisation Methods, EDAs (`chapters/Metaheuristic Optimisation Methods.tex:427`)
+
+> Estimation of Distribution Algorithms (EDAs)
+> \cite{muhlenbein1996,larranaga2001,hauschild2011} are model-based alternatives to
+> traditional GAs.
+
+**Verdict: CONFIRMED. No edit.**
+
+This is an origin citation and the paper is the origin. Its title supplies the phrase and
+the abstract states the programme: "In the last part of the paper we discuss more
+sophisticated methods, based on estimating the distribution of promising points."
+Section 3 delivers the first such algorithm, UMDA. The framing as an alternative to GA
+recombination is the paper's own: "But in evolutionary computation we have more freedom. We
+can design new recombination operators which have no counterpart in nature", and, on gene
+pool recombination, "The biologically inspired idea of restricting the recombination to the
+alleles of two parents for each offspring is abandoned."
+
+Worth knowing rather than fixing: the paper never uses the acronym "EDA", which was
+consolidated later. The two co-cites are what carry the acronym and the modern definition,
+so the triple is correctly ordered as origin plus definition.
+
+### Statement 3 of 8 - Metaheuristic Optimisation Methods, EDAs (`chapters/Metaheuristic Optimisation Methods.tex:429`)
+
+> They emerged in response to the difficulty standard GAs have with strongly interacting
+> variables, where crossover can disrupt useful structure
+> \cite{baluja1994,muhlenbein1996}
+
+**Verdict: CONFIRMED. No edit.** This one genuinely earns its co-citation, so the division
+of labour is worth having ready.
+
+`muhlenbein1996` carries the interacting-variables half, in three places. Section 6:
+"Deceptive problems have been introduced by Goldberg [9] as a challenge to genetic
+algorithm. For these functions genetic algorithms will converge to sub-optimal points."
+Section 5: "The suitability of these algorithms for solving optimization problems with
+strongly interacting genes at different loci seems limited", which is what motivates the
+move to conditional distributions in the same section. And on the messy GA, Section 6: "we
+believe that it is impossible to detect all important gene interactions by simply
+manipulating substrings".
+
+`baluja1994` carries the crossover clause. This paper does discuss crossover, but its
+complaint is analytic rather than about disruption of building blocks. Section 2: "Uniform
+crossover in genetic algorithms, which models Mendelian recombination, leads to very
+difficult systems of difference equations. The genetic population moves away from linkage
+equilibrium. This makes an analysis of the algorithm almost impossible." The sentence is
+supported as written by the pair, and if pressed on which reference supports which clause,
+the answer is the split above rather than both for both.
+
+The sharpest form of the objection, worth pre-empting, is about "emerged in response to".
+The paper's *own* stated motivation is neither of the two clauses but a third thing,
+namely analytical tractability of the breeder-GA theory. The abstract: "The Breeder Genetic
+Algorithm (BGA) is based on the equation for the response to selection. In order to use
+this equation for prediction, the variance of the fitness of the population has to be
+estimated. For the usual sexual recombination the computation can be difficult." So the
+thesis sentence states the standard retrospective account of why the EDA line of work
+arose, which `larranaga2001` and `hauschild2011` give in exactly those terms one paragraph
+earlier, rather than paraphrasing this paper's introduction. That is a normal use of an
+origin paper and not an over-claim, because the thesis does not write "Muhlenbein and Paass
+argue that". The interacting-variables thread genuinely is in the paper, in Sections 5 and
+6, as quoted above; it is simply not what its abstract leads with.
+
+### Statement 4 of 8 - Metaheuristic Optimisation Methods, Model Classes (`chapters/Metaheuristic Optimisation Methods.tex:457`)
+
+> This work therefore evaluates a single representative, the Univariate Marginal
+> Distribution Algorithm (UMDA) \cite{muhlenbein1996}.
+
+**Verdict: CONFIRMED. No edit.**
+
+A naming citation, and the name is coined here. Section 3, immediately after eq. 7: "The
+conceptual Univariate Marginal Distribution Algorithm (UMDA) is defined as follows",
+followed by the four-step box. Nothing beyond the name and the algorithm is claimed by the
+sentence.
+
+### Statement 5 of 8 - Metaheuristic Optimisation Methods, Working Principle of UMDA (`chapters/Metaheuristic Optimisation Methods.tex:471`)
+
+> UMDA maintains a population $P_t$ of $N$ candidates and, each generation, performs
+> \emph{evaluation}, \emph{selection}, \emph{estimation}, and \emph{sampling}
+> \cite{muhlenbein1996,larranaga2001}: $S_t = select(P_t)$, $p_t = estimate(S_t)$,
+> $P_{t+1} = sample(p_t, N)$.
+
+**Verdict: CONFIRMED. No edit.** A near verbatim restatement of the algorithm box.
+
+Step for step, Section 3: "STEP0: Set t = 1. Generate N >> 0 points randomly" gives the
+population of N; "STEP1: Select M <= N points according to a selection schedule. Compute
+the marginal frequencies r_{t;i}(x_i) of the selected set" gives select then estimate;
+"STEP2: Generate N new points according to the distribution
+q_{t+1}(x) = prod_{i=1}^n r_{t;i}(x_i)" gives sample, and STEP3 returns to STEP1. The
+thesis's factorisation p_t(x) = prod_i p_{t,i}(x_i) two lines further down is the paper's
+eq. 6, and the frequency-count estimator is its eq. 7, p_i(x_i) = sum_{x|x_i} q(x).
+
+Two incidental corroborations. The thesis writes "keeping the top mu <= N individuals", and
+the paper's STEP1 is literally "Select M <= N points", the same relation under a different
+letter. And the thesis's choice of truncation is a legitimate instantiation rather than a
+departure, because STEP1 specifies only "according to a selection schedule". The paper's
+theorems then specialise to proportionate selection for tractability, which the thesis does
+not claim to follow.
+
+### Statement 6 of 8 - Metaheuristic Optimisation Methods, Working Principle of UMDA (`chapters/Metaheuristic Optimisation Methods.tex:506`)
+
+> Three parameters govern the exploration--exploitation balance
+> \cite{muhlenbein1996,larranaga2001}: the population size $N$ [...] the selection ratio
+> $\mu / N$ [...] and a margin that keeps marginals away from the exact extremes so a value
+> absent from one generation's selection is not lost forever \cite{chen2010analysis}
+
+**Verdict: CONFIRMED. No edit.** The weakest of the eight for this key taken alone, but the
+citations are placed so that every clause has a source that carries it.
+
+N and the selection ratio are the paper's only UMDA parameters, and they are exactly the
+two free quantities in the algorithm box: N in STEP0 and M <= N in STEP1. The paper also
+treats N as governing behaviour rather than as an implementation detail: "For difficult
+multi modal fitness functions the success of SUMDA depends on the parameter lambda and N",
+and "Because the size of the population, N, is very large, the speed of convergence is
+almost independent of the size of the problem n."
+
+Three things this paper does not supply, each already sourced elsewhere in the thesis, so
+none is an over-attribution. The margin has its own citation, `chen2010analysis`, at the end
+of that clause; this paper has no margin, and its own safeguard against collapse is SUMDA's
+lambda instead. "mu = N/2 a common default" is hedged as convention and rests on
+`larranaga2001`. The word "drift" in the gloss on N rests on `shapiro2005drift`,
+`doerr2020sharp` and `witt2019upper`, cited two paragraphs earlier at line 465 where the
+concept is introduced; this paper predates that analysis and does not use the term.
+
+### Statement 7 of 8 - Metaheuristic Optimisation Methods, Encoding and Constraints (`chapters/Metaheuristic Optimisation Methods.tex:527`)
+
+> Third, the objective function of Equation~\eqref{eq:cloud_obj} is approximately additive
+> across tasks under the soft-penalty formulation, a structure favourable to univariate EDAs
+> \cite{muhlenbein1996,muhlenbein1999fda}.
+
+**Verdict: CONFIRMED. No edit.** The paper proves this rather than asserting it, which makes
+the citation stronger than the sentence needs.
+
+Theorem 4 gives the response to selection as R(t) = V_A(t)/f(t) plus a term that vanishes in
+linkage equilibrium, where V_A is the additive genetic variance of eq. 11. The corollary on
+the same page is the sharp form: "For proportionate selection the UMDA stays in equilibrium
+iff V_A = 0", glossed as "The response to selection is zero if the additive variance is
+zero. UMDA only exploits the additive genetic variance." Section 5 states the consequence
+for problem structure directly: the marginal-distribution algorithms "exploit the additive
+genetic variance mainly", and their "suitability for solving optimization problems with
+strongly interacting genes at different loci seems limited". The empirical side matches,
+with Table 1 showing SUMDA converging on the linear function ONEMAX while Sections 5 and 6
+abandon univariate models for the deceptive functions.
+
+So "favourable to univariate EDAs" is the contrapositive of a theorem in the source, not a
+soft claim. The thesis's own hedge in the next sentence, that the argument weakens when
+capacities bind tightly, is the right one, because the paper's limit case is "UMDA is not a
+global optimization method for difficult fitness functions."
+
+### Statement 8 of 8 - Related Work, EDAs on Cloud Allocation (`chapters/Related work.tex:21`)
+
+> The most widely used univariate EDA is the Univariate Marginal Distribution Algorithm
+> (UMDA)~\cite{muhlenbein1996}, which re-estimates each variable's marginal directly from
+> the selected population at every generation
+
+**Verdict: CONFIRMED. No edit.**
+
+The mechanism clause is the algorithm box again, and "directly from the selected population"
+is the precise wording, because STEP2 samples from r_{t;i}, the frequencies of the selected
+set itself, with no intermediate vector. The contrast drawn in the next sentence of the same
+paragraph is also the paper's own: PBIL "instead updates a single probability vector
+incrementally", which is eq. 14 and its attribution to reference [2], Baluja and Caruana.
+See Statement 1.
+
+"Most widely used" is a claim about the literature, not about this paper, and the citation
+sits on the algorithm's name rather than on the superlative, so it is correctly placed.
+
+## `moscato1989` (ref. 68)
+
+**Source:** P. Moscato, "On Evolution, Search, Optimization, Genetic Algorithms and Martial
+Arts: Towards Memetic Algorithms", Caltech Concurrent Computation Program, California
+Institute of Technology, Pasadena, CA, C3P Report 826, 1989.
+
+**Checked:** 2026-08-14, against the full report PDF (67 pages, Sections 1-10 plus 194
+references).
+
+**Bib entry: correct, no change.** The cover page gives the author as Pablo Moscato and the
+title on two lines, "On Evolution, Search, Optimization, Genetic Algorithms and Martial
+Arts" over "Towards Memetic Algorithms", which the bib joins with a colon in the usual way.
+The affiliation block reads "Caltech Concurrent Computation Program 158-79, California
+Institute of Technology, Pasadena, CA 91125", matching the institution and address fields.
+Two fields cannot be read off this scan and were checked for consistency instead. The report
+number C3P 826 is not printed on the cover, but the report's own reference list cites three
+neighbouring Moscato items as C3P-778, C3P-789 and C3P-790, all 1989, so 826 sits in the
+right series and is the number by which the report is universally cited. The year is not
+printed either, but the newest references in it are from July 1989 and the acknowledgements
+thank friends "during this year at Caltech", so 1989 is consistent.
+
+**Summary of the pass:** four statements checked across three chapters. Three confirmed as
+written. One clause in the Chapter 4 footnote was narrowed, because it overstated the gene
+side of the gene-versus-meme contrast in a way the source does not support and the thesis's
+own GA contradicts. No bibliographic field changed.
+
+**Note on what this source is.** It is the report that names memetic algorithms, so all four
+instances are origin citations for the term and the template rather than claims about
+experimental results. That is the right use of it. The report's own experiments are on the
+TSP and the quadratic assignment problem, and the thesis never attributes an EV routing
+result to it.
+
+### Statement 1 of 4 - Implementation, Memetic Algorithm (`chapters/Implementation.tex:170`)
+
+> The memetic algorithm \citep{moscato1989} reuses the GA but refines each offspring with up
+> to thirty first-improvement local-search steps (drawn from the same eight operators)
+> before it enters the population.
+
+**Verdict: CONFIRMED. No edit.**
+
+The citation carries the name and the template, and both are the report's. Section 5, "The
+Memetic algorithm": "Memetic algorithms is a marriage between a population-based global
+search and the heuristic local search made by each of the individuals." The ordering the
+sentence describes, local search first and population membership second, is the report's own
+procedure: "After that, each individual makes local search... After that, when the individual
+has reached a certain development, it interacts with the other members of the population."
+
+The bounded budget of thirty steps is within what the report allows rather than a departure
+from it. It states that local search need not run to a local optimum: "The mechanism to do
+local search can be to reach a local optima or to improve (regarding the objective cost
+function) up to a predetermined level." A step cap is one such level.
+
+The numbers, the eight operators and the first-improvement rule are this thesis's own design
+choices, and the sentence does not attribute them to the source.
+
+### Statement 2 of 4 - Metaheuristic Optimisation Methods, Memetic Algorithms (`chapters/Metaheuristic Optimisation Methods.tex:190`)
+
+> A Memetic Algorithm (MA) hybridises a population-based method with local search, so that
+> the population evolves over locally optimised solutions rather than raw offspring
+> \cite{moscato1989}. [footnote] The name is Moscato's, after Dawkins's \emph{meme}, a unit
+> of cultural rather than genetic transmission.
+
+**Verdict: CONFIRMED. No edit.**
+
+Three separate claims here, all of them the report's.
+
+The definition is the sentence quoted under Statement 1, the marriage of population-based
+global search with per-individual local search. The stronger half of the thesis sentence,
+that the population evolves over locally optimised solutions rather than raw offspring, is
+the report's too, in the passage where it quotes Brown et al. on SAGA and endorses the
+wording: "each of the offspring generated by the GA in a given generation is improved using
+SA. In other words, each offspring is required to 'mature' before being allowed to have
+offspring". Moscato adds that he "found myself using the same words" for all three methods
+he surveys.
+
+The name is his. Conclusions: "Due to some of these analogies and the fact that they clearly
+diverge of some other approaches, I found that they can be labeled as memetic algorithms."
+
+The etymology is stated in Section 5, "The concept of the meme": "R. Dawkins in the last
+chapter of his book 'The Selfish Gene', has introduced the word meme to denote the idea of a
+unit of imitation in cultural transmission which in some aspects is analogous to the gene."
+The thesis compresses "unit of imitation in cultural transmission" to "a unit of cultural
+rather than genetic transmission", and the contrast it adds is the report's framing
+throughout that section, which is built on "the analogies between cultural and genetic
+evolution".
+
+### Statement 3 of 4 - Metaheuristic Optimisation Methods, Memetic Algorithms footnote (`chapters/Metaheuristic Optimisation Methods.tex:190`)
+
+> Genes are passed on unchanged, whereas memes are typically improved by their carrier
+> before being propagated, just as each offspring here is locally refined before it enters
+> the population \cite{moscato1989}.
+
+**Verdict: OVERREACHED ON THE GENE SIDE. Edited.**
+
+The meme half is well supported and stays. Section 5 is explicit that a meme is improved
+before it is passed on, and that this is what separates cultural from genetic evolution:
+"Only the masters have the sufficient knowledge that permits them create a new movement and
+to incorporate it to the form... So, there is much problem specific knowledge that is applied
+to each modification. Almost all modifications give improvements rather than create a
+disorder. This fast-feedback flow of information from high order phenotype knowledge to
+genotype level, seems to have differences with the processes of biological evolution."
+He names this as the source of the speed-up: "the analogy of cultural and genetic evolution
+breaks down in the copying-fidelity aspects of them in addition with mutation. And that
+these break-down points are the reasons of the tremendous speed-up observed in cultural
+evolution."
+
+"Genes are passed on unchanged" was the problem. The report does not say that. What it
+quotes from Dawkins is about particulateness, not constancy: meme transmission looks "quite
+unlike the particulate, all-or-none quality of gene transmission", the point being that a
+gene arrives whole or not at all while a meme can arrive blended. Moscato says close to the
+opposite of "unchanged" two pages earlier, listing how life searches: "performing point
+mutational operations like the substitution, insertion or deletion of nucleotides in the DNA
+or RNA. Other rearrangements of the structure are chromosomal mutations like the deletions,
+inversions, duplications, transpositions, translocations, conversions". The sentence also sat
+oddly next to the thesis's own GA, which mutates offspring at rate $0.15$ and at $0.25$ in
+the MA, so an examiner reading the footnote against Chapter 6 would have a fair question.
+
+**Edit made.** `chapters/Metaheuristic Optimisation Methods.tex:190`, the footnote's second
+sentence:
+
+- before: "Genes are passed on unchanged, whereas memes are typically improved by their
+  carrier before being propagated, just as each offspring here is locally refined before it
+  enters the population"
+- after: "Unlike a gene, a meme is usually improved by its carrier before being passed on,
+  which is what local search does to each offspring"
+
+That is the contrast the report actually draws, the absence in biology of any feedback from
+what the individual learns back into what it transmits, against the meme that its carrier
+refines first. It is also the contrast the analogy needs, since local search is that
+feedback. "Usually" carries the report's own hedge, "almost all modifications give
+improvements rather than create a disorder".
+
+The replacement is also shorter than the original, 24 words against 34. The first draft of
+this fix kept the original three-clause shape and read "Genes are not improved by the
+individual that carries them, whereas memes usually are, just as each offspring here is
+locally refined before it enters the population". Two things were wrong with it against the
+supervisor's style rules. "Whereas memes usually are" leaves the verb phrase elliptical,
+where "unlike a gene" states the contrast directly. And the closing clause repeated what the
+body sentence had just said two lines earlier, that the population evolves over locally
+optimised solutions rather than raw offspring. Nothing else in the footnote or the paragraph
+changed.
+
+### Statement 4 of 4 - Related Work, Heuristics and Metaheuristics on EVRP (`chapters/Related work.tex:53`)
+
+> Combining a genetic algorithm with local refinement yields a \emph{memetic
+> algorithm}~\cite{moscato1989}, a template that is particularly effective on routing
+> problems because the local-search step repairs the route disruption that recombination
+> causes.
+
+**Verdict: CONFIRMED. No edit.**
+
+The first clause is the report's own way of positioning MA against GA: "The GA community
+would like to say that MA are only a special kind of GA with local hill-climbing", and "my
+impression is that the only clear separation is the local search, which was considered the
+hybrid characteristic for the eyes of the GA community".
+
+The causal clause is the stronger claim and it is supported almost verbatim, in the report's
+own TSP implementation. Section 6, "The Optimisation Schedule", gives as the first reason for
+interleaving the phases "that the results of cooperation do not compete until they have
+undergone local optimisation to ameliorate the damage caused by the OX operator". Damage
+caused by the OX operator is route disruption caused by recombination, and local optimisation
+ameliorating it is the local-search step repairing it. The disruption itself is quantified in
+the preceding subsection: "the excision of cities means that achieving the subtour often makes
+significant changes to the tour into which it is inserted... the number of links in the second
+tour which change during crossover may be any value, up to the number of links it contains."
+
+"Particularly effective on routing problems" is carried by the report's results rather than by
+an assertion in it, which is the weaker form of support but adequate here. Its own TSP runs
+land at or near optimum, and the ASPARAGOS results it surveys reach the optimum on instances
+below 100 cities and come under one percent above optimum on the 532-city Padberg and Rinaldi
+instance. The same pairing is separately attributed to `talbi2009` in Chapter 4 and shown
+empirically by `liu2022hybridga` in the sentence that follows this one, so the claim does not
+rest on this source alone.
+
+## `mann2015allocation` (ref. 61)
+
+**Source:** Z. A. Mann, "Allocation of Virtual Machines in Cloud Data Centers - A Survey of
+Problem Models and Optimization Algorithms", ACM Computing Surveys, volume 48, issue 1, 2015.
+DOI 10.1145/2797211.
+
+**Checked:** 2026-08-14, against the full survey PDF (28 pages, Sections 1-8 plus 124
+references).
+
+**Bib entry: correct, no change.** The byline reads "Zoltan Adam Mann, Budapest University of
+Technology and Economics" and the first-page footnote reads "Published in ACM Computing
+Surveys, volume 48, issue 1, 2015", which fixes author, journal, volume, number and year. The
+title matches word for word; the dash before "A Survey" prints as an en dash in this preprint
+and as an em dash in the ACM version, which is the form the bib uses. One field cannot be read
+off this scan: the `pages` value `11:1--11:34` is the ACM article numbering, and the preprint
+paginates 1-28 with no article number printed. It was left as is, since nothing in the PDF
+contradicts it and it is consistent with the DOI.
+
+**Summary of the pass:** four statements checked across two chapters, all confirmed as
+written. No edit to the report, and no bibliographic field changed.
+
+**Note on what this source is.** It is a survey of problem models and algorithms, so every
+instance here is a "this is how the field frames it" citation rather than an experimental
+result. That is the right use of it: the survey reports no experiments of its own, and the
+thesis never attributes a measured number to it.
+
+### Statement 1 of 4 - Problem Specification, Sets and Parameters (`chapters/Problem Specification.tex:92`)
+
+> CPU usage is assumed to be linearly additive across tasks and perfectly divisible across
+> cores, a standard abstraction in the cloud scheduling
+> literature~\cite{beloglazov2012energy,mann2015allocation} that ignores non-linear effects
+> such as cache contention but preserves the essential property that aggregate demand must
+> not exceed aggregate capacity.
+
+**Verdict: CONFIRMED. No edit.**
+
+The citation is shared with `beloglazov2012energy`, which supplies an instance of the
+abstraction. Mann is what carries the word "standard", and the survey supports all three parts
+of the sentence separately.
+
+Divisible across cores, Section 4.2: "Beloglazov and Buyya model a multi-core CPU by means of
+a single-core CPU with capacity equal to the sum of the capacities of the cores of the
+original multi-core CPU". That summing of core capacities into one pool is exactly the
+assumption the sentence names. Section 4.1.3 records how common it is, "In this
+often-investigated special case, only the computational demands and computational capacities
+are considered, and no other resources. Moreover, the CPU is taken to be single-core, making
+the problem truly one-dimensional", and Section 7.1 lists the gap among the field's open
+problems: "The existing problem formulations in the literature either do not model multi-core
+CPUs at all, or model them in a very simplistic way."
+
+Additive, and the capacity property that survives, Section 7.1: "When deciding to place a set
+of VMs on a PM, many works only check that the total size of the VMs does not exceed the PM's
+capacity." Total size against capacity is the aggregate-demand test the sentence says the
+abstraction preserves.
+
+Cache contention as the named casualty, Section 3.3: "current virtualization technologies do
+not ensure isolation of the cache usage of individual VMs accommodated by the same PM, leading
+to contention between them". The same Section 7.1 paragraph puts this on the deficit list
+under "co-location interference" and the "noisy neighbor" effect, so the survey agrees both
+that the abstraction is standard and that this is what it costs.
+
+### Statement 2 of 4 - Related Work, Cloud Resource Allocation (`chapters/Related work.tex:8`)
+
+> The cloud resource allocation problem studied in this thesis is usually framed as Virtual
+> Machine Placement (VMP)~\cite{mann2015allocation}.
+
+**Verdict: CONFIRMED. No edit.**
+
+The survey is that framing. Its keyword list is "Cloud computing, data center, virtual
+machine, live migration, VM placement, VM consolidation, green computing", and the abstract
+states the object of study as "a careful allocation of VMs to hosts". Section 7.1 gives the
+usual-case wording the thesis sentence needs: "In the Single-DC problem, the usual formulation
+is about mapping VMs to PMs." Section 5.2 then uses "the VM placement problem" as the standing
+name throughout. Mann treats "VM allocation" and "VM placement" as the same problem, so the
+thesis naming it VMP is faithful rather than a narrowing.
+
+### Statement 3 of 4 - Related Work, Cloud Resource Allocation (`chapters/Related work.tex:8`)
+
+> The problem is NP-hard~\cite{mann2015allocation}, and the scale of modern data centres rules
+> out exhaustive search in practice.
+
+**Verdict: CONFIRMED. No edit.**
+
+Section 7.2 states it and gives the argument: "Since the VM placement problem contains the
+bin-packing problem as special case, which is NP-hard in the strong sense [77], there is no
+hope for an exact algorithm with polynomial or even pseudo-polynomial runtime." The reduction
+is by containment, with the bin-packing hardness itself credited to Martello and Toth, which
+is the standard route and is also how Chapter 2 of the thesis reaches the same conclusion.
+Section 6.3 carries an independent NP-hardness proof for one variant, Meng et al. "prove its
+NP-hardness by reduction from Balanced Minimum k-Cut".
+
+The second clause is supported by the same section: "the fact that those solvers took a long
+time to solve even mid-sized problem instances", and Section 5.1, "its worst-case runtime is
+exponential with respect to the size of the input, so that solving large-scale problem
+instances takes much too long. Most researchers turned to heuristics for this reason."
+
+### Statement 4 of 4 - Related Work, Heuristics and Metaheuristics on Cloud Allocation (`chapters/Related work.tex:14`)
+
+> Comprehensive surveys are given by Mann~\cite{mann2015allocation} and, with a focus on
+> bin-packing-style approaches, by Kumaraswamy and Nair~\cite{kumaraswamy2019binpacking}.
+
+**Verdict: CONFIRMED. No edit.**
+
+"Comprehensive" is fair and the survey says so itself, "we tried to show a representative
+selection of the most important works", covering 124 references, two problem-model tables and
+a full algorithm review split into exact methods (Section 5.1), Single-DC heuristics (5.2),
+Multi-IaaS heuristics (5.3) and evaluation practice (5.5).
+
+The sentence sits under a heading about heuristics and metaheuristics, and the survey covers
+both, which is what the paragraph goes on to use it for: the bin-packing family in Section
+5.2, "the usage of FF has been suggested [16], just like BF [10], WF [56, 71, 107], FFD [111,
+113] and BFD [8, 7, 46]", and the metaheuristics in the next paragraph, "simulated annealing
+[52], genetic algorithms [44], and ant colony optimization [41]". The lead-in sentence, that
+the practical literature relies on heuristics, is the survey's own position: "Although the
+majority of the proposed algorithms are heuristics, also some exact algorithms have been
+proposed".
+
+Scope note, not an error. Mann's coverage is wider than the subsection heading, since it
+includes exact methods too. The sentence claims only that he gives a comprehensive survey, not
+that the survey is confined to heuristics, so the placement is correct. The narrower framing
+belongs to `kumaraswamy2019binpacking`, and the thesis already says so in the same sentence.
+
+## `witt2019upper` (ref. 98)
+
+**Source:** C. Witt, "Upper Bounds on the Running Time of the Univariate Marginal Distribution
+Algorithm on OneMax", Algorithmica, volume 81, issue 2, pages 632-667, 2019.
+DOI 10.1007/s00453-018-0463-0.
+
+**Checked:** 2026-08-14, against the full paper PDF (36 pages, Sections 1-6 plus the appendix
+proof of the drift theorem).
+
+**Bib entry: correct, no change.** Author, title, journal, volume, pages and year match the
+running head "Algorithmica (2019) 81:632-667" and the DOI printed on page 1. The issue number
+is the one field the PDF never prints; Crossref gives issue 2, print date February 2019, which
+is what the entry already has.
+
+### Statement 1 of 1 - Metaheuristic Optimisation Methods, Model Classes (`chapters/Metaheuristic Optimisation Methods.tex:463`)
+
+> Theoretical analyses show the population must be sized generously relative to $n$ to prevent
+> \emph{genetic drift}, in which a marginal moves toward its extremes through finite-sample
+> noise rather than genuine selection pressure
+> \cite{shapiro2005drift,doerr2020sharp,witt2019upper}.
+
+**Verdict: CONFIRMED. No edit.** Every clause is carried, and the paper uses the term itself
+rather than leaving it to be inferred.
+
+**The term.** Section 1 says Wu et al. "use concentration bounds such as Chernoff bounds to
+bound the effect of so-called genetic drift, which is also considered in the present paper".
+Section 3 fixes the meaning: "there are random fluctuations (referred to as genetic drift in
+[26]) of frequencies that may lead to undesired decreases towards 0". Reference [26] is
+Sudholt and Witt, GECCO 2016, where the name is coined.
+
+**Noise rather than selection pressure.** Section 2.2 gives the mechanism exactly as the report
+glosses it. Strip selection and "the frequency describes a random walk that is a martingale,
+i.e., in expectation it does not change"; keep selection and "since only the accumulated number
+of 1-bits per individual matters for selection, a single frequency may still decrease even if
+the step leads to an increase of the best-so-far seen OneMax value".
+
+**The extremes are absorbing.** Section 2: "If a frequency is either 0 or 1, it cannot change
+anymore since then all values at this position will be either 0 or 1." Same passage supports
+the later sentence at line 516 that a drifted marginal cannot recover without a mutation
+operator.
+
+**Sized relative to n.** This is the paper's phase transition. Section 1: "Around
+mu = Theta(sqrt(n) log n), there is a phase transition in the behavior of the algorithm. With
+smaller mu, the stochastic movement of the frequencies is more chaotic and many frequencies
+will hit the lowest possible value during the optimization." Above the threshold, Lemma 11
+proves that for mu >= c sqrt(n) log n a frequency does not fall to 1/4 within n^Theta(c)
+generations, which subsumes any polynomial number of steps for c large enough, and Theorem 10
+turns that into the O(lambda sqrt(n)) running-time bound. Section 5 matches empirically: for
+n = 2000 the number of hits of the lower border decreases exponentially in lambda and the
+transition sits "somewhere between 250 and 300", the same order as sqrt(n) ln n, about 340
+(my arithmetic, not the paper's).
+
+Three things worth having ready for the defence, none of them an error in the report.
+
+**1. The paper proves sufficiency; necessity is quoted from elsewhere.** Lemma 11 shows a large
+population prevents drift. The converse, that a small one causes it, is Krejca and Witt, FOGA
+2017, restated in Section 4: "with high probability n^Omega(1) frequencies will walk to the
+lower border before the optimum is found, resulting in a coupon collector effect". The report
+says "theoretical analyses show", plural, across three sources, and this paper states the
+two-sided threshold in its own introduction, so the "must" is carried. If pressed, quote the
+phase-transition sentence, not Lemma 11.
+
+**2. Drift is not failure, and that is the paper's headline.** With the borders [1/n, 1-1/n] in
+place, Theorem 12 gives expected time O(lambda n) for mu >= c log n, far below the drift
+threshold, and the conclusion extracts O(n log n) at mu = c' log n. Only the border-free
+variant breaks: "For UMDA*, it is infinite with high probability if mu < c' sqrt(n) log n". The
+report's sentence survives this because it claims a large population is needed to prevent
+drift, not to make UMDA work at all. The margin paragraph at lines 510-518 is the counterpart
+the UMDA/UMDA* split calls for, and it is also the answer if the examiner asks why this thesis
+does not simply scale N with n: it uses Laplace smoothing, which is the border, so it sits on
+the UMDA rather than the UMDA* side of that result.
+
+**3. Scope.** All of this is binary UMDA on OneMax; this thesis runs a multi-valued UMDA over m
+servers on a penalised objective. The mechanism transfers, since a marginal estimated from mu
+samples carries sampling noise whatever its arity, but the threshold constant does not. That is
+the reason not to sharpen "sized generously relative to $n$" into "of order sqrt(n) log n": the
+figure belongs to this benchmark, and quoting it would claim more transfer than the sources
+support. The wording stays qualitative on purpose.
+
+**Not verified in this pass:** `shapiro2005drift` and `doerr2020sharp`, the other two citations
+on the same sentence. Only the Witt PDF was supplied.
+
+---
+
+## `larranaga2001` (ref. 55)
+
+**Source:** P. Larranaga and J. A. Lozano (editors), *Estimation of Distribution Algorithms:
+A New Tool for Evolutionary Computation*, Genetic Algorithms and Evolutionary Computation
+series, Kluwer Academic Publishers, Boston, MA, 2001. DOI 10.1007/978-1-4615-1539-5.
+
+**Checked:** 2026-08-14.
+
+**Read the caveat first: this pass is by proxy, not against the book.** The PDF supplied was
+not the Kluwer book. It was E. Bengoetxea, P. Larranaga, I. Bloch and A. Perchant,
+"Estimation of Distribution Algorithms: A New Evolutionary Computation Approach for Graph
+Matching Problems", in *EMMCVPR 2001*, Lecture Notes in Computer Science 2134, Springer,
+pages 454-469. That paper is a legitimate proxy and an unusually good one, for three reasons.
+Larranaga is its second author. It is the same year as the book. And its Section 2, pages
+455-460, is a self-contained tutorial exposition of the EDA framework which cites the book as
+its own reference [16] on the opening line of Section 2.1, that is, the paper's summary of
+EDAs is presented as a summary *of* the book, by one of the book's editors. Every one of the
+six thesis statements below is matched against that Section 2. What this pass therefore
+establishes is that the six claims are true of the EDA framework as the book's own editor set
+it out in the same year, not that a specific page of the book says so. If an examiner asks for
+page numbers in the book itself, that has not been done and the honest answer is to say so.
+
+**Bib entry: correct, no change.** The one thing the supplied PDF verifies directly, and
+verifies twice, is the bibliographic record. Reference [16] on page 467 reads
+"P. Larranaga and J. A. Lozano. Estimation of Distribution Algorithms. A New Tool for
+Evolutionary Computation. Kluwer Academic Publishers, 2001", confirming both names, the title
+including the subtitle, the publisher and the year. Reference [35] on page 468 confirms
+independently that the two are *editors* rather than sole authors, and so that `@book` with an
+`editor` field is the right form: "In P. Larranaga and J. A. Lozano, editors, Estimation of
+Distribution Algorithms. A new tool for Evolutionary Computation. Kluwer Academic Publishers,
+2001". Reference [35] is itself a chapter in that book by the authors of the supplied paper,
+which is also why the paper's Section 2 tracks the book so closely. The `series`, `address`
+and `doi` fields are not printed in either reference and were not checked in this pass.
+
+**Summary of the pass:** six statements checked across two chapters, all six confirmed as
+written. No bibliographic field changed and no wording changed anywhere in the thesis. Four of
+the six are near verbatim restatements of the source's own sentences or of its Figure 1
+pseudocode.
+
+### Statement 1 of 6 - Metaheuristic Optimisation Methods, model-based section (`chapters/Metaheuristic Optimisation Methods.tex:423`)
+
+> Probabilistic Model-Based Metaheuristics replace the heuristic variation operators with an
+> explicit probabilistic model fitted to the currently best solutions, and generate new
+> candidates by sampling from that model \cite{larranaga2001,hauschild2011,pelikan2002survey}.
+
+**Verdict: CONFIRMED. No edit.** The source states this as the defining property, and states
+both halves of it, the fitting and the replacement, in consecutive sentences. Section 2.1,
+page 455: "the characteristic that most differentiates EDAs from other evolutionary search
+strategies such as GAs is that the evolution from a generation to the next one is done by
+estimating the probability distribution of the fittest individuals, and afterwards by sampling
+the induced model. This avoids the use of crossing or mutation operators." "The fittest
+individuals" is the report's "the currently best solutions", and "avoids the use of crossing
+or mutation operators" is the report's "replace the heuristic variation operators".
+
+### Statement 2 of 6 - Metaheuristic Optimisation Methods, EDAs (`chapters/Metaheuristic Optimisation Methods.tex:427`)
+
+> Estimation of Distribution Algorithms (EDAs)
+> \cite{muhlenbein1996,larranaga2001,hauschild2011} are model-based alternatives to
+> traditional GAs.
+
+**Verdict: CONFIRMED. No edit.** This is a bare framing sentence and the source frames them
+the same way. Section 2.1, page 455, places EDAs inside evolutionary computation, "EDAs
+[16,17,18] are non-deterministic, stochastic heuristic search strategies that form part of the
+evolutionary computation approaches", and then separates them from GAs by the model, in the
+sentence quoted under Statement 1. The reference marker [16] on that first line is the book
+itself, so the citation points at the work the source points at.
+
+### Statement 3 of 6 - Metaheuristic Optimisation Methods, Model Classes (`chapters/Metaheuristic Optimisation Methods.tex:445`)
+
+> EDAs are classified by the complexity of the fitted model
+> \cite{pelikan2002survey,hauschild2011,larranaga2001}.
+
+**Verdict: CONFIRMED. No edit.** The source not only states the classification principle but
+organises its own Section 2.2 by it, and the three tiers it uses are the report's three tiers.
+Page 457: "All the EDAs are classified depending on the maximum number of dependencies between
+variables that they accept (maximum number of parents that a variable $X_i$ can have in the
+probabilistic graphical model)." Maximum number of dependencies is the report's "complexity of
+the fitted model". The subheadings that follow are "Without Interdependencies", with UMDA as
+the example; "Pairwise Dependencies", with MIMIC as the example and reference [21] being
+De Bonet, Isbell and Viola 1997, which is the thesis's `debonet1997`; and "Multiple
+Interdependencies", with EBNA and a learned Bayesian network. That maps onto the report's
+univariate, bivariate and multivariate tiers item for item, including the choice of MIMIC as
+the bivariate representative.
+
+### Statement 4 of 6 - Metaheuristic Optimisation Methods, Working Principle of UMDA (`chapters/Metaheuristic Optimisation Methods.tex:471`)
+
+> UMDA maintains a population $P_t$ of $N$ candidates and, each generation, performs
+> \emph{evaluation}, \emph{selection}, \emph{estimation}, and \emph{sampling}
+> \cite{muhlenbein1996,larranaga2001}: [select, estimate, sample display]
+
+**Verdict: CONFIRMED. No edit.** The strongest of the six. The report's three-operator display
+is the source's Figure 1 pseudocode line for line, page 456: "$D_0$ <- Generate $N$ individuals
+(the initial population) randomly. Repeat for $l = 1, 2, \ldots$ until a stopping criterion is
+met: $D^{Se}_{l-1}$ <- Select $Se \leq N$ individuals from $D_{l-1}$ according to a selection
+method; $\rho_l(x) = \rho(x|D^{Se}_{l-1})$ <- Estimate the probability distribution of an
+individual being among the selected individuals; $D_l$ <- Sample $N$ individuals (the new
+population) from $\rho_l(x)$." The population size is $N$ and the selected count satisfies
+$Se \leq N$, which is the report's $\mu \leq N$ under a different letter.
+
+Two details further down carry the rest of the paragraph. The univariate factorisation
+$p_t(x) = \prod_i p_{t,i}(x_i)$ is equation (4) on page 458,
+$p_l(x; \theta^l) = \prod_{i=1}^{n} p_l(x_i; \theta_i)$. The maximum-likelihood frequency
+estimate is the sentence immediately after it: "$\theta^l$ is recalculated every generation by
+its maximum likelihood estimation, i.e. $\hat\theta^l_{ijk} = N^{l-1}_{ijk} / N^{l-1}_{ij}$", a
+count of cases divided by a total, which is the report's
+$p_{t,i}(s) = \frac{1}{\mu}\sum_{x \in S_t}\mathds{1}[x_i = s]$ in the parent-free case.
+"Recalculated every generation" is the report's re-estimation from scratch.
+
+### Statement 5 of 6 - Metaheuristic Optimisation Methods, UMDA parameters (`chapters/Metaheuristic Optimisation Methods.tex:507`)
+
+> Three parameters govern the exploration--exploitation balance
+> \cite{muhlenbein1996,larranaga2001}: the population size $N$ (estimate accuracy and drift
+> resistance), the selection ratio $\mu / N$ (selection pressure, with $\mu = N/2$ a common
+> default), and a margin that keeps marginals away from the exact extremes so a value absent
+> from one generation's selection is not lost forever \cite{chen2010analysis} [...]
+
+**Verdict: CONFIRMED. No edit.** Read the citation brackets carefully before judging this one,
+because the sentence does three things and only two of them are charged to this key. The margin
+is cited to `chen2010analysis`, separately, at the clause where it appears. `larranaga2001`
+carries $N$ and the selection ratio.
+
+$N$ and $\mu/N$ are both parameters of the source's own experiment, Section 4.2, page 463: "a
+population of 2000 individuals ($N = 2000$), from which a subset of the best 1000 are selected
+($S_e = 1000$) to estimate the probability, and the elitist approach was chosen". That is
+$\mu/N = 1/2$ exactly, which is the report's "$\mu = N/2$ a common default", corroborated by
+use rather than by prescription, but corroborated in a paper by the book's own editor, which is
+about as good as "common default" claims get. The same sentence supports "keeping the top $\mu$
+individuals by fitness" as truncation ("the best 1000 are selected") and the report's elitism
+sentence four lines later ("always the best individual is included for the next population and
+1999 individuals are simulated").
+
+Worth noting rather than fixing: the parenthetical "(estimate accuracy and drift resistance)"
+is not supported by the supplied PDF, which never discusses drift. It does not need to be. The
+drift claim is made and cited in full two paragraphs earlier at line 463, to
+`shapiro2005drift`, `doerr2020sharp` and `witt2019upper`, and the parenthetical is a
+back-reference to it, not a fresh claim. The one sentence in the supplied PDF that gestures at
+the margin idea is on page 457, "We assume that every $\theta_{ijk}$ is greater than zero", the
+positivity condition that Laplace smoothing enforces, but it is stated there as a modelling
+assumption on Bayesian network parameters, not as a tunable parameter, so it is not strong
+enough to carry the margin clause and the clause does not lean on it.
+
+### Statement 6 of 6 - Related Work, EDAs on Cloud Allocation (`chapters/Related work.tex:21`)
+
+> Estimation of Distribution Algorithms (EDAs) replace the crossover and mutation operators of
+> evolutionary algorithms with a probabilistic model that is fitted to selected individuals
+> from the current population and then sampled to generate new candidate
+> solutions~\cite{hauschild2011, larranaga2001}.
+
+**Verdict: CONFIRMED. No edit.** Same support as Statement 1, and here the match is closer
+still because the report names the two operators the source names. Section 2.1, page 455:
+"This avoids the use of crossing or mutation operators." Crossing is crossover. "Fitted to
+selected individuals from the current population" is Figure 1's estimate step, whose object is
+$D^{Se}_{l-1}$, the selected subset, and the source's own gloss for the estimated quantity is
+"the probability distribution of an individual being among the selected individuals".
+
+**Not verified in this pass:** the `series`, `address` and `doi` fields of the bib entry, which
+neither reference in the supplied PDF prints; and `hauschild2011`, `pelikan2002survey` and
+`chen2010analysis`, the co-cited keys on four of the six statements. Only the Bengoetxea et al.
+PDF was supplied.
+
+---
+
+## `kirkpatrick1983` (ref. 52)
+
+**Source:** S. Kirkpatrick, C. D. Gelatt, Jr., M. P. Vecchi, "Optimization by Simulated
+Annealing", *Science* (New Series) 220(4598), 13 May 1983, pp. 671-680. DOI
+10.1126/science.220.4598.671.
+
+**Checked:** 2026-08-14, against the full article (JSTOR scan of the printed pages).
+
+**Bib entry: correct, no edit.** Journal, volume, issue, pages and year all match the
+article's own running head, "13 May 1983, Volume 220, Number 4598", and the page range
+671-680. Title and author order match the byline. One cosmetic difference left alone: the
+byline reads "C. D. Gelatt, Jr." and the bib omits the suffix, which is how most
+bibliographies of this paper render it, and changing it risks a name-parse change in a
+file I cannot compile locally.
+
+**Summary of the pass:** five statements checked, four confirmed as written, one edited.
+The edit removes `kirkpatrick1983` from the citation on the 80 % initial-acceptance rule,
+because that rule is in the van Laarhoven and Aarts book and not in this article. No prose
+was changed anywhere, and this also amends the earlier `vanlaarhoven1987` entry above.
+
+### Statement 1 of 5 - Implementation, Simulated Annealing (`chapters/Implementation.tex:97`)
+
+> The implementation applies the standard Metropolis acceptance rule and geometric cooling
+> introduced in Chapter~\ref{ch:metaheuristics} \citep{kirkpatrick1983}, cooling once per
+> \emph{temperature step} of $50$ candidate moves
+
+**Verdict: CONFIRMED. No edit.**
+
+Both named ingredients are the paper's own. The Metropolis rule, p. 672: "The case
+Delta-E > 0 is treated probabilistically: the probability that the configuration is
+accepted is P(Delta-E) = exp(-Delta-E/k_B T)", and the transfer out of physics on the same
+page: "Using the cost function in place of the energy and defining configurations by a set
+of parameters {x_i}, it is straightforward with the Metropolis procedure to generate a
+population of configurations of a given optimization problem at some effective
+temperature."
+
+Geometric cooling, p. 675: "For the annealing schedule we chose to start at a high
+'temperature,' T_0 = 10 [...] then cool exponentially, T_n = (T_1/T_0)^n T_0, with the
+ratio T_1/T_0 = 0.9." That is exactly T_{k+1} = alpha . T_k with alpha = 0.9, the form
+given in Chapter 4, so "introduced in Chapter 4" points at the right rule.
+
+*The 50-move temperature step is not attributed to the paper and does not need to be.* It
+is this thesis's own number. The paper's per-temperature budget is far larger but the same
+in kind, p. 675: "At each temperature enough flips are attempted that either there are ten
+accepted flips per circuit on the average (for this case, 50,000 accepted flips at each
+temperature), or the number of attempts exceeds 100 times the number of circuits."
+
+### Statement 2 of 5 - Simulated Annealing (`chapters/Metaheuristic Optimisation Methods.tex:213`)
+
+> Simulated Annealing (SA) \cite{kirkpatrick1983,cerny1985} is a single-solution search
+> method that improves one candidate step by step. It is inspired by the metallurgical
+> process of annealing
+
+**Verdict: CONFIRMED. No edit.**
+
+This is the paper being cited for being the paper, and the annealing analogy is its central
+device. p. 672: "Experiments that determine the low-temperature state of a material, for
+example, by growing a single crystal from a melt, are done by careful annealing, first
+melting the substance, then lowering the temperature slowly, and spending a long time at
+temperatures in the vicinity of the freezing point", carried into the algorithm on the same
+page: "The simulated annealing process consists of first 'melting' the system being
+optimized at a high effective temperature, then lowering the temperature by slow stages
+until the system 'freezes' and no further changes occur."
+
+Single-solution and step-by-step, p. 680: "Like most iterative improvement schemes, the
+Metropolis algorithm proceeds in small steps from one configuration to the next, but the
+temperature keeps the algorithm from getting stuck by permitting uphill moves." The
+following sentence in the thesis, that early uphill moves prevent getting permanently
+stuck, is cited to `talbi2009` but is equally this paper's, p. 673: "the procedure need not
+get stuck since transitions out of a local optimum are always possible at nonzero
+temperature."
+
+*The `cerny1985` co-citation is endorsed by this paper itself.* Note 29, p. 680: "V. Cerny
+has described an approach to the traveling salesman problem similar to ours in a manuscript
+received after this article was submitted for publication." Worth having ready if anyone
+asks why two references sit on one sentence: the joint attribution is Kirkpatrick et al.'s
+own.
+
+### Statement 3 of 5 - Working Principle (`chapters/Metaheuristic Optimisation Methods.tex:226`)
+
+> At each step, SA takes the current solution $s$ and generates a slightly modified
+> ``neighbour'' $s'$, then computes the difference in objective value
+> \cite{kirkpatrick1983}: \[\Delta E = F(s') - F(s)\]
+
+**Verdict: CONFIRMED. No edit.**
+
+p. 672: "In each step of this algorithm, an atom is given a small random displacement and
+the resulting change, Delta-E, in the energy of the system is computed." The rename from
+energy to objective value is the paper's own instruction two paragraphs later, "Using the
+cost function in place of the energy", so both the quantity and the symbol Delta-E come
+from the source.
+
+*Notation point, not an error.* The paper writes exp(-Delta-E/k_B T) with Boltzmann's
+constant and the thesis writes e^{-Delta E / T}. Dropping k_B is the standard optimisation
+convention and the paper licenses it where it defines the effective temperature, p. 672:
+"This temperature is simply a control parameter in the same units as the cost function."
+The acceptance rule itself is cited to `metropolis1953` on the next line, which is where it
+belongs.
+
+### Statement 4 of 5 - The Cooling Schedule (`chapters/Metaheuristic Optimisation Methods.tex:246`)
+
+> The temperature schedule controls how fast SA transitions from broad exploration to
+> focused local search, and SA's performance is highly sensitive to
+> it~\cite{kirkpatrick1983,talbi2009,vanlaarhoven1987}
+
+**Verdict: CONFIRMED. No edit.**
+
+The first half is stated twice. p. 673: "Gross features of the eventual state of the system
+appear at higher temperatures; fine details develop at lower temperatures." Restated in the
+conclusions, p. 680: "The temperature distinguishes classes of rearrangements, so that
+rearrangements causing large changes in the objective function occur at high temperatures,
+while the small changes are deferred until low temperatures."
+
+The sensitivity half is the paper's headline experiment rather than an aside. Annealed, the
+5000-gate partitioning problem gave two chips of 353 and 321 pins. Quenched, p. 675: "If,
+instead of slowly cooling, one were to start from a random partition and accept only flips
+that reduce the objective function (equivalent to setting T = 0 in the Metropolis rule),
+the result is chips with approximately 700 pins (several such runs led to results with 677
+to 730 pins). Rapid cooling results in a system frozen into a metastable state far from the
+optimal configuration." That is about a factor of two on the objective from the schedule
+alone. p. 673 adds the diagnostic form: a large specific heat "can be used in the
+optimization context to indicate that freezing has begun and hence that very slow cooling
+is required".
+
+*Spreadsheet note.* The tracking sheet still carries this statement in its older wording,
+"it is the most important design decision when applying the algorithm". That superlative was
+already removed under `talbi2009` (Statement 7 there) and confirmed removed under
+`vanlaarhoven1987` (Statement 2 there). The sentence in the tree is the corrected one and is
+what I checked, so there is nothing outstanding here. This paper would not have supported
+the superlative either: p. 680 lists the schedule as one of four needed ingredients and puts
+the difficulty elsewhere, "Inventing the most effective sets of moves and deciding which
+factors to incorporate into the objective function require insight into the problem being
+solved and may not be obvious."
+
+### Statement 5 of 5 - The Cooling Schedule (`chapters/Metaheuristic Optimisation Methods.tex:254`)
+
+> The starting temperature $T_{\max}$ is commonly calibrated so that typical worsening moves
+> are initially accepted around $80\,\%$ of the
+> time~\cite{~~kirkpatrick1983,~~vanlaarhoven1987}
+
+**Verdict: NOT IN THIS SOURCE. Edited, one bib key removed, prose unchanged.**
+
+The article sets no target acceptance ratio, and where it does fix an initial temperature it
+fixes a much hotter one. p. 675: "we chose to start at a high 'temperature,' T_0 = 10, where
+essentially all proposed circuit flips are accepted." Essentially all is not 80 %. The
+travelling-salesman section is qualitative in the same direction, p. 680: "The temperature
+at which segments flow about freely will be of order N^{1/2}." The summary offers only trial
+and error, p. 680: the schedule "may be developed by trial and error for a given problem, or
+may consist of just warming the system until it is obviously melted, then cooling in slow
+stages until diffusion of the components ceases." The one 0.9 on p. 675 is the cooling ratio
+T_1/T_0 and not an acceptance rate, which is a trap for a quick reader.
+
+*Why the earlier pass concluded the opposite, and why this supersedes it.* The
+`vanlaarhoven1987` entry confirmed the co-citation from the book's p. 59: "Kirkpatrick et al.
+propose the following empirical rule [...] If the acceptance ratio chi [...] is less than a
+given value chi_0 (in [KIR82] chi_0 = 0.8), double the current value of c_0." The book's key
+there is **[KIR82]**, a 1982 Kirkpatrick et al. item, not [KIR83], and neither the 0.8 nor
+the doubling procedure appears anywhere in the 1983 *Science* article. Whatever [KIR82] is,
+`kirkpatrick1983` resolves to the *Science* article and the bib entry carries its DOI, so an
+examiner who follows the citation lands on a paper that says "essentially all". The number is
+real and the credit to Kirkpatrick et al. is real, but the source that documents both is the
+book, so the book now carries the sentence alone.
+
+*What the edit costs:* nothing. `kirkpatrick1983` still carries four statements, two of them
+in this same subsection, and the 80 % figure keeps a source that provably contains it. The
+thesis's own calibration, e^{-Delta-bar/T_0} = 0.80 at `chapters/Implementation.tex:104`, is
+presented there as this work's choice and cites nobody, so it is untouched and still
+consistent with the chapter.
+
+**Not verified in this pass:** `cerny1985`, `metropolis1953`, `talbi2009`, `hajek1988` and
+`vanlaarhoven1987`, the co-cited keys on these sentences. `talbi2009` and `vanlaarhoven1987`
+have their own entries above. Only the Kirkpatrick PDF was supplied here.
+
+---
+
+## `dorigo1996` (ref. 25)
+
+**Source:** M. Dorigo, V. Maniezzo, A. Colorni, "Ant System: Optimization by a Colony of
+Cooperating Agents", *IEEE Transactions on Systems, Man, and Cybernetics, Part B: Cybernetics*,
+vol. 26, no. 1, pp. 29-41, February 1996. DOI 10.1109/3477.484436.
+
+**Checked:** 2026-08-14, against the full paper PDF.
+
+**Bib entry: correct, no change.** Author list and order match the byline (Dorigo, Maniezzo,
+Colorni). Title, journal, volume 26, number 1, pages 29-41 and year 1996 all match the running
+head and first page of the PDF.
+
+**Summary of the pass:** seven statements checked, all seven confirmed on the substance. Two
+citation-list edits made, both because a clause is carried by `dorigo2004` rather than by this
+paper: the pheromone-update equation is written in the modern evaporation-rate convention
+(line 367), and the "classic application domain" claim is a statement about eight subsequent
+years of literature (line 576). No prose changed anywhere.
+
+### Statement 1 of 7 - Metaheuristic Optimisation Methods, ACO opening (`chapters/Metaheuristic Optimisation Methods.tex:319`)
+
+> Ant Colony Optimisation (ACO) \cite{dorigo1996,dorigo2004} is a population-based method in
+> which artificial ants cooperate to build solutions by following and reinforcing promising
+> paths, mimicking the foraging behaviour of real colonies: ants deposit pheromone as they
+> walk, others preferentially follow stronger trails, and shorter paths accumulate pheromone
+> faster, so the colony converges on good routes without any individual having a global view.
+
+**Verdict: CONFIRMED. No edit.** Every clause is in Section I, most of them nearly verbatim.
+
+- Population-based. Third bullet of the Introduction: "It is a *population based approach*."
+- Deposit while walking. "A moving ant lays some pheromone (in varying quantities) on the
+  ground, thus marking the path by a trail of this substance."
+- Preferential following. "an ant encountering a previously laid trail can detect it and decide
+  with high probability to follow it, thus reinforcing the trail with its own pheromone."
+- Shorter paths accumulate faster. "This causes the quantity of pheromone on the shorter path
+  to grow faster than on the longer one."
+- Convergence without a global view. "how almost blind animals like ants could manage to
+  establish shortest route paths from their colony to feeding sources and back", and the
+  outcome, "The final result is that very quickly all ants will choose the shorter path."
+
+One point worth having ready for the defence, not an error. In the algorithm the paper settles
+on, *ant-cycle*, trail is laid after the tour is complete, not while walking: "when it completes
+a tour, it lays a substance called trail on each edge (i,j) visited". The two variants that do
+deposit step by step, *ant-density* and *ant-quantity*, are the ones Table I shows to be worse,
+because they "use local information" and their "search is not directed by any measure of the
+final result achieved". The report's sentence is safe from this because the colon scopes
+"deposit pheromone as they walk" to "the foraging behaviour of real colonies", which is exactly
+the paper's own framing of that clause, and the report's own update rule at line 366 states the
+end-of-tour timing explicitly.
+
+### Statement 2 of 7 - Metaheuristic Optimisation Methods, ACO opening (`chapters/Metaheuristic Optimisation Methods.tex:328`)
+
+> First demonstrated on the Travelling Salesman Problem \cite{dorigo1996}, ACO has become one of
+> the most widely applied metaheuristics for routing and sequencing problems \cite{dorigo2004}.
+
+**Verdict: CONFIRMED. No edit.** Abstract: "We apply the proposed methodology to the classical
+Traveling Salesman Problem (TSP), and report simulation results." Section II opens by saying so
+in the paper's own words: "We decided to use the well-known traveling salesman problem [26] as
+benchmark, in order to make the comparison with other heuristic approaches easier." The whole
+of Sections II to VI is the TSP, and the other problems in Section VII (ATSP, QAP, JSP) are
+presented as evidence of generality *after* it.
+
+Note the citation split in this sentence, which is the pattern the fix at line 576 was made to
+match: the TSP demonstration is charged to this paper, the "most widely applied" claim to
+`dorigo2004`. Only the first half is this paper's to carry.
+
+If an examiner presses on "first": the earliest AS-on-TSP results are not in this 1996 journal
+paper but in the conference and thesis work it supersedes, which it lists itself as "Preliminary
+results, obtained on small-scale problems, have been presented in [6], [7], and [12], [13]",
+that is Colorni, Dorigo and Maniezzo at ECAL 1991 and Dorigo's 1992 PhD thesis. The report's
+claim is that ACO was first demonstrated on the TSP, which is true, and it cites the paper of
+record for that demonstration. The honest answer if asked is that the 1991-92 work came first
+and this is its journal form.
+
+### Statement 3 of 7 - Metaheuristic Optimisation Methods, Solution Construction (`chapters/Metaheuristic Optimisation Methods.tex:338`)
+
+> \[ P_{ij}^{k} = \frac{\tau_{ij}^{\alpha} \cdot \eta_{ij}^{\beta}}{\sum_{l \in \mathcal{A}^{k}}
+> \tau_{il}^{\alpha} \cdot \eta_{il}^{\beta}} \]
+> where $\mathcal{A}^k$ is the set of nodes still allowed for ant $k$, $\tau_{ij}$ is the
+> pheromone level on edge $(i,j)$, and $\eta_{ij}$ is a heuristic desirability, typically
+> inverse distance $\eta_{ij} = 1 / d_{ij}$ \cite{dorigo1996}.
+
+**Verdict: CONFIRMED. No edit.** This is the paper's **Equation (4)** term for term, page 31:
+p_ij^k(t) = [tau_ij(t)]^alpha [eta_ij]^beta / sum_{k in allowed_k} [tau_ik(t)]^alpha
+[eta_ik]^beta for j in allowed_k, and 0 otherwise.
+
+- The allowed set. "where allowed_k = {N-tabu_k}", the towns not yet in the ant's tabu list.
+  The report's $\mathcal{A}^k$ is the same object under a different letter, and the report's
+  omission of the "0 otherwise" branch is not a loss, since it states that the denominator
+  "normalises over the allowed nodes, so the $P^k_{ij}$ form a probability distribution on
+  $\mathcal{A}^k$", which assigns zero mass outside it by construction.
+- Inverse distance. "We call *visibility* eta_ij the quantity 1/d_ij." Verbatim.
+- The exponents. "alpha and beta are parameters that control the relative importance of trail
+  versus visibility", which is the report's "balance learned preference against heuristic
+  knowledge". The report's gloss that high beta "prefers short edges regardless of pheromone"
+  is the paper's own limiting case: "setting alpha = 0, the trail level is no longer considered,
+  and a stochastic greedy algorithm with multiple starting points is obtained."
+
+Correction to the working notes, not to the report: the transition rule is Equation (4), not
+Equation (1). Equation (1) is the trail update quoted under Statement 4.
+
+### Statement 4 of 7 - Metaheuristic Optimisation Methods, The Pheromone Update (`chapters/Metaheuristic Optimisation Methods.tex:366`)
+
+> Once all ants have completed their tours, evaporation and deposit are combined into a single
+> update \cite{dorigo1996,dorigo2004}:
+> \[ \tau_{ij}(t+1) = (1 - \rho) \cdot \tau_{ij}(t) + \sum_{k=1}^{m} \Delta\tau_{ij}^{k} \]
+> where $\rho \in (0, 1)$ is the evaporation rate.
+
+**Verdict: CONFIRMED as mathematics, with `dorigo2004` added to the citation.** This is the one
+statement of the seven that is not a literal restatement of the source, and the reason is a
+notation convention that has flipped since 1996.
+
+The paper's **Equation (1)**, page 31, is tau_ij(t+n) = rho * tau_ij(t) + Delta tau_ij, and its
+rho is the *persistence*, not the evaporation: "where rho is a coefficient such that (1 - rho)
+represents the evaporation of trail between time t and t+n". Section IV repeats it in the
+parameter list: "rho: trail persistence, 0 <= rho < 1 (1 - rho can be interpreted as trail
+evaporation)". The report multiplies by (1 - rho) and calls rho the evaporation rate, so the
+report's rho is the paper's 1 - rho. The two equations are the same map under that substitution,
+but a reader checking the report against the 1996 paper alone would find the symbol used the
+other way round, and the report's tuned rho = 0.3 would read as heavy evaporation in one
+convention and light in the other.
+
+The form the report actually writes, with (1 - rho) and rho as the evaporation rate, is the
+convention of Dorigo and Stutzle's 2004 book, which is already cited three times in the same
+subsection and is already in the bibliography. Adding it to this citation makes the equation
+attributable exactly as written, and costs one key. **Edit applied:** `\cite{dorigo1996}` ->
+`\cite{dorigo1996,dorigo2004}` at line 367. No prose changed, and the equation is right as it
+stands, so nothing downstream moves. The code agrees with the report and not with the 1996
+symbol: `pheromone *= (1.0 - rho)` in `EV_routing/algorithms/ant_colony.py:445`, with the tuned
+rho = 0.3 stated at `chapters/Implementation.tex:182`.
+
+Two further details, both carried and neither needing an edit.
+
+- The sum over ants is the paper's **Equation (2)**, Delta tau_ij = sum_{k=1}^{m} Delta
+  tau_ij^k, with m the total number of ants.
+- "Once all ants have completed their tours" is the ant-cycle timing exactly: "After n
+  iterations all ants have completed a tour, and their tabu lists will be full; at this point
+  for each ant k the value of L_k is computed and the values Delta tau_ij^k are updated". The
+  report indexes the update by iteration, t+1, where the paper indexes by ant move, t+n, because
+  in the paper a cycle is n moves. Same event, different clock.
+
+Worth knowing for the defence: the m-ant sum in this display is the generic Ant System update,
+not the update this thesis runs. The implementation deposits from a single ant per iteration,
+alternating iteration-best and global-best, which `chapters/Implementation.tex:182` states
+plainly and which the variants paragraph at line 386 sets up. The methods chapter is describing
+the canonical rule before narrowing to the variant, which is the right order, but the question
+"your equation sums over m ants and your code deposits from one" has an answer and it is in the
+implementation chapter.
+
+### Statement 5 of 7 - Metaheuristic Optimisation Methods, The Pheromone Update (`chapters/Metaheuristic Optimisation Methods.tex:374`)
+
+> \[ \Delta\tau_{ij}^{k} = \begin{cases} \dfrac{Q}{L_k} & \text{if ant } k \text{ used edge }
+> (i,j) \text{ in its tour} \\ 0 & \text{otherwise} \end{cases} \]
+> where $L_k$ is the total cost of ant $k$'s tour, so better solutions exert a stronger influence
+> on future iterations \cite{dorigo1996}, and $Q$ is a constant scaling every deposit equally,
+> leaving the learning signal in the $1/L_k$ ratio alone (fixed at $Q = 1$ here).
+
+**Verdict: CONFIRMED. No edit.** The strongest of the seven, and the report's own gloss is the
+paper's explanation rather than an inference from the formula.
+
+The display is **Equation (3)**, page 31: Delta tau_ij^k = Q/L_k "if kth ant uses edge (i,j) in
+its tour (between time t and t+n)", 0 otherwise, "where Q is a constant and L_k is the tour
+length of the kth ant". Both branches and both symbols match.
+
+"Better solutions exert a stronger influence" is the paper's stated reason for preferring
+ant-cycle over the two rejected variants, page 33: "Ant-cycle uses global information, that is,
+its ants lay an amount of trail which is proportional to how good the solution produced was. In
+fact, ants producing shorter paths contribute a higher amount of trail than ants whose tour was
+poor."
+
+The parenthetical about Q is supported twice over, which is more than it needs. The paper's own
+parameter study dropped Q from Table I for exactly the report's reason: "Parameter Q is not
+shown because its influence was found to be negligible." And the code matches the report's
+"fixed at Q = 1 here": `delta = 1.0 / update_cost` in
+`EV_routing/algorithms/ant_colony.py:447`, with no Q factor at all, which is Q = 1.
+
+One scope note. The paper writes "tour length" where the report writes "total cost of ant k's
+tour", because in this thesis L_k is the weighted objective value rather than a distance. That
+is a deliberate generalisation to the EV objective and the surrounding text makes it explicit,
+so it is not an overstatement of the source.
+
+### Statement 6 of 7 - Metaheuristic Optimisation Methods, variants (`chapters/Metaheuristic Optimisation Methods.tex:386`)
+
+> Variants differ in how reinforcement is applied: the original Ant System \cite{dorigo1996}
+> lets all ants deposit, while Ant Colony System \cite{dorigo1997} restricts the offline deposit
+> to the best ant.
+
+**Verdict: CONFIRMED. No edit.** The half charged to this paper is Equation (2) again, the sum
+running k = 1 to m over the whole colony, and step 4 of the formal algorithm on page 32 confirms
+it procedurally: "For every edge (i,j), For k := 1 to m do", accumulating Delta tau_ij^k from
+every ant. The word "original" is right as well, since this is the paper that names the method
+Ant System.
+
+Two things to have ready, neither of which contradicts the sentence.
+
+- The paper also introduces an *elitist* variant, Section V-C, in which the best-so-far tour is
+  reinforced by an extra e * Q/L*, and the parameter set it finally recommends includes e = 8:
+  "given a good parameter setting (for instance alpha = 1, beta = 5, rho = 0.5, Q = 100, e = 8)".
+  This does not weaken "lets all ants deposit", because the elitist term is added on top of the
+  m-ant sum rather than replacing it, but "the original Ant System has no elitism" would be the
+  wrong thing to say if asked, and the report does not say it.
+- The word "offline" in the ACS half is doing real work and is correct. ACS also applies a local
+  update on each edge as it is traversed, so "restricts *deposit*" without the qualifier would
+  be too strong. That half belongs to `dorigo1997` and was not checked in this pass.
+
+### Statement 7 of 7 - Matching Algorithms to Problems (`chapters/Metaheuristic Optimisation Methods.tex:573`)
+
+> Its pheromone model is indexed by edges (the same unit in which route cost accrues), and
+> routing has been ACO's classic application domain \cite{dorigo2004} since its first
+> demonstration on the TSP \cite{dorigo1996}.
+
+**Verdict: CONFIRMED for the clause this paper carries, with `dorigo2004` added for the clause
+it does not.** The sentence makes two claims and the citation sat at the end of both.
+
+- Edge-indexed pheromone. Carried outright, and it is the paper's central data structure:
+  "Let tau_ij(t) be the *intensity of trail* on edge (i,j) at time t", deposited per edge in
+  Equation (3) and read per edge in Equation (4).
+- First demonstration on the TSP. Carried, same evidence as Statement 2.
+- "Routing has been ACO's classic application domain." Not this paper's claim to make. It is a
+  statement about what happened to the method after 1996, and if anything the 1996 paper pushes
+  the other way: Section VII is an argument for generality *beyond* routing, applying AS to the
+  quadratic assignment and job-shop scheduling problems, and the Introduction sells robustness
+  as the headline property. Dorigo and Stutzle 2004 is the source that surveys the intervening
+  literature and is already used for the identical claim at line 330.
+
+**Edit applied:** the sentence now reads "routing has been ACO's classic application domain
+\cite{dorigo2004} since its first demonstration on the TSP \cite{dorigo1996}", splitting the two
+citations at the clause boundary in the same pattern already used at lines 328-331. No wording
+changed, only the placement of one key.
+
+**Not verified in this pass:** `dorigo2004`, `dorigo1997` and `stutzle2000`, the co-cited keys
+in this subsection, and `schneider2014` on the EV-adaptation paragraph. Only the Dorigo,
+Maniezzo and Colorni 1996 PDF was supplied.
+
+---
+
+## `eiben2015` (ref. 27)
+
+**Source:** A. E. Eiben, J. E. Smith, *Introduction to Evolutionary Computing*, 2nd edition,
+Natural Computing Series, Springer, Berlin Heidelberg, 2015. DOI 10.1007/978-3-662-44874-8.
+
+**Checked:** 2026-08-14, against the full book PDF.
+
+**Bib entry: correct, no edit.** Author order, title, edition, series, publisher, place, year
+and DOI all match the copyright page: "A.E. Eiben, J.E. Smith, Introduction to Evolutionary
+Computing, Second Edition", "Natural Computing Series", "Springer-Verlag Berlin Heidelberg
+2003, 2015", "DOI 10.1007/978-3-662-44874-8".
+
+**Summary of the pass:** six statements checked, four confirmed as written, two edited. Both
+edits concern attribution rather than fact, both are one clause, and no citation was added or
+removed. The first stopped the thesis from crediting the exploration-exploitation balance to
+the two variation operators alone, which is not how this book divides the forces. The second
+replaced "scale-invariant" with the property the book actually names, which is also the
+property that makes a minimised objective work.
+
+### Statement 1 of 6 - Experimental Setup, Hyperparameter Tuning (`chapters/Experimental Setup.tex:98`)
+
+> Two parameters are tuned per algorithm, a common compromise for keeping grid search
+> tractable \citep{eiben2015,hutter2009}
+
+**Verdict: CONFIRMED. No edit.** Both halves are in Chapter 7, and the book supplies the
+practice and the reason for it in the same place.
+
+That a small hand-built grid is what people actually do, Sect. 7.4 p. 123: "The common way to
+solve the tuning problem is based on conventions ('mutation rate should be low'), ad hoc
+choices ('why not use population size 100') and limited experimentation with different values,
+for example, considering four parameters and five values for each of them." Sect. 7.6 p. 129
+names the same thing as the best known method of its category: "the frequently used parameter
+'optimisation' through a systematic comparison of a few combinations of parameter values,
+e.g., four mutation rates, four crossover rates, two values for tournament size, and four
+values for population size."
+
+The tractability reason is the book's own arithmetic on p. 123: "Trying all different
+combinations systematically is extremely time consuming. Testing five different values for
+four parameters leads to 5^4 = 625 different setups. Performing 100 independent EA runs with
+each setup implies 62,500 runs with the EA before we can even start the 'real' run."
+
+One nuance worth knowing rather than fixing. The book reports this practice in order to argue
+against it, and Sect. 7.6 recommends automated tuners instead (SPO, F-Race, REVAC). The thesis
+sentence claims only that the practice is common and says why, which is what the book asserts,
+and it calls it a compromise rather than best practice. The wording survives the source's own
+scepticism.
+
+### Statement 2 of 6 - Metaheuristic Optimisation Methods, Metaheuristics for Combinatorial Optimisation (`chapters/Metaheuristic Optimisation Methods.tex:6`)
+
+> the thesis uses \emph{metaheuristics}: general-purpose search methods that combine
+> randomness with problem-specific logic to find good, if not perfect, solutions within a
+> reasonable runtime \cite{talbi2009,eiben2015}
+
+**Verdict: CONFIRMED. No edit.**
+
+The definition is near verbatim from Sect. 2.4 p. 21: "there is a need for algorithms that are
+applicable to a wide range of problems, do not need much tailoring for specific problems, and
+deliver good (not necessarily optimal) solutions within acceptable time." That covers
+general-purpose, good rather than perfect, and reasonable runtime in one sentence. The
+NP-hardness premise in the first half of the thesis sentence is Sect. 1.4 p. 12: "if we wish
+to be able to create acceptable solutions for any instance of such a problem, we must turn to
+the use of approximation and metaheuristics and abandon the idea of definitely finding a
+solution which is provably the best." Randomness is Sect. 3.1 p. 27, in the list of features
+placing EAs among generate-and-test methods: "EAs are stochastic."
+
+"Problem-specific logic" is the clause this book carries least. Its emphasis in Sect. 2.4 runs
+the other way, that such algorithms "do not need much tailoring", and problem knowledge only
+enters later, in Chapter 10 on memetic algorithms and in Sect. 16.10 p. 244: "For a given
+problem we can circumvent the NFL theorem by incorporating problem-specific knowledge." The
+co-cited `talbi2009` is the source that defines metaheuristics in those terms and is listed
+first, so the pairing carries the sentence as it stands.
+
+### Statement 3 of 6 - Metaheuristic Optimisation Methods, Genetic Algorithms (`chapters/Metaheuristic Optimisation Methods.tex:108`)
+
+> New candidates are produced by recombining existing solutions (\emph{crossover}) and
+> perturbing them (\emph{mutation}), which together balance exploration of new regions against
+> exploitation of known good solutions \cite{eiben2015,back1997}
+
+**Verdict: ATTRIBUTED TO THE WRONG FORCE. Edited, one clause.**
+
+The two definitions are the book's, close to verbatim, Sect. 3.5 p. 42: "exploration is the
+generation of new individuals in as-yet untested regions of the search space, while
+exploitation means the concentration of the search in the vicinity of known good solutions.
+Evolutionary search processes are often referred to in terms of a trade-off between
+exploration and exploitation." So the vocabulary and the trade-off framing are sourced.
+
+What is not sourced is putting both sides of that trade-off on crossover and mutation. The
+book splits the forces the other way, Sect. 3.1 p. 26: "Variation operators (recombination and
+mutation) create the necessary diversity within the population, and thereby facilitate
+novelty. Selection acts as a force increasing the mean quality of solutions in the
+population." Exploitation in this book is what selection does, so a sentence that names only
+the two variation operators and then claims they balance exploration against exploitation does
+not match its own citation. The book also warns that the terms are loose, p. 41: "there is no
+universally accepted rigorous definition of the terms exploration and exploitation".
+
+Rewritten to the book's division:
+
+> New candidates are produced by recombining existing solutions (\emph{crossover}) and
+> perturbing them (\emph{mutation}). These variation operators generate the novelty that
+> drives exploration of new regions, while selection concentrates the search on known good
+> solutions \cite{eiben2015,back1997}.
+
+Cost of the edit: nothing. Same length, same vocabulary, and it removes a collision with the
+finer operator-level split two paragraphs later at line 137, where crossover exploits existing
+structure and mutation re-injects diversity, cited to `holland1992`. That sentence is about
+what each operator does with the material already in the population and is untouched.
+
+### Statement 4 of 6 - Metaheuristic Optimisation Methods, Genetic Algorithms (`chapters/Metaheuristic Optimisation Methods.tex:138`)
+
+> It is scale-invariant, so it handles a minimised objective without any fitness
+> transformation, and the tournament size $k$ gives direct control over selection pressure
+> \cite{goldberg1989,eiben2015}
+
+**Verdict: SECOND HALF CONFIRMED, FIRST HALF IMPRECISE. Edited, one clause.**
+
+The tournament-size half is exact. Sect. 5.2.4 p. 86: "the probability of selecting a
+high-fitness member increases, and that of selecting a low-fitness member decreases, as k is
+increased. Hence we say that increasing k increases the selection pressure", closing with "the
+selection pressure is easy to control by varying the tournament size k". The mechanism in the
+thesis sentence, draw k at random and keep the best, is the pseudocode of Fig. 5.3.
+
+The first half names the wrong property. What the book identifies is ordering, p. 85:
+"Tournament selection is an operator with the useful property that it does not require any
+global knowledge of the population, nor a quantifiable measure of quality. Instead it only
+relies on an ordering relation that can compare and rank any two individuals", and "Because
+tournament selection looks at relative rather than absolute fitness, it has the same
+properties as ranking schemes in terms of invariance to translation and transposition of the
+fitness function." Translation and transposition, not scale.
+
+The distinction is not pedantic, because scale invariance would not deliver what the sentence
+claims: multiplying an objective by -1 is a scaling, and it reverses the ordering. Ordering is
+what lets a minimised objective be used without transformation. Edited to:
+
+> It uses only the relative ordering of the candidates, so it handles a minimised objective
+> without any fitness transformation
+
+### Statement 5 of 6 - Metaheuristic Optimisation Methods, Genetic Algorithms (`chapters/Metaheuristic Optimisation Methods.tex:145`)
+
+> The dominant failure mode is \emph{premature convergence}: once the population homogenises
+> on a suboptimal region, crossover cannot recover the lost diversity and mutation alone is
+> slow to do so \cite{eiben2015}
+
+**Verdict: CONFIRMED. No edit.** One clause rests on an inference, flagged below.
+
+The failure mode and its name, Sect. 3.5 p. 42: "Premature convergence is the well-known
+effect of losing population diversity too quickly, and getting trapped in a local optimum.
+This danger is generally present in evolutionary algorithms, and techniques to prevent it are
+discussed in Chap. 5." The thesis's "suboptimal region" is the book's own wording elsewhere,
+Sect. 10.5 p. 179: "The problem of premature convergence, whereby the population converges
+around some suboptimal point". The homogenising mechanism is Sect. 5.5.1 p. 91-92, genetic
+drift under panmictic mixing driving the population onto a single optimum.
+
+"Crossover cannot recover the lost diversity" is the closest match of the whole pass,
+Sect. 4.4.3 p. 65: "This has the disadvantage (shared with all of the recombination operators
+described above) that only mutation can insert new values into the population, since
+recombination only gives us new combinations of existing values." The parenthetical makes it
+general rather than specific to one representation.
+
+"Mutation alone is slow to do so" is not stated for diversity recovery. The nearest statement
+is about fine-tuning, Sect. 10.1 p. 168: "the process of mutation finding the last few bits to
+change can be slow, since the choice of which genes are mutated is random." Chapter 5 exists
+because mutation on its own is not the answer, so the clause is consistent with the book, but
+it is an inference and not a quotation. Left as written, because it is hedged by "alone" and
+is uncontroversial. If it ever needs to be airtight, the p. 65 mechanism can carry the
+sentence on its own.
+
+"Dominant failure mode" is the thesis's own ranking. The book says "well-known" and "generally
+present", not most common. The citation sits on the mechanism rather than on the superlative,
+which is where it belongs.
+
+### Statement 6 of 6 - Metaheuristic Optimisation Methods, Genetic Algorithms (`chapters/Metaheuristic Optimisation Methods.tex:161`)
+
+> Four parameters govern the exploration--exploitation balance
+> \cite{goldberg1989,eiben2015,back1997}: the population size $N$ (diversity versus cost per
+> generation), the crossover probability $p_c$ (typically $0.6$--$0.9$), the mutation
+> probability $p_m$ (a common heuristic is $p_m \approx 1/L$ for representation length $L$
+> \cite{back1997}), and the selection pressure via the tournament size $k$ (typically
+> $2$--$5$)
+
+**Verdict: CONFIRMED, with one number this book states more narrowly. No edit.**
+
+Sect. 6.1 p. 100 gives three of the four in one sentence: "Recommendations were for mutation
+rates between 1/l and 1/mu, crossover probabilities around 0.6-0.8, and population sizes in
+the fifties or low hundreds, although to some extent these values reflect the computing power
+available in the 1980s and 1990s."
+
+- $p_m \approx 1/L$ is the lower end of that interval, l being the representation length.
+  Confirmed twice more by worked examples: the knapsack GA's "Mutation probability $p_m$ | 1/n"
+  in Table 3.5, and p. 41, "a mutation rate of $p_m$ = 1/n, i.e., that will on average change
+  one value in every offspring".
+- $N$ as diversity against cost per generation, p. 100 plus Sect. 3.2.3 on the population as
+  the unit of evolution and the source of the limited resource that creates competition.
+- $k$ as the selection-pressure knob, as quoted in statement 4.
+- $p_c$: this book says 0.6-0.8. The 0.9 upper bound is not from it. It is the range the code
+  comment attributes to De Jong (`Cloud_scheduling/config.yaml:105`), the tuning grid
+  deliberately spans 0.6 to 1.0, and the applied value is 0.8, inside both ranges. Left
+  unchanged, because two other sources are cited on the sentence and the grid is wider than
+  either range by design. If the sentence should be exactly this book's, it reads 0.6-0.8.
+- $k$ typically 2-5: no explicit recommendation in the book. Its two worked EAs happen to
+  bracket the range, eight-queens with "Best 2 out of random 5" (Table 3.4) and the knapsack GA
+  with "Best out of random 2" (Table 3.5), so the book demonstrates the range rather than
+  stating it, and the co-citations carry the number.
+
+**Not verified in this pass:** `hutter2009`, `dejong1975`, `birattari2009`, `goldberg1989`,
+`back1997`, `holland1992` and `syswerda1989`, the co-cited keys on these sentences.
+`talbi2009` has its own entry above. Only the Eiben and Smith PDF was supplied here.

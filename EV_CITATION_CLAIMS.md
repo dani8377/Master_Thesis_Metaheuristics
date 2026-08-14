@@ -334,22 +334,22 @@ Already verified and re-listed here for completeness: `mavrovouniotis2020benchma
 
 ---
 
-### `moscato1989` — Moscato (1989)
+### `moscato1989` — Moscato (1989) ✅ *verified in `CITATION_VERIFICATION.md`*
 *On Evolution, Search, Optimization, Genetic Algorithms and Martial Arts: Towards Memetic Algorithms*
 
-- [ ] **1.** `Implementation.tex:168` — Implementation › Algorithm Implementations for Electric Vehicle Routing › Memetic Algorithm
+- [x] **1.** `Implementation.tex:168` — Implementation › Algorithm Implementations for Electric Vehicle Routing › Memetic Algorithm
 
   > The memetic algorithm [moscato1989] reuses the GA but refines each offspring with up to thirty first-improvement local-search steps (drawn from the same eight operators) before it enters the population.
 
-- [ ] **2.** `Metaheuristic Optimisation Methods.tex:190` — Metaheuristics › Bio-inspired & Heuristic-Based Metaheuristics › Memetic Algorithms
+- [x] **2.** `Metaheuristic Optimisation Methods.tex:190` — Metaheuristics › Bio-inspired & Heuristic-Based Metaheuristics › Memetic Algorithms
 
   > A Memetic Algorithm (MA) hybridises a population-based method with local search, so that the population evolves over locally optimised solutions rather than raw offspring [moscato1989].{The name is Moscato's, after Dawkins's meme, a unit of cultural rather than genetic transmission.
 
-- [ ] **3.** `Metaheuristic Optimisation Methods.tex:190` — Metaheuristics › Bio-inspired & Heuristic-Based Metaheuristics › Memetic Algorithms
+- [x] **3.** `Metaheuristic Optimisation Methods.tex:190` — Metaheuristics › Bio-inspired & Heuristic-Based Metaheuristics › Memetic Algorithms *(edited: gene clause narrowed)*
 
-  > Genes are passed on unchanged, whereas memes are typically improved by their carrier before being propagated, just as each offspring here is locally refined before it enters the population [moscato1989].} In this thesis the MA extends the Genetic Algorithm of the previous section.
+  > Unlike a gene, a meme is usually improved by its carrier before being passed on, which is what local search does to each offspring [moscato1989].} In this thesis the MA extends the Genetic Algorithm of the previous section.
 
-- [ ] **4.** `Related work.tex:53` — Related Work › Electric Vehicle Routing › Heuristics and Metaheuristics on EVRP
+- [x] **4.** `Related work.tex:53` — Related Work › Electric Vehicle Routing › Heuristics and Metaheuristics on EVRP
 
   > Combining a genetic algorithm with local refinement yields a memetic algorithm [moscato1989], a template that is particularly effective on routing problems because the local-search step repairs the route disruption that recombination causes.
 
