@@ -1241,3 +1241,91 @@ initialises at $\tau_{\max}$, as the code does. The phrase was right for Ant Sys
 wrong for the algorithm being described. Adding an explicit historical contrast
 ("the original Ant System used a small positive constant") would be accurate if the space
 is judged worth it. Not done.
+
+---
+
+## `schneider2014` — all four instances, against the paper
+
+**Source:** M. Schneider, A. Stenger, D. Goeke, "The Electric Vehicle-Routing Problem with
+Time Windows and Recharging Stations", *Transportation Science*, vol. 48, no. 4,
+pp. 500–520, November 2014. DOI 10.1287/trsc.2013.0490.
+
+**Checked:** 2026-08-14, against the full paper PDF.
+
+**Bib entry: correct.** Authors, title, journal, volume, issue, page range, year and DOI
+all match the article header. No change needed.
+
+### Instances 1 and 2 — **CONFIRMED, no edit**
+
+| Claim | Where | Support in the paper |
+|---|---|---|
+| E-VRPTW introduced by Schneider et al., solved with a VNS/TS hybrid; they introduced the benchmark instances | `Related work.tex:45` | Abstract, "We introduce the electric vehicle-routing problem with time windows and recharging stations (E-VRPTW) [...] we present a hybrid heuristic that combines a variable neighborhood search algorithm with a tabu search heuristic"; §5.2, "we are the first to study E-VRPTW"; §5.2.1, 56 large instances (100 customers, 21 stations) and 36 small ones |
+| Dedicated operators insert, remove, or relocate charging stations | `Metaheuristic Optimisation Methods.tex:295` | §4.4: `stationInRe` "performs insertions and removals of recharging stations"; "Relocate is also defined for recharging stations"; 2-opt* allows "the removal and insertion of arcs, including recharging stations" |
+
+Two notes for the defence, neither an error. The "widely used testbeds" half of the first
+claim is about the later literature, not something this paper can attest; `froger2022exact`
+is cited alongside and covers it. And the VNS/TS acceptance criterion is itself SA-based
+(§4.3), so the method is a three-component hybrid; "VNS and Tabu Search" is the authors'
+own name for it (VNS/TS) and is fine as written.
+
+### Instance 3 — `:359` — **WRONG causal clause, edit made**
+
+> the allowed set $\mathcal{A}^k$ must account for the vehicle's battery state, since
+> energy consumption depends on the entire sequence of decisions made so far
+
+The conclusion is right; the reason inverts the model. In Schneider, per-arc consumption is
+$h \cdot d_{ij}$, a constant charge consumption rate times distance (§3, Table 1). That is
+arc-local and carries no sequence dependence. What accumulates over the sequence is the
+battery *level* $y_i$, through constraints (10)–(11).
+
+**The same is true of this thesis.** `Problem Specification.tex:382` defines $e_{ij}$ as the
+energy "computed from $e_{\text{base}}$, $d_{ij}$, and the grade and speed multipliers",
+indexed by the arc; `data_loader.py:73` computes
+`energy[i,j] = d_km * energy_consumption_kwh_per_km * grade_mult * speed_mult`, and
+`ant_colony.py:187` accumulates it with `battery -= energy_array[ci, ni]`. Arc-local
+consumption, path-dependent battery level.
+
+**The report already says this correctly elsewhere**, which makes `:359` the lone outlier:
+`Problem Analysis and Success Criteria.tex:9` ("the battery state is coupled along the whole
+route, so whether a stop is reachable depends on the entire prefix of decisions preceding
+it"), `Comparative Discussion.tex:17` ("alters the energy trajectory of every later node"),
+`Metaheuristic Optimisation Methods.tex:586` ("path-dependent feasibility"), and the
+construction-rule paragraph of `Implementation.tex` (the charging terms "depend on the
+station visited and the battery level on arrival rather than on the arc").
+
+**Fix applied:** "Each arc's consumption is fixed by the arc itself, but the charge remaining
+accumulates over the decisions taken since the last recharge, so whether a node is reachable
+depends on the whole prefix of the route." This matches the phrasing already used in
+`Problem Analysis and Success Criteria.tex:9`.
+
+Worth knowing: this thesis's energy model is richer than Schneider's, which explicitly
+assumes "a flat terrain, i.e., no grades are considered" (§3), whereas this one applies a
+grade multiplier from node elevations. Schneider is therefore the wrong source to lean on
+for anything about energy-model structure.
+
+### Instance 4 — `Implementation.tex:176` — **MISATTRIBUTED, edit made**
+
+> insertion is triggered dynamically by the battery state, the standard reserve-threshold
+> treatment of proactive charging in energy-constrained routing \citep{schneider2014}
+
+Schneider has no reserve threshold. Stations enter solutions two ways: the `stationInRe`
+neighbourhood operator applied to generator arcs (§4.4), and the $P_{\text{batt}}$ term of
+the generalized cost function (17), which lets the search carry infeasible solutions and
+repair them under a dynamically updated penalty. The initial construction inserts customers
+"until a violation of capacity or battery capacity occurs" (§4.1) — a violation trigger, and
+computed "under the assumption that no recharging possibility exists". Nothing in the paper
+resembles a battery-percentage reserve.
+
+The threshold is this thesis's own tuned design choice, and the project says so consistently
+everywhere except in this sentence: the grid `"battery_threshold_frac": [0.2, 0.4]` in
+`tune.py:140` and `scalability_analysis.py:132`, the matching grid in
+`Additional Experimental Material.tex:16`, "battery threshold 0.4, tuned" in
+`Experimental Setup.tex:297`, and "stations enter the candidate list once charge drops below
+$40\,\%$" in `Results and Evaluation.tex:726`. Only the word "standard" and the citation
+claimed a provenance the source does not have. Same failure mode as the `deb2000`
+normalisation estimator corrected earlier.
+
+**Fix applied:** keep Schneider for what it does support — that recharging must be planned
+into the route rather than left until the charge is critical — record that it enforces this
+by penalising battery violations rather than by a threshold, and state that the reserve
+threshold is this thesis's own mechanism. No value changed, so no other site is affected.
