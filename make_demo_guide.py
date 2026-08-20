@@ -24,7 +24,7 @@ from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import mm
 from reportlab.platypus import (
     BaseDocTemplate, CondPageBreak, Frame, KeepTogether, PageTemplate,
-    Paragraph, Spacer, Table, TableStyle,
+    Paragraph, Preformatted, Spacer, Table, TableStyle,
 )
 
 OUT = Path(__file__).parent / "DEMO_GUIDE.pdf"
@@ -67,10 +67,15 @@ CODESM = ParagraphStyle("CODESM", parent=CODE, fontName="Courier",
 
 
 def code_block(lines: list[str], accent=BLUE):
-    """A shaded, left-ruled block of literal commands."""
+    """A shaded, left-ruled block of literal commands.
+
+    Uses Preformatted rather than Paragraph so the text in the PDF is plain
+    ASCII with real spaces.  These commands are meant to be selected out of
+    the PDF and pasted into a shell, so no &nbsp;, no smart quotes, no soft
+    hyphens, and no line continuations that a copy would break.
+    """
     style = CODE if max(len(x) for x in lines) < 62 else CODESM
-    rows = [[Paragraph(ln.replace(" ", "&nbsp;") or "&nbsp;", style)] for ln in lines]
-    t = Table(rows, colWidths=[CONTENT_W])
+    t = Table([[Preformatted("\n".join(lines), style)]], colWidths=[CONTENT_W])
     t.setStyle(TableStyle([
         ("BACKGROUND", (0, 0), (-1, -1), GREY),
         ("LEFTPADDING", (0, 0), (-1, -1), 9),
@@ -155,7 +160,7 @@ def build() -> None:
     s.append(code_block([
         "cd ~/demo",
         "uv run run.py cloud -a SA GA UMDA greedy -s 1",
-        "uv run run.py ev    -a SA Greedy      -s 1",
+        "uv run run.py ev -a SA Greedy -s 1",
     ]))
     s.append(Spacer(1, 5))
     s.append(Paragraph(
@@ -168,40 +173,33 @@ def build() -> None:
         "<font face='Courier'>greedy</font> in lower case, EV takes "
         "<font face='Courier'>Greedy</font> capitalised.", BODY))
 
-    s.append(Paragraph("2. Rule one: never run in the real repository", H2))
-    s.append(callout(
-        "This has already gone wrong once.",
-        "On 19 August a 1-seed demo run was launched inside the working repository. It "
-        "overwrote the committed 20-seed results for the balanced focus mode: the Branch "
-        "and Bound, Round-Robin and Random rows were deleted and every figure was redrawn "
-        "from a single seed. It was recovered with <font face='Courier'>git checkout</font> "
-        "because the results were committed. Run the demo from a throwaway copy and this "
-        "cannot happen at all."))
-    s.append(Spacer(1, 6))
-
-    s.append(Paragraph("3. Setup, the evening before, on the presentation machine", H2))
+    s.append(Paragraph("2. Setup, the evening before, on the presentation machine", H2))
     s.append(code_block([
-        "# 1. sandbox copy - the live run must never touch the real tree",
+        "# work from a copy, so a demo run does not leave your results dirty",
         'cp -R "/path/to/Master_Thesis_Metaheuristics" ~/demo',
         "cd ~/demo",
         "",
-        "# 2. warm the uv cache so nothing downloads on DTU wifi",
-        "uv run --with numpy --with pandas --with matplotlib \\",
-        "       --with pyyaml --with scipy \\",
-        "  python -c \"import numpy, pandas, matplotlib, scipy, yaml; print('ok')\"",
-        "",
-        "# 3. time both runs for real, and check the numbers still come out",
+        "# run both twice: the first pass downloads packages and warms the",
+        "# uv cache, the second pass is the real timing to plan around",
         "time uv run run.py cloud -a SA GA UMDA greedy -s 1",
-        "time uv run run.py ev    -a SA Greedy      -s 1",
+        "time uv run run.py ev -a SA Greedy -s 1",
     ], accent=GREEN))
     s.append(Spacer(1, 5))
     s.append(Paragraph(
-        "Write down what <font face='Courier'>time</font> reports. Those two numbers are "
-        "what the run sheet on page 2 should be built around. Measured on a Windows laptop "
-        "the runs take 79 s and 93 s; on the Apple M3 Pro that produced the committed "
-        "results, expect roughly 15 s and 25 s. Measure, do not assume.", BODY))
+        "Write down what <font face='Courier'>time</font> reports on the second pass. Those "
+        "two numbers are what the run sheet in section 5 should be built around. Measured "
+        "on a Windows laptop the runs take 79 s and 93 s warm, against 100 s cold; on the "
+        "Apple M3 Pro that produced the committed results, expect roughly 15 s and 25 s. "
+        "Measure, do not assume.", BODY))
+    s.append(Paragraph(
+        "The copy is hygiene, not a safety rule. A run overwrites the results directory it "
+        "writes to, so running in the real tree leaves it dirty and, if committed, puts "
+        "1-seed numbers in a repository whose README says its results came from full runs. "
+        "Nothing you project comes from those files, and "
+        "<font face='Courier'>git checkout</font> undoes it in two seconds. One "
+        "<font face='Courier'>cd</font> avoids the question entirely.", BODY))
 
-    s.append(Paragraph("4. Machine and logistics", H2))
+    s.append(Paragraph("3. Machine and logistics", H2))
     s.append(Paragraph(
         "Use <b>one laptop for the whole demo</b>, the Mac that produced the committed "
         "results. Swapping laptops mid-demo costs 30 to 60 seconds of dead air out of 300 "
@@ -227,7 +225,7 @@ def build() -> None:
           "Not an issue on macOS"],
          ], [26 * mm, 56 * mm, W - 82 * mm], accent=ORANGE))
 
-    s.append(Paragraph("5. Files to have open before you start", H2))
+    s.append(Paragraph("4. Files to have open before you start", H2))
     s.append(code_block([
         "~/demo/Cloud_scheduling/figures/balanced/allocation_greedy_construction.gif",
         "~/demo/Cloud_scheduling/figures/balanced/allocation_sa_search.gif",
@@ -239,7 +237,7 @@ def build() -> None:
 
     # ---------------------------------------------------------------- page 2
     s.append(CondPageBreak(130 * mm))
-    s.append(Paragraph("6. The five minutes, minute by minute", H1))
+    s.append(Paragraph("5. The five minutes, minute by minute", H1))
     s.append(Paragraph(
         "Timings assume the Mac. On the Mac each run finishes before you finish the "
         "sentence that launched it, so the structure is <b>result first, explanation "
@@ -278,7 +276,7 @@ def build() -> None:
          ["4:40", "-", "Buffer.", "Stop talking. Do not fill it."],
          ], [13 * mm, 10 * mm, 52 * mm, W - 75 * mm]))
 
-    s.append(Paragraph("7. Numbers you are allowed to quote", H2))
+    s.append(Paragraph("6. Numbers you are allowed to quote", H2))
     s.append(Paragraph(
         "The live run uses <b>one seed</b>. The thesis reports <b>twenty</b>. For cloud "
         "these coincide; for EV they do not. Say \"one seed\" out loud on the EV half, "
@@ -297,7 +295,7 @@ def build() -> None:
 
     # ---------------------------------------------------------------- page 3
     s.append(CondPageBreak(130 * mm))
-    s.append(Paragraph("8. What actually happens when you press enter", H1))
+    s.append(Paragraph("7. What actually happens when you press enter", H1))
     s.append(Paragraph(
         "Phase by phase, so you can narrate confidently and answer \"what is it doing "
         "right now\". Times are the Windows measurements; divide by roughly five for the "
@@ -362,7 +360,7 @@ def build() -> None:
 
     # ---------------------------------------------------------------- page 4
     s.append(CondPageBreak(110 * mm))
-    s.append(Paragraph("9. Five things on screen that can bite you", H1))
+    s.append(Paragraph("8. Five things on screen that can bite you", H1))
     s.append(Paragraph(
         "All five are real, all five were observed in a rehearsal run. None is a bug in "
         "the science, but each one looks bad on a projector if it surprises you.", BODY))
@@ -407,7 +405,7 @@ def build() -> None:
         "warning from a figure helper.", accent=ORANGE)]))
 
     s.append(CondPageBreak(95 * mm))
-    s.append(Paragraph("10. Why the demo is built this way", H1))
+    s.append(Paragraph("9. Why the demo is built this way", H1))
     s.append(table(
         ["Choice", "Reason"],
         [["One seed, not twenty",
