@@ -192,6 +192,11 @@ def build() -> None:
         "Apple M3 Pro that produced the committed results, expect roughly 15 s and 25 s. "
         "Measure, do not assume.", BODY))
     s.append(Paragraph(
+        "Machine load matters more than you would expect. The same EV run on the same "
+        "Windows laptop reported 42.0 s and 18.2 s per SA seed on two occasions an hour "
+        "apart, purely from what else was running. Close everything first, and take the "
+        "slower of two measurements when you plan the timing.", BODY))
+    s.append(Paragraph(
         "The copy is hygiene, not a safety rule. A run overwrites the results directory it "
         "writes to, so running in the real tree leaves it dirty and, if committed, puts "
         "1-seed numbers in a repository whose README says its results came from full runs. "
@@ -371,9 +376,14 @@ def build() -> None:
         "Projected on a wall, \"no significant difference between Greedy and SA\" reads as "
         "your method failing. <b>Say the sentence before it appears:</b> \"one seed, so "
         "the test is a placeholder here; the thesis runs twenty and the difference is "
-        "significant after Holm correction.\" Alternatively run the EV demo with "
-        "<font face='Courier'>-s 3</font>, which costs about 30 extra seconds on the Mac "
-        "and produces a table that does not say that."), Spacer(1, 6)]))
+        "significant after Holm correction.\"<br/><br/>"
+        "<b>Do not try to fix this by adding seeds.</b> The exact two-sided signed-rank "
+        "test cannot return a p-value below 2/2^n, so n = 3 can never beat p = 0.25 and "
+        "n = 5 can never beat 0.0625. Six seeds is the first count that can reach p &lt; "
+        "0.05, and six SA seeds costs roughly 70 s on the Mac, a quarter of the whole "
+        "demo. Explain the limitation instead of trying to out-run it. If a censor asks "
+        "why you did not simply use more seeds, that floor is the answer, and it is a good "
+        "one."), Spacer(1, 6)]))
 
     s.append(KeepTogether([callout(
         "2. The printed LaTeX table is captioned \"(10 seeds, mean +/- std)\" whatever you ran.",
