@@ -1,0 +1,9 @@
+# Git guesses "binary" by looking for a NUL byte in the first 8000 bytes.
+# PDFs written by reportlab (DEMO_GUIDE.pdf) put their compressed streams far
+# enough in that the guess misfires, and with core.autocrlf=true the file is
+# then LF->CRLF converted on checkout, which corrupts it.  Declare the binary
+# formats explicitly rather than relying on the heuristic.
+*.pdf  binary
+*.png  binary
+*.gif  binary
+*.xlsx binary
